@@ -14,6 +14,7 @@
         "no-sparse-arrays":["error"],  // disallow sparse arrays like: var items [,,]
         "no-unreachable":["warn"],  // disallow unreachable code after `return`, `throw`, `continue`, and `break` statements
         "no-unreachable-loop":["warn"],  // disallow loops with a body that allows only one iteration
-        "no-unsafe-negation":["warn"]  // disallow negating the left operand of relational operators like: !key in object instead of !(key in object)
+        "no-unsafe-negation":["warn"],  // disallow negating the left operand of relational operators like: !key in object instead of !(key in object)
+        "consistent-return":["warn"]  // require return statements to either always or never specify values
     }
 }
