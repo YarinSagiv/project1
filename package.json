@@ -1,0 +1,27 @@
+{
+  "name": "project1",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha test/*.spec.js --color",
+    "lint": "eslint src/*.js --color"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/YarinSagiv/project1.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/YarinSagiv/project1/issues"
+  },
+  "homepage": "https://github.com/YarinSagiv/project1#readme",
+  "devDependencies": {
+    "@types/chai": "^4.2.15",
+    "@types/mocha": "^8.2.1",
+    "chai": "^4.3.3",
+    "eslint": "^7.21.0",
+    "mocha": "^8.3.0"
+  }
+}

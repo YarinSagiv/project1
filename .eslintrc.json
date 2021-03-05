@@ -1,0 +1,19 @@
+{
+    "env": {
+        "browser": true,
+        "es2021": true
+    },
+    "extends": "eslint:recommended", 
+    "parserOptions": {
+        "ecmaVersion": 12,
+        "sourceType": "module"
+    },
+    "rules": {
+        "semi": ["error", "always"],  // always use a semi-colon: ;
+        "quotes": ["error", "double"],  // allow only " and not '
+        "no-sparse-arrays":["error"],  // disallow sparse arrays like: var items [,,]
+        "no-unreachable":["warn"],  // disallow unreachable code after `return`, `throw`, `continue`, and `break` statements
+        "no-unreachable-loop":["warn"],  // disallow loops with a body that allows only one iteration
+        "no-unsafe-negation":["warn"]  // disallow negating the left operand of relational operators like: !key in object instead of !(key in object)
+    }
+}
