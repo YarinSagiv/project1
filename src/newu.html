@@ -18,7 +18,7 @@ body {
 }
 
 /* Full-width input fields */
-input[type=text], input[type=password] {
+input[type=text], input[type=password],input[type=email] {
   width: 100%;
   padding: 15px;
   margin: 5px 0 22px 0;
@@ -159,7 +159,7 @@ a {
       <input type="text" placeholder="Enter User Name" name="username" id="username" required>
   
       <label for="email"><b>Email</b></label>
-      <input type="text" placeholder="Enter Email" name="email" id="email" required>
+      <input type="email" placeholder="Enter Email" name="email" id="email" required>
   
       <label for="psw"><b>Password</b></label>
       <input type="password" placeholder="Enter Password" name="psw" id="psw" required>
@@ -169,12 +169,12 @@ a {
       <hr>
   
       <p>By creating an account you agree to our <a href="#">Terms & Privacy</a>.</p>
-      <button type="submit" class="registerbtn" onclick="backtohome()">Register</button>
+      <button type="submit" class="registerbtn" onclick="">Register</button>
     </div>
   
     <div class="container signin">
       <p>Already have an account? </p> 
-      <button onclick="signin()" class="registerbtn">Sign In</button>
+      <button onclick="login()" class="registerbtn">Log In</button>
     </div>
 </form>
 
@@ -198,9 +198,9 @@ a {
     window.location.href = "firstpage.html";
   }
 
-  function signin()
+  function login()
   {
-    window.location.href = "signin.html";
+    window.location.href = "login.html";
 
   }
 
