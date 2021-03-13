@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+
+</style>
+</head>
+<body>
+  <header>
+    <%- include('../partials/header') %>
+  </header>
+  
+<button type="button" class=button onclick="newuser_fuc()">new member</button>
+<button type="button" class=button onclick="existuser_fuc()">Existsing member</button>
+<script>
+  function newuser_fuc() {
+    window.location.href = "newu.html";
+
+  }
+
+  function existuser_fuc() {
+    window.location.href = "login.html";
+
+  }
+  
+  </script>
+</body>
+</html>
