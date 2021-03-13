@@ -15,9 +15,9 @@ Project is created with:
 ## Setup
 To run this project, install it locally using npm:
 
-```
-$ `npm install express` <br/>
-$ `npm install nodemon` <br/>
-$ `npm install mocha chai`<br/>
-$ `npm install eslint`<br/>
-```
+* `npm install express`
+* `npm install nodemon`
+* `npm install mocha chai`
+* `npm install eslint`
+* `npm install ejs`
+
