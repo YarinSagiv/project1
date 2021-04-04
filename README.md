@@ -20,4 +20,5 @@ To run this project, install it locally using npm:
 * `npm install mocha chai`
 * `npm install eslint`
 * `npm install ejs`
+* `npm install mongodb`
 
