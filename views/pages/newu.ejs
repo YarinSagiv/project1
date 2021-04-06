@@ -42,8 +42,6 @@
       <input type="checkbox" id="Terms" name="Terms" value="Terms">
       <label for="Terms"> By creating an account you agree to our <a href="#">Terms & Privacy</a> </label><br>
   
-       <!-- <p>By creating an account you agree to our <a href="#">Terms & Privacy</a>.</p> -->
-
 
       <button type="submit" class="registerbtn" onclick="backtohome()">Register</button>
     </div>
@@ -59,6 +57,15 @@
 
 <script>
   function backtohome() {
+
+    /* check if the user checked the check box of the termes */
+    if(!validate)
+    {
+      alert("You didn't check it! plise Please confirm the terms if you want to register on the site");
+    }
+
+
+
     /*var pw = document.getElementById("psw").value;  
     var pw2=document.getElementById("psw-repeat").value;  
     //check if the password are equal 
@@ -79,6 +86,15 @@
     window.location.href = "logIn";
 
   }
+
+  /* func that check if the user checked the check box of the termes */
+  function validate() {
+        if (document.getElementById('Terms').checked) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
 
   

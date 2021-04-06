@@ -35,7 +35,7 @@ app.get('/newu', function (req, res) {
 });
 
 
-// https://project1sprint1.herokuapp.com/
+// https://project1sprint1.herokuapp.com
 
 
 
