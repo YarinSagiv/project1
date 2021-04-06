@@ -58,11 +58,31 @@
 <script>
   function backtohome() {
 
+    newusucc=true
+
     /* check if the user checked the check box of the termes */
-    if(!validate)
+    if(!validate())
     {
+      newusucc=false
       alert("You didn't check it! plise Please confirm the terms if you want to register on the site");
     }
+
+    /*check if the first name contain is only letters */
+    if(checkLetters(document.getElementById(firstname))==false)
+    {
+      newusucc=false
+      alert("The first name need to be with only letters");
+    }
+
+    /*check if the last name contain is only letters */
+    if(checkLetters(document.getElementById(secname))==false)
+    {
+      newusucc=false
+      alert("The second name need to be with only letters");
+    }
+
+
+
 
 
 
@@ -78,7 +98,10 @@
     }
     else
   */
-    window.location.href = "/";
+    if(newusucc)
+    {
+      window.location.href = "/";
+    }
   }
 
   function login()
@@ -86,8 +109,8 @@
     window.location.href = "logIn";
 
   }
-
-  /* func that check if the user checked the check box of the termes */
+  
+  /* func that check if the user checked the check box of the termes  */
   function validate() {
         if (document.getElementById('Terms').checked) {
             return true;
@@ -95,7 +118,19 @@
             return false;
         }
     }
+    
+  /* fun that check if the texs is only letters */
+  function checkLetters(inputtxt) {
 
+    var letters = /^[A-Za-z]+$/;
+    if(!(inputtxt.value.match(letters)))
+    {
+      return false;
+    }
+    return true;
+  }
+   
+  
 
   
 </script>
