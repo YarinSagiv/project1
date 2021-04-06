@@ -21,10 +21,10 @@
       <input type="text" placeholder="Enter Secones Name" name="secname" id="secname" required>
       <br/>
       <label for="iduser"><b>ID</b></label>
-      <input type="text" placeholder="Enter ID" name="iduser" id="iduser" required>
+      <input type="number" placeholder="Enter ID" name="iduser" id="iduser" required>
       <br/>
       <label for="phone"><b>Phone Number</b></label>
-      <input type="text" placeholder="Enter Phone Number" name="phone" id="phone" required>
+      <input type="number" placeholder="Enter Phone Number" name="phone" id="phone" required>
       <br/>
       <label for="username"><b>User Name</b></label>
       <input type="text" placeholder="Enter User Name" name="username" id="username" required>
@@ -58,51 +58,57 @@
 <script>
   function backtohome() {
 
-    newusucc=true
+    newusucc=true;
+    messageError="";
 
     /* check if the user checked the check box of the termes */
     if(!validate())
     {
-      newusucc=false
-      alert("You didn't check it! plise Please confirm the terms if you want to register on the site");
+      newusucc=false;
+      messageError+="You didn't check it! Please confirm the terms if you want to register on the site\n ";
     }
 
     /*check if the first name contain is only letters */
     if(checkLetters(document.getElementById(firstname))==false)
     {
-      newusucc=false
-      alert("The first name need to be with only letters");
+      newusucc=false;
+      messageError+="The first name need to be with only letters\n ";
+      
     }
 
     /*check if the last name contain is only letters */
     if(checkLetters(document.getElementById(secname))==false)
     {
       newusucc=false
-      alert("The second name need to be with only letters");
+      messageError+="The second name need to be with only letters\n ";
     }
-
-
-
-
-
-
-    /*var pw = document.getElementById("psw").value;  
-    var pw2=document.getElementById("psw-repeat").value;  
-    //check if the password are equal 
-    if (pw!= pw2)
+    /* check if the ID have 9 digits */
+    if((document.getElementById(iduser).length)!=9)
     {
-        document.getElementById("message").innerHTML = "The passwords are not the same, try again";  
-        window.location.href = "newu.html";
-
+      newusucc=false
+      messageError+="The ID need to be with 9 digits\n ";
 
     }
-    else
-  */
+        /* check if the phone number have 10 digits */
+    if((document.getElementById(phone).length)!=10)
+    {
+      newusucc=false
+      messageError+="The phone number need to be with 10 digits\n ";
+
+    }
+
     if(newusucc)
     {
       window.location.href = "/";
     }
-  }
+    else
+    {
+      alert(messageError);
+    }
+  } 
+
+ 
+
 
   function login()
   {
@@ -128,6 +134,22 @@
       return false;
     }
     return true;
+  }
+
+  function checkPassword()
+  {
+    /*var pw = document.getElementById("psw").value;  
+    var pw2=document.getElementById("psw-repeat").value;  
+    //check if the password are equal 
+    if (pw!= pw2)
+    {
+        document.getElementById("message").innerHTML = "The passwords are not the same, try again";  
+        window.location.href = "newu.html";
+
+
+    }
+  
+  */
   }
    
   
