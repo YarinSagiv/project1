@@ -1,0 +1,156 @@
+<html>
+
+<head>
+    <link href="css/sty.css" rel="stylesheet">
+</head>
+
+<body>
+
+    <header>
+        <%- include('../partials/_header') %>
+    </header>
+    <form id="updateContractor">
+        <label for="firstname"><b>First Name: </b></label>
+        <input type="text" name="firstname" id="firstname" required>
+        <br />
+        <label for="lastname"><b>Last Name: </b></label>
+        <input type="text" name="lastname" id="lastname" required>
+        <br />
+        <label for="email"><b>Email: </b></label>
+        <input type="email" name="email" id="email" required> <!-- TODO: check if really working -->
+        <br />
+        <label for="adress" style="font-size:18px;">Do you have a business adress?</label>
+        <input type="checkbox" style="width: 18px; height: 18px;" name="adressC" id="adressC" onchange="addBusiness()"
+            checked>
+        <br />
+        <label for="adress" id="adressL"><b>Business Adress: </b></label>
+        <input type="text" name="adress" id="adress" required>
+        <!-- TODO: if the check box is checked but this is empty -->
+        <br />
+        
+        <label for="phonenumber"><b>Phone numbers: </b></label>
+        <!--<input type="text" name="phonenumber" id="phonenumber" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');"  required>-->
+       <ul id="addedPhoneNumbers">
+            <!-- TODO: change place holders to the number from the db if initial log in then no phone numbers yet-->
+            <li style="font-size: 18px;" id="thePhoneNumber">place holder (phone from db)<span style="cursor: pointer;" onclick="delPhone('thePhoneNumber')">&#215;</span></li>
+            <label id="phoneError"></label>
+        </ul>
+        <button type="button" class=button onclick="addPhone()" style="padding: 8px 15px;">add another phone number</button>
+        <br />
+
+        <label for="jobTypesL"><b>Job Types </b></label><label style="font-size:18px;">select the services you provide:
+        </label>
+        <br />
+        <select name="jobTypes" id="jobTypes" multiple>
+            <!-- TODO: change style? -->
+            <option style="font-size:18px;" value="Hair Styling">Hair Styling</option>
+            <option style="font-size:18px;" value="Makeup">Makeup</option>
+            <option style="font-size:18px;" value="Photography">Photography</option>
+            <option style="font-size:18px;" value="DJ">DJ</option>
+        </select>
+        <button type="button" class=button onclick="addType()" style="padding: 8px 15px;">add job</button>
+        <!-- a list of the selected job types-->
+        <br><label id="myJobTypes" style="font-size:18px; display: none;">My job types:</label>
+        <ul id="selectedTypes"></ul>
+        <br />
+
+        <label for="gender"><b>Gender: </b></label><br>
+        <input type="radio" id="male" name="gender" value="male" checked>
+        <label for="male" style="font-size:22px;" >Male&emsp;</label>
+        <input type="radio" id="female" name="gender" value="female">
+        <label for="female" style="font-size:22px;">Female&emsp;</label>
+        <input type="radio" id="other" name="gender" value="other">
+        <label for="other" style="font-size:22px;">Other</label>
+
+        <!-- TODO: add areas in the country -->
+        
+    </form>
+</body>
+
+<script>
+
+    var jobTypes = []; // get initial from db
+    var phoneNumbers = [123]; //get initial from db
+
+    //TODO: take all information from the data base and put in the right places in the form
+
+    function addBusiness() {/* this function shows and hides the business adress label so that if the contractor worker
+        doesn't have one then he can't enter one, and changes rather it is required.*/
+        if (document.getElementById("adress").style.display == 'none') {
+            //show elemnets
+            document.getElementById("adress").style.display = 'block';
+            document.getElementById("adressL").style.display = 'block';
+            document.getElementById("adress").required = true; //TODO: check if works
+        }
+        else {
+            document.getElementById("adress").style.display = 'none';
+            document.getElementById("adressL").style.display = 'none';
+            document.getElementById("adress").required = false; //TODO: check if works
+        }
+
+    }
+
+    function addType() {/* This function is to add a job type to the list of jobs. */
+        var selElement = document.getElementById("jobTypes");
+
+        //add all selected values into the array
+        for (var option of selElement.options) {
+            if (option.selected && !jobTypes.includes(option.value)) { //making sure that each value is in the array once
+                jobTypes.push(option.value);
+
+                //------add to selected:------
+                var ul = document.getElementById("selectedTypes");
+                var li = document.createElement("li");
+                li.appendChild(document.createTextNode(option.value));
+                li.setAttribute("id", option.value);
+                li.setAttribute("style", "font-size:18px;");
+
+                //------span -> X symbol : REMOVE job type
+                var span = document.createElement("span");
+                span.appendChild(document.createTextNode('\u00D7'));
+                span.setAttribute("style", "cursor: pointer;");
+                //onclick
+                span.addEventListener("click", function () {
+                    this.parentElement.style.display = 'none';
+
+                    //remove the type from the types list:
+                    jobTypes = jobTypes.filter(type => type != this.parentElement.id);
+                    console.log(jobTypes);
+
+                    // hide my jobs label
+                    if (jobTypes.length == 0)
+                        document.getElementById("myJobTypes").style.display = 'none';
+                });
+
+                //----adding the childs
+                li.appendChild(span);
+                ul.appendChild(li);
+
+            }
+            // dispaly my jobs label
+            if (jobTypes.length != 0)
+                document.getElementById("myJobTypes").style.display = "block";
+        }
+
+        //check:
+        console.log(jobTypes);
+    }
+
+    function delPhone(id)
+    {
+        console.log('1');
+        if(phoneNumbers.length==1){
+            var l = document.getElementById("phoneError");
+            l.innerHTML = "please add a new phone number before you delete the only one."
+            l.style = "font-size:18px; color: red;"
+        }
+        else
+        {
+            // TODO
+        }
+    }
+
+</script>
+
+
+</html>

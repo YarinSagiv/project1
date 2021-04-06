@@ -34,6 +34,13 @@ app.get('/newu', function (req, res) {
     res.render('pages/newu');
 });
 
+app.get('/updateProfileContractor', function (req, res) {
+    res.render('pages/updateProfileContractor');
+});
+
+app.get('/updateProfileEmployer', function (req, res) {
+    res.render('pages/updateProfileEmployer');
+});
 
 // https://project1sprint1.herokuapp.com
 
