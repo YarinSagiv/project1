@@ -29,14 +29,14 @@
         <br />
         
         <label for="phonenumber"><b>Phone numbers: </b></label>
-        <!--<input type="text" name="phonenumber" id="phonenumber" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');"  required>-->
        <ul id="addedPhoneNumbers">
             <!-- TODO: change place holders to the number from the db if initial log in then no phone numbers yet-->
             <li style="font-size: 18px;" id="thePhoneNumber">place holder (phone from db)<span style="cursor: pointer;" onclick="delPhone('thePhoneNumber')">&#215;</span></li>
             <label id="phoneError"></label>
         </ul>
-        <input type="text">
-        <button type="button" class=button onclick="addPhone()" style="padding: 8px 15px;">add another phone number</button<
+        <input type="text" style="display: none;" name="phonenumber" id="phonenumber" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');"  required>
+        <button id="addAnotherPhoneB" type="button" class=button onclick="addAnotherPhone()" style="padding: 8px 15px;">add another phone number</button>
+        <button id="addPhoneB" type="button" class=button onclick="addPhone()" style="padding: 8px 15px; display: none;">Add</button>
         <br />
 
         <label for="jobTypesL"><b>Job Types </b></label><label style="font-size:18px;">select the services you provide:
@@ -151,9 +151,16 @@
         }
     }
 
+    function addAnotherPhone()
+    {
+        document.getElementById("phonenumber").style.display='block'; //show
+        document.getElementById("addAnotherPhoneB").style.display='none'; //hide
+        document.getElementById("addPhoneB").style.display='block'; //show
+    }
+
     function addPhone()
     {
-        // TODO
+
     }
 
 </script>
