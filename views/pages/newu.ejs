@@ -18,7 +18,7 @@
       <input type="text" placeholder="Enter First Name" name="firstname" id="firstname" oninput="this.value = this.value.replace(/[^a-zA-Z]/g, '').replace(/(\..?)\../g, '$1');"required>
       <br/>
       <label for="secname"><b>Seconed Name</b></label>
-      <input type="text" placeholder="Enter Secones Name" name="secname" id="secname" required>
+      <input type="text" placeholder="Enter Secones Name" name="secname" id="secname" oninput="this.value = this.value.replace(/[^a-zA-Z]/g, '').replace(/(\..?)\../g, '$1');" required>
       <br/>
       <label for="iduser"><b>ID</b></label>
       <input type="text" placeholder="Enter ID" name="iduser" id="iduser" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..?)\../g, '$1');" required>
@@ -39,7 +39,8 @@
       <input type="password" placeholder="Repeat Password" name="psw-repeat" id="psw-repeat" required>
       <hr>
 
-      <input type="checkbox" id="Terms" name="Terms" value="Terms">
+      <input type="checkbox" id="Terms" name="Terms" value="Terms" >
+      <label id="terms"></label><br>
       <label for="Terms"> By creating an account you agree to our <a href="#">Terms & Privacy</a> </label><br>
   
 
@@ -57,47 +58,41 @@
 
 <script>
   function backtohome() {
-
+    console.log("yarin");
     newusucc=true;
     messageError="";
 
     /* check if the user checked the check box of the termes */
     if(!validate())
     {
+      var l = document.getElementById("terms");
+      l.innerHTML = "You didn't check it! Please confirm the terms if you want to register on the site."
+      l.style = "font-size:18px; color: red;"
       newusucc=false;
-      messageError+="You didn't check it! Please confirm the terms if you want to register on the site\n ";
     }
-
-
-    /*check if the first name contain is only letters 
-    if(checkLetters(document.getElementById(firstname))==false)
+    else
     {
-      newusucc=false;
-      messageError+="The first name need to be with only letters\n ";
-      
+      document.getElementById('terms').style.display = 'none';
+
     }
 
-
-    /*check if the last name contain is only letters
-    if(checkLetters(document.getElementById(secname))==false)
-    {
-      newusucc=false
-      messageError+="The second name need to be with only letters\n ";
-    }
- */
     
     /* check if the ID have 9 digits */
-    if((document.getElementById(iduser).length)!=9)
+    if((document.getElementById('iduser').value.length)!=9)
     {
+      var l = document.getElementById("terms");
+      l.innerHTML = "The ID need to be with 9 digits."
+      l.style = "font-size:18px; color: red;"
       newusucc=false
-      messageError+="The ID need to be with 9 digits\n ";
 
     }
         /* check if the phone number have 10 digits */
-    if((document.getElementById(phone).length)!=10)
+    if((document.getElementById('phone').value.length)!=10)
     {
+      var l = document.getElementById("terms");
+      l.innerHTML = "The phone number need to be with 10 digits."
+      l.style = "font-size:18px; color: red;"
       newusucc=false
-      messageError+="The phone number need to be with 10 digits\n ";
 
     }
 
