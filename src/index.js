@@ -4,7 +4,7 @@ const ejs = require('ejs');
 // Initialise Express
 const app = express();
 
-const app_port = process.env.PORT || 3000;
+const app_port = process.env.PORT || 4000;
 
 // Set the view engine to ejs
 app.set("view engine", "ejs");
@@ -34,13 +34,6 @@ app.get('/newu', function (req, res) {
     res.render('pages/newu');
 });
 
-app.get('/updateProfileContractor', function (req, res) {
-    res.render('pages/updateProfileContractor');
-});
-
-app.get('/updateProfileEmployer', function (req, res) {
-    res.render('pages/updateProfileEmployer');
-});
 
 // https://project1sprint1.herokuapp.com
 

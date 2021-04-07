@@ -15,16 +15,16 @@
       <hr>
 
       <label for="firstname"><b>First Name</b></label>
-      <input type="text" placeholder="Enter First Name" name="firstname" id="firstname" required>
+      <input type="text" placeholder="Enter First Name" name="firstname" id="firstname" oninput="this.value = this.value.replace(/[^a-zA-Z]/g, '').replace(/(\..?)\../g, '$1');"required>
       <br/>
       <label for="secname"><b>Seconed Name</b></label>
       <input type="text" placeholder="Enter Secones Name" name="secname" id="secname" required>
       <br/>
       <label for="iduser"><b>ID</b></label>
-      <input type="number" placeholder="Enter ID" name="iduser" id="iduser" required>
+      <input type="text" placeholder="Enter ID" name="iduser" id="iduser" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..?)\../g, '$1');" required>
       <br/>
       <label for="phone"><b>Phone Number</b></label>
-      <input type="number" placeholder="Enter Phone Number" name="phone" id="phone" required>
+      <input type="text" placeholder="Enter Phone Number" name="phone" id="phone" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..?)\../g, '$1');" required>
       <br/>
       <label for="username"><b>User Name</b></label>
       <input type="text" placeholder="Enter User Name" name="username" id="username" required>
@@ -68,7 +68,8 @@
       messageError+="You didn't check it! Please confirm the terms if you want to register on the site\n ";
     }
 
-    /*check if the first name contain is only letters */
+
+    /*check if the first name contain is only letters 
     if(checkLetters(document.getElementById(firstname))==false)
     {
       newusucc=false;
@@ -76,12 +77,15 @@
       
     }
 
-    /*check if the last name contain is only letters */
+
+    /*check if the last name contain is only letters
     if(checkLetters(document.getElementById(secname))==false)
     {
       newusucc=false
       messageError+="The second name need to be with only letters\n ";
     }
+ */
+    
     /* check if the ID have 9 digits */
     if((document.getElementById(iduser).length)!=9)
     {
@@ -125,7 +129,7 @@
         }
     }
     
-  /* fun that check if the texs is only letters */
+  /* fun that check if the texs is only letters 
   function checkLetters(inputtxt) {
 
     var letters = /^[A-Za-z]+$/;
@@ -135,6 +139,8 @@
     }
     return true;
   }
+
+  */
 
   function checkPassword()
   {
