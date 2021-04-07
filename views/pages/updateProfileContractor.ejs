@@ -27,16 +27,20 @@
         <input type="text" name="adress" id="adress" required>
         <!-- TODO: if the check box is checked but this is empty -->
         <br />
-        
+
         <label for="phonenumber"><b>Phone numbers: </b></label>
-       <ul id="addedPhoneNumbers">
+        <br /><label id="phoneError"></label>
+        <ul id="addedPhoneNumbers">
             <!-- TODO: change place holders to the number from the db if initial log in then no phone numbers yet-->
-            <li style="font-size: 18px;" id="thePhoneNumber">place holder (phone from db)<span style="cursor: pointer;" onclick="delPhone('thePhoneNumber')">&#215;</span></li>
-            <label id="phoneError"></label>
+            <!--<li style="font-size: 18px;" id="thePhoneNumber">place holder (phone from db)<span style="cursor: pointer;"
+                    onclick="delPhone('thePhoneNumber')">&#215;</span></li>-->
         </ul>
-        <input type="text" style="display: none;" name="phonenumber" id="phonenumber" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');"  required>
-        <button id="addAnotherPhoneB" type="button" class=button onclick="addAnotherPhone()" style="padding: 8px 15px;">add another phone number</button>
-        <button id="addPhoneB" type="button" class=button onclick="addPhone()" style="padding: 8px 15px; display: none;">Add</button>
+        <input type="text" style="display: none;" name="phonenumber" id="phonenumber"
+            oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" required>
+        <button id="addAnotherPhoneB" type="button" class=button onclick="addAnotherPhone()"
+            style="padding: 8px 15px;">add another phone number</button>
+        <button id="addPhoneB" type="button" class=button onclick="addPhone()"
+            style="padding: 8px 15px; display: none;">Add</button>
         <br />
 
         <label for="jobTypesL"><b>Job Types </b></label><label style="font-size:18px;">select the services you provide:
@@ -57,21 +61,21 @@
 
         <label for="gender"><b>Gender: </b></label><br>
         <input type="radio" id="male" name="gender" value="male" checked>
-        <label for="male" style="font-size:22px;" >Male&emsp;</label>
+        <label for="male" style="font-size:22px;">Male&emsp;</label>
         <input type="radio" id="female" name="gender" value="female">
         <label for="female" style="font-size:22px;">Female&emsp;</label>
         <input type="radio" id="other" name="gender" value="other">
         <label for="other" style="font-size:22px;">Other</label>
 
         <!-- TODO: add areas in the country -->
-        
+
     </form>
 </body>
 
 <script>
 
     var jobTypes = []; // get initial from db
-    var phoneNumbers = [123]; //get initial from db
+    var phoneNumbers = []; //get initial from db
 
     //TODO: take all information from the data base and put in the right places in the form
 
@@ -137,30 +141,60 @@
         console.log(jobTypes);
     }
 
-    function delPhone(id)
-    {
-        console.log('1');
-        if(phoneNumbers.length==1){
+    function delPhone(li, id1) {
+        console.log(phoneNumbers.length);
+        if (phoneNumbers.length == 1) {
             var l = document.getElementById("phoneError");
             l.innerHTML = "please add a new phone number before you delete the only one."
             l.style = "font-size:18px; color: red;"
         }
-        else
-        {
-            // TODO
+        else {
+            li.parentElement.style.display = 'none';
+            //remove the phone from the phones list:
+            phoneNumbers = phoneNumbers.filter(type => type != id1);
+            //for checking
+            console.log(phoneNumbers);
         }
     }
 
-    function addAnotherPhone()
-    {
-        document.getElementById("phonenumber").style.display='block'; //show
-        document.getElementById("addAnotherPhoneB").style.display='none'; //hide
-        document.getElementById("addPhoneB").style.display='block'; //show
+    function addAnotherPhone() {
+        document.getElementById("phonenumber").style.display = 'block'; //show
+        document.getElementById("addAnotherPhoneB").style.display = 'none'; //hide
+        document.getElementById("addPhoneB").style.display = 'block'; //show
     }
 
-    function addPhone()
-    {
+    function addPhone() {
+        var text = document.getElementById("phonenumber")
+        text.style.display = 'none'; //hide
+        document.getElementById("addAnotherPhoneB").style.display = 'block'; //show
+        document.getElementById("addPhoneB").style.display = 'none'; //hide
+        //TODO: add tests of the phone number
 
+         //add the phone to the list:
+        var newPhone = text.value;
+        phoneNumbers.push(newPhone);
+        console.log(newPhone);
+
+        var ul = document.getElementById("addedPhoneNumbers");
+        var li = document.createElement("li");
+        li.appendChild(document.createTextNode(newPhone));
+        li.setAttribute("id", newPhone);
+        li.setAttribute("style", "font-size:18px;");
+
+        //------span -> X symbol : REMOVE the phone number
+        var span = document.createElement("span");
+        span.appendChild(document.createTextNode('\u00D7'));
+        span.setAttribute("style", "cursor: pointer;");
+        //onclick
+        span.addEventListener("click", function () {
+            delPhone(this, this.id);
+        });
+
+        text.value="";
+
+        //----adding the childs
+        li.appendChild(span);
+        ul.appendChild(li);
     }
 
 </script>
