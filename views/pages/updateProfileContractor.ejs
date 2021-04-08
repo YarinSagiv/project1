@@ -72,7 +72,7 @@
     </form>
 </body>
 
-<script>
+<script type="text/javascript">
 
     var jobTypes = []; // get initial from db
     var phoneNumbers = []; //get initial from db
@@ -80,7 +80,7 @@
     //TODO: take all information from the data base and put in the right places in the form
 
     function addBusiness() {/* this function shows and hides the business adress label so that if the contractor worker
-        doesn't have one then he can't enter one, and changes rather it is required.*/
+    doesn't have one then he can't enter one, and changes rather it is required.*/
         if (document.getElementById("adress").style.display == 'none') {
             //show elemnets
             document.getElementById("adress").style.display = 'block';
@@ -116,6 +116,16 @@
                 span.setAttribute("style", "cursor: pointer;");
                 //onclick
                 span.addEventListener("click", function () {
+                    /*
+                        function to delete a job type.
+                    */
+
+                    if (jobTypes.length <= 1) {
+                        var l = document.getElementById("phoneError");
+                        l.innerHTML = "please add a new phone number before you delete the only one."
+                        l.style = "font-size:18px; color: red;"
+                    }
+
                     this.parentElement.style.display = 'none';
 
                     //remove the type from the types list:
@@ -143,7 +153,7 @@
 
     function delPhone(li, id1) {
         console.log(phoneNumbers.length);
-        console.log("id1="+id1);
+        console.log("id1=" + id1);
         if (phoneNumbers.length == 1) {
             var l = document.getElementById("phoneError");
             l.innerHTML = "please add a new phone number before you delete the only one."
@@ -164,6 +174,9 @@
         document.getElementById("addPhoneB").style.display = 'block'; //show
     }
 
+    /*
+        add phone adds a phone to the phones list and shows it on screen
+    */
     function addPhone() {
         var text = document.getElementById("phonenumber")
         text.style.display = 'none'; //hide
@@ -171,8 +184,8 @@
         document.getElementById("addPhoneB").style.display = 'none'; //hide
         //TODO: add tests of the phone number
 
-         //add the phone to the list:
-         debugger;
+        //add the phone to the list:
+        debugger;
         var newPhone = text.value;
         phoneNumbers.push(newPhone);
         console.log(newPhone);
@@ -192,12 +205,13 @@
             delPhone(this.parentElement, this.parentElement.id);
         });
 
-        text.value="";
+        text.value = "";
 
         //----adding the childs
         li.appendChild(span);
         ul.appendChild(li);
     }
+
 
 </script>
 
