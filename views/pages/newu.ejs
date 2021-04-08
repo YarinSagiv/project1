@@ -62,7 +62,7 @@
 <script>
   function backtohome() {
     newusucc=true;
-    console.log("yarin");
+  
     /* check if the user checked the check box of the termes */
     if(!validate())
     {
@@ -90,7 +90,7 @@
     {
       document.getElementById('id').style.display = 'none';
     }
-        /* check if the phone number have 10 digits */
+    /* check if the phone number have 10 digits */
     if((document.getElementById('phone').value.length)!=10)
     {
       var l = document.getElementById("phoneerror");
@@ -104,7 +104,7 @@
 
       document.getElementById('phoneerror').style.display = 'none';
     }
-
+    /* check if  the password and the repeat password are the same */
     if(!checkPassword())
     {
       var l = document.getElementById("pswerror");
@@ -125,9 +125,7 @@
    
   } 
 
- 
-
-
+  /* go to log in page */
   function login()
   {
     window.location.href = "logIn";
@@ -143,7 +141,7 @@
         }
     }
     
-
+  /* check if  the password and the repeat password are the same */
   function checkPassword()
   {
     var pw = document.getElementById("psw").value;
