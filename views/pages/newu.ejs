@@ -32,6 +32,7 @@
       <input type="text" placeholder="Enter User Name" name="username" id="username" required>
       <br/>
       <label for="email"><b>Email</b></label>
+      <br><label id="emailerr"></label><br>
       <input type="email" placeholder="Enter Email" name="email" id="email" required>
       <br/>
       <label for="psw"><b>Password</b></label>
@@ -73,6 +74,7 @@
     }
     else
     {
+
       document.getElementById('terms').style.display = 'none';
     }
 
@@ -118,8 +120,44 @@
       document.getElementById('pswerror').style.display = 'none';
     }
 
-    if(newusucc)
+    /* check if  the email is invalid */
+    if(!emailIsValid(document.getElementById("email").value))
     {
+      var l = document.getElementById("emailerr");
+      l.innerHTML = "The email is invalid"
+      l.style = "font-size:18px; color: red;"
+      newusucc=false
+
+    }
+    else
+    {
+      document.getElementById('emailerr').style.display = 'none';
+    }
+
+    if(newusucc) //if all test pass
+    {
+
+      var MongoClient = require('mongodb').MongoClient;
+      var url = "mongodb+srv://ymon:ymonashdod@cluster.0qqlp.mongodb.net/eventSaver?retryWrites=true&w=majority";
+
+      MongoClient.connect(url, function(err, db) {
+        if (err) throw err;
+        var dbo = db.db("eventSaver");
+        var myobj = { _id: document.getElementById('iduser').value,
+                      firstName: document.getElementById('firstname').value,
+                      secondName: document.getElementById('secname').value,
+                      phoneNumber: document.getElementById('phone').value,
+                      userName: document.getElementById('username').value,
+                      email: document.getElementById('email').value,
+                      password: document.getElementById('psw').value  };
+        dbo.collection("Employers").insertOne(myobj, function(err, res) {
+          if (err) throw err;
+          console.log("1 document inserted");
+          db.close();
+          });
+        });
+
+      
       window.location.href = "/";
     }
    
@@ -162,8 +200,12 @@
 
     }
   
-  
   }
+
+  /* check if  the email is invalid */
+  function emailIsValid (email) {
+   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
    
   
 
