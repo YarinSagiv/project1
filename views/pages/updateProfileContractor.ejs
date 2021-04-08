@@ -143,15 +143,16 @@
 
     function delPhone(li, id1) {
         console.log(phoneNumbers.length);
+        console.log("id1="+id1);
         if (phoneNumbers.length == 1) {
             var l = document.getElementById("phoneError");
             l.innerHTML = "please add a new phone number before you delete the only one."
             l.style = "font-size:18px; color: red;"
         }
         else {
-            li.parentElement.style.display = 'none';
+            li.style.display = 'none';
             //remove the phone from the phones list:
-            phoneNumbers = phoneNumbers.filter(type => type != id1);
+            phoneNumbers = phoneNumbers.filter(phone => phone != id1);
             //for checking
             console.log(phoneNumbers);
         }
@@ -171,6 +172,7 @@
         //TODO: add tests of the phone number
 
          //add the phone to the list:
+         debugger;
         var newPhone = text.value;
         phoneNumbers.push(newPhone);
         console.log(newPhone);
@@ -187,7 +189,7 @@
         span.setAttribute("style", "cursor: pointer;");
         //onclick
         span.addEventListener("click", function () {
-            delPhone(this, this.id);
+            delPhone(this.parentElement, this.parentElement.id);
         });
 
         text.value="";
