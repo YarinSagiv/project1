@@ -18,7 +18,7 @@ app.set("view engine", "ejs");
 app.use(express.static("public"));
 app.use(express.urlencoded({
     extended: true
-}))
+}));
 
 
 app.listen(app_port);
@@ -89,7 +89,7 @@ app.post('/updateContractor', (req, res) => {
       });*/
 
     res.end();
-})
+});
 
 
 app.get('/updateProfileEmployer', function (req, res) {
