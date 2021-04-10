@@ -9,13 +9,13 @@
     <header>
         <%- include('../partials/_header') %>
     </header>
-    <form id="updateContractor">
+    <form id="updateContractor" action="/updateContractor" method="POST" onsubmit="beforeSubmit()">
         <label for="firstname"><b>First Name: </b></label>
-        <input type="text" name="firstname" id="firstname"
+        <input type="text" name="firstname" id="firstname" value="<%= firstName %>"
             oninput="this.value = this.value.replace(/[^a-zA-Z]/g, '').replace(/(\..?)\../g, '$1');" required>
         <br />
         <label for="lastname"><b>Last Name: </b></label>
-        <input type="text" name="lastname" id="lastname"
+        <input type="text" name="lastname" id="lastname" value="<%= lastName %>"
             oninput="this.value = this.value.replace(/[^a-zA-Z]/g, '').replace(/(\..?)\../g, '$1');" required>
         <br />
         <label for="email"><b>Email: </b></label>
@@ -44,6 +44,7 @@
             style="padding: 8px 15px;">add another phone number</button>
         <button id="addPhoneB" type="button" class=button onclick="addPhone()"
             style="padding: 8px 15px; display: none;">Add</button>
+        <input type="hidden" id="phoneNumbers" name="phone"> <!--to POST-->
         <br />
 
         <label for="jobTypesL"><b>Job Types </b></label><label style="font-size:18px;">select the services you provide:
@@ -62,6 +63,7 @@
         <label id="jobTypesErrorL" style="font-size:18px; color: red; display: none;"><br>please add a new job type
             before you delete the only one.</label>
         <ul id="selectedTypes"></ul>
+        <input type="hidden" id="types" name="types"><!--to POST-->
         <br />
 
         <label for="gender"><b>Gender: </b></label><br>
@@ -94,9 +96,10 @@
         <button id="addAreaB" type="button" class=button onclick="addArea()"
             style="padding: 8px 15px; display: none;">Add</button>
         <br />
+        <input type="hidden" id="areas" name="areas"><!--to POST-->
+        
 
-
-        <br><button type="submit" class="button" onclick="submit()">update ditails</button>
+        <br><button type="submit" class="button">update ditails</button>
     </form>
 </body>
 
@@ -107,18 +110,29 @@
     var countryAreas = []; //get initial from db
 
     //TODO: take all information from the data base and put in the right places in the form
+    //console.log("<%= firstName %>");
+
+    function show(id)
+    {
+        document.getElementById(id).style.display = 'block';
+    }
+
+    function hide(id)
+    {
+        document.getElementById(id).style.display = 'none';
+    }
 
     function addBusiness() {/* this function shows and hides the business adress label so that if the contractor worker
     doesn't have one then he can't enter one, and changes rather it is required.*/
         if (document.getElementById("adress").style.display == 'none') {
             //show elemnets
-            document.getElementById("adress").style.display = 'block';
-            document.getElementById("adressL").style.display = 'block';
+            show("adress");
+            show("adressL");
             document.getElementById("adress").required = true; //TODO: check if works
         }
         else {
-            document.getElementById("adress").style.display = 'none';
-            document.getElementById("adressL").style.display = 'none';
+            hide("adress");
+            hide("adressL");
             document.getElementById("adress").required = false; //TODO: check if works
         }
 
@@ -126,7 +140,7 @@
 
     function addType() {/* This function is to add a job type to the list of jobs. */
         var selElement = document.getElementById("jobTypes");
-        document.getElementById("jobTypesErrorL").style.display = 'none';
+        hide("jobTypesErrorL");
 
         //add all selected values into the array
         for (var option of selElement.options) {
@@ -158,7 +172,7 @@
                         return;
                     }
 
-                    this.parentElement.style.display = 'none';
+                    this.parentElement.style.display = 'none';//hide
 
                     //remove the type from the types list:
                     jobTypes = jobTypes.filter(type => type != this.parentElement.id);
@@ -173,7 +187,7 @@
             }
             // dispaly my jobs label
             if (jobTypes.length != 0)
-                document.getElementById("myJobTypes").style.display = "block";
+                show("myJobTypes");
         }
 
         //check:
@@ -198,9 +212,9 @@
     }
 
     function addAnotherPhone() {
-        document.getElementById("phonenumber").style.display = 'block'; //show
-        document.getElementById("addAnotherPhoneB").style.display = 'none'; //hide
-        document.getElementById("addPhoneB").style.display = 'block'; //show
+        show("phonenumber");
+        hide("addAnotherPhoneB"); 
+        show("addPhoneB");
     }
 
     /*
@@ -208,16 +222,14 @@
     */
     function addPhone() {
         var text = document.getElementById("phonenumber")
-        text.style.display = 'none'; //hide
-        document.getElementById("addAnotherPhoneB").style.display = 'block'; //show
-        document.getElementById("addPhoneB").style.display = 'none'; //hide
-        //TODO: add tests of the phone number
+        hide("phonenumber");
+        show("addAnotherPhoneB"); 
+        hide("addPhoneB");
+        
 
         //add the phone to the list:
-        debugger;
         var newPhone = text.value;
         phoneNumbers.push(newPhone);
-        console.log(newPhone);
 
         var ul = document.getElementById("addedPhoneNumbers");
         var li = document.createElement("li");
@@ -314,13 +326,13 @@
 
     }
 
-    function submit() {
+    function beforeSubmit() {
         /* 
             this function will update the inforamtion in the database, according to the new one.
         */
-
-
-
+        document.getElementById("phoneNumbers").value=phoneNumbers.toString();
+        document.getElementById("types").value=jobTypes.toString();
+        document.getElementById("areas").value=countryAreas.toString();
     }
 
 </script>
