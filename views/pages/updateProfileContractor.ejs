@@ -11,13 +11,16 @@
     </header>
     <form id="updateContractor">
         <label for="firstname"><b>First Name: </b></label>
-        <input type="text" name="firstname" id="firstname" required>
+        <input type="text" name="firstname" id="firstname"
+            oninput="this.value = this.value.replace(/[^a-zA-Z]/g, '').replace(/(\..?)\../g, '$1');" required>
         <br />
         <label for="lastname"><b>Last Name: </b></label>
-        <input type="text" name="lastname" id="lastname" required>
+        <input type="text" name="lastname" id="lastname"
+            oninput="this.value = this.value.replace(/[^a-zA-Z]/g, '').replace(/(\..?)\../g, '$1');" required>
         <br />
         <label for="email"><b>Email: </b></label>
-        <input type="email" name="email" id="email" required> <!-- TODO: check if really working -->
+        <input type="email" name="email" id="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" required>
+        <!-- TODO: check if really working -->
         <br />
         <label for="adress" style="font-size:18px;">Do you have a business adress?</label>
         <input type="checkbox" style="width: 18px; height: 18px;" name="adressC" id="adressC" onchange="addBusiness()"
@@ -35,8 +38,8 @@
             <!--<li style="font-size: 18px;" id="thePhoneNumber">place holder (phone from db)<span style="cursor: pointer;"
                     onclick="delPhone('thePhoneNumber')">&#215;</span></li>-->
         </ul>
-        <input type="text" style="display: none;" name="phonenumber" id="phonenumber"
-            oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');" required>
+        <input type="text" style="display: none;" name="phonenumber" id="phonenumber" maxlength="10"
+            oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');">
         <button id="addAnotherPhoneB" type="button" class=button onclick="addAnotherPhone()"
             style="padding: 8px 15px;">add another phone number</button>
         <button id="addPhoneB" type="button" class=button onclick="addPhone()"
@@ -56,6 +59,8 @@
         <button type="button" class=button onclick="addType()" style="padding: 8px 15px;">add job</button>
         <!-- a list of the selected job types-->
         <br><label id="myJobTypes" style="font-size:18px; display: none;">My job types:</label>
+        <label id="jobTypesErrorL" style="font-size:18px; color: red; display: none;"><br>please add a new job type
+            before you delete the only one.</label>
         <ul id="selectedTypes"></ul>
         <br />
 
@@ -69,13 +74,37 @@
 
         <!-- TODO: add areas in the country -->
 
+        <br /><br /><label for="countryAreas"><b>areas where i can't work in: </b></label>
+        <ul id="addedCountryAreas">
+            <!-- TODO: change place holders to the number from the db if initial log in then no phone numbers yet-->
+            <!--<li style="font-size: 18px;" id="thePhoneNumber">place holder (phone from db)<span style="cursor: pointer;"
+                    onclick="delPhone('thePhoneNumber')">&#215;</span></li>-->
+        </ul>
+        <label id="noCountryAreas" style="font-size:22px;">no areas to show<br><br></label>
+        <label style="font-size:18px;">choose another area:</label>
+        <br>
+        <select name="countryAreas" id="countryAreas">
+            <option style="font-size:18px;" value="Golan Heights">Golan Heights</option>
+            <option style="font-size:18px;" value="Galilee">Galilee</option>
+            <option style="font-size:18px;" value="Coastal Plain">Coastal Plain</option>
+            <!--TODO: add more areas-->
+        </select>
+        <button id="addAountryAreaB" type="button" class=button onclick="addAnotherArea()"
+            style="padding: 8px 15px;">add area</button>
+        <button id="addAreaB" type="button" class=button onclick="addArea()"
+            style="padding: 8px 15px; display: none;">Add</button>
+        <br />
+
+
+        <br><button type="submit" class="button" onclick="submit()">update ditails</button>
     </form>
 </body>
 
 <script type="text/javascript">
-
+    var loggedId;
     var jobTypes = []; // get initial from db
     var phoneNumbers = []; //get initial from db
+    var countryAreas = []; //get initial from db
 
     //TODO: take all information from the data base and put in the right places in the form
 
@@ -97,6 +126,7 @@
 
     function addType() {/* This function is to add a job type to the list of jobs. */
         var selElement = document.getElementById("jobTypes");
+        document.getElementById("jobTypesErrorL").style.display = 'none';
 
         //add all selected values into the array
         for (var option of selElement.options) {
@@ -121,9 +151,11 @@
                     */
 
                     if (jobTypes.length <= 1) {
-                        var l = document.getElementById("phoneError");
-                        l.innerHTML = "please add a new phone number before you delete the only one."
-                        l.style = "font-size:18px; color: red;"
+                        var l = document.getElementById("jobTypesErrorL");
+                        l.innerHTML = "please add a new job type before you delete the only one."
+                        //l.style = "font-size:18px; color: red; display: block;"
+                        l.style.display = 'block';
+                        return;
                     }
 
                     this.parentElement.style.display = 'none';
@@ -132,9 +164,6 @@
                     jobTypes = jobTypes.filter(type => type != this.parentElement.id);
                     console.log(jobTypes);
 
-                    // hide my jobs label
-                    if (jobTypes.length == 0)
-                        document.getElementById("myJobTypes").style.display = 'none';
                 });
 
                 //----adding the childs
@@ -212,6 +241,87 @@
         ul.appendChild(li);
     }
 
+    function addAnotherArea() {
+        var selElement = document.getElementById("countryAreas");
+        //document.getElementById("jobTypesErrorL").style.display='none';
+
+        for (var option of selElement.options) {
+            if (option.selected && !countryAreas.includes(option.value)) { //making sure that each value is in the array once
+                countryAreas.push(option.value);
+
+                document.getElementById("noCountryAreas").style.display = "none";
+
+                //------add to selected:------
+                var ul = document.getElementById("addedCountryAreas");
+                var li = document.createElement("li");
+                li.appendChild(document.createTextNode(option.value));
+                li.setAttribute("id", option.value);
+                li.setAttribute("style", "font-size:18px;");
+
+                //------span -> X symbol : REMOVE job type
+                var span = document.createElement("span");
+                span.appendChild(document.createTextNode('\u00D7'));
+                span.setAttribute("style", "cursor: pointer;");
+                //onclick
+                span.addEventListener("click", function () {
+                    /*
+                        function to delete an area
+                    */
+
+                    this.parentElement.style.display = 'none';
+
+                    //remove the type from the types list:
+                    countryAreas = countryAreas.filter(type => type != this.parentElement.id);
+                    console.log(countryAreas);
+
+                    if (countryAreas.length == 0)
+                        document.getElementById("noCountryAreas").style.display = "block";
+
+                });
+
+                //----adding the childs
+                li.appendChild(span);
+                ul.appendChild(li);
+            }
+        }
+
+    }
+
+    function initialDitails() {
+        /*
+            this function gets the information already in the database for this specific contractor worker
+        */
+        var MongoClient = require('mongodb').MongoClient;
+        var url = "mongodb+srv://ymon:ymonashdod@cluster.0qqlp.mongodb.net/eventSaver?retryWrites=true&w=majority";
+        var doc;
+
+        MongoClient.connect(url, function (err, db) {
+            if (err) throw err;
+            var dbo = db.db("eventSaver");
+            var query = { _id: loggedId }; //find the logged user 
+            dbo.collection("ContractorWorkers").find(query).toArray(function (err, result) {
+                if (err) throw err;
+                doc = result;
+                db.close();
+            });
+        });
+
+        //---first name
+        document.getElementById("firstname").value=doc["firstName"];
+
+        //---last name
+        document.getElementById("lastname").value=doc["lastName"];
+
+    }
+
+    function submit() {
+        /* 
+            this function will update the inforamtion in the database, according to the new one.
+        */
+
+
+
+    }
 
 </script>
 
