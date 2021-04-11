@@ -40,7 +40,7 @@ app.get("/connectpage", function (req, res) {
 });
 
 app.get('/newu', function (req, res) {
-    res.render('pages/newu');
+    res.render('pages/newu',{suc1: true});
 });
 
 app.get('/updateProfileContractor', function (req, res) {
@@ -89,6 +89,63 @@ app.post('/updateContractor', (req, res) => {
       });*/
 
     res.end();
+});
+
+// function that input to the data base the details that the user enter when he register to the website
+app.post('/inputDataBase', (req, res) => {
+
+
+      MongoClient.connect(url, function(err, db) {
+        if (err) throw err;
+        var dbo = db.db("eventSaver");
+        try{
+        var myobj = { _id: req.body.iduser,
+                      firstName:  req.body.firstname,
+                      lastName: req.body.secname,
+                      phoneNumbers: req.body.phone,
+                      userName: req.body.username,
+                      email: req.body.email,
+                      password:req.body.psw };
+       
+        
+        var succ=dbo.collection("Employers").insertOne(myobj, function(err, res1) {
+
+          if (err) 
+          {
+            myobj[suc1]='false';
+            res.render("pages/newu",myobj); 
+          }
+
+        
+          console.log("1 document inserted");
+          db.close();
+         
+          });
+
+        }
+        catch
+        {
+            console.log(succ);
+        }
+        });
+    
+
+        
+        //res.render("pages/firstpage"); //the response 
+        
+      
+    
+});
+
+
+app.post('/loginInCheck',(req, res) => {
+    
+    MongoClient.connect(url, function(err, db) {
+        if (err) throw err;
+        var dbo = db.db("eventSaver");
+    
+    
+});
 });
 
 
