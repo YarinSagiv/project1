@@ -9,11 +9,11 @@
     <%- include('../partials/_header') %>
   </header>
 
-<form id="form1">
+<form id="form1" action="/inputDataBase" method="POST" onsubmit="return backtohome()">
     <div class="container">
       <p>Please fill in this form to create an account</p>
       <hr>
-
+      <br><label id="errorinput"></label><br>
       <label for="firstname"><b>First Name</b></label>
       <input type="text" placeholder="Enter First Name" name="firstname" id="firstname" oninput="this.value = this.value.replace(/[^a-zA-Z]/g, '').replace(/(\..?)\../g, '$1');"required>
       <br/>
@@ -48,7 +48,7 @@
       <label for="Terms"> By creating an account you agree to our <a href="#">Terms & Privacy</a> </label><br>
   
 
-      <button type="button" class="registerbtn" onclick="backtohome()">Register</button>
+      <button type="submit" class="registerbtn" >Register</button>
     </div>
   
     <div class="container signin">
@@ -61,6 +61,23 @@
 
 
 <script>
+  
+  if ("<%= suc1 %>" == 'false')
+  {
+    var l = document.getElementById("errorinput");
+    l.innerHTML = "The user name / ID already exixt in the website, please change id."
+    l.style = "font-size:18px; color: red;"
+    newusucc=false;
+
+    enterToTextBox();
+
+  }
+  else
+  {
+    document.getElementById('errorinput').style.display = 'none';
+
+  }
+
   function backtohome() {
     newusucc=true;
   
@@ -134,32 +151,7 @@
       document.getElementById('emailerr').style.display = 'none';
     }
 
-    if(newusucc) //if all test pass
-    {
-
-      var MongoClient = require('mongodb').MongoClient;
-      var url = "mongodb+srv://ymon:ymonashdod@cluster.0qqlp.mongodb.net/eventSaver?retryWrites=true&w=majority";
-
-      MongoClient.connect(url, function(err, db) {
-        if (err) throw err;
-        var dbo = db.db("eventSaver");
-        var myobj = { _id: document.getElementById('iduser').value,
-                      firstName: document.getElementById('firstname').value,
-                      lastName: document.getElementById('secname').value,
-                      phoneNumber: document.getElementById('phone').value,
-                      userName: document.getElementById('username').value,
-                      email: document.getElementById('email').value,
-                      password: document.getElementById('psw').value  };
-        dbo.collection("Employers").insertOne(myobj, function(err, res) {
-          if (err) throw err;
-          console.log("1 document inserted");
-          db.close();
-          });
-        });
-
-      
-      window.location.href = "/";
-    }
+    return newusucc;
    
   } 
 
@@ -206,7 +198,15 @@
   function emailIsValid (email) {
    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
-   
+  function enterToTextBox()
+  {
+    document.getElementById('firstname').value="<%= firstName %>"
+    document.getElementById('secname').value="<%= lastName %>"
+    document.getElementById('iduser').value="<%= _id %>"
+    document.getElementById('phone').value="<%= phoneNumbers %>"
+    document.getElementById('username').value="<%= userName %>"
+    document.getElementById('email').value="<%= email %>"
+  }
   
 
   
