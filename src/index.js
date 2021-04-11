@@ -9,7 +9,7 @@ const app_port = process.env.PORT || 4000;
 const MongoClient = require('mongodb').MongoClient;
 const { request } = require("express");
 const url = "mongodb+srv://ymon:ymonashdod@cluster.0qqlp.mongodb.net/eventSaver?retryWrites=true&w=majority";
-
+var Uid = "208394700";
 
 
 // Set the view engine to ejs
@@ -47,15 +47,15 @@ app.get('/updateProfileContractor', function (req, res) {
     /* 
         get ditails from db
     */
-    var Uid = 1234; //the user's ID after logging in //TODO
+    //the user's ID after logging in //TODO
     var info = "";
 
     MongoClient.connect(url, function (err, db) {
         if (err) throw err;
         var dbo = db.db("eventSaver");
         //var query = { _id: Uid };
-        var query = { firstName: "mor" };
-        dbo.collection("Employers").find(query).toArray(function (err, result) {
+        var query = { _id: "208394700" };
+        dbo.collection("ContractorWorkers").find(query).toArray(function (err, result) {
             if (err) throw err;
             if (result.length != 0) {
                 console.log(result[0].lastName); //test
@@ -74,21 +74,35 @@ app.get('/updateProfileContractor', function (req, res) {
 });
 
 app.post('/updateContractor', (req, res) => {
-    console.log(req.body.phone);
-    //------TEST:
-    /*
-    MongoClient.connect(url, function(err, db) {
+    console.log("phone+" + req.body.addressC);
+
+    MongoClient.connect(url, function (err, db) {
         if (err) throw err;
         var dbo = db.db("eventSaver");
-        var myobj = { firstName: req.body.firstname, lastName: req.body.lastname };
-        dbo.collection("Employers").insertOne(myobj, function(err, res) {
-          if (err) throw err;
-          console.log("1 document inserted");
-          db.close();
-        });
-      });*/
+        var myquery = { _id: "208394700" };
 
-    res.end();
+        var hasA, theA; //address
+        if (typeof req.body.addressC != "undefined"){
+            hasA = true;
+            console.log("hasA 1");
+        }
+        else
+            hasA = false;
+        if(hasA)
+            theA=req.body.address;
+        else
+            theA=null;
+
+        var newvalues = { $set: { firstName: req.body.firstname, lastName: req.body.lastname, email: req.body.email, hasAddress: hasA, address: theA, phoneNumbers:req.body.phone, countryAreas:req.body.areas, jobTypes:req.body.types } };
+
+        dbo.collection("ContractorWorkers").updateOne(myquery, newvalues, function (err, res) {
+            if (err) throw err;
+            console.log("1 document updated");
+            db.close();
+        });
+    });
+
+    res.render("pages/firstpage");
 });
 
 // function that input to the data base the details that the user enter when he register to the website
@@ -150,9 +164,32 @@ app.post('/loginInCheck',(req, res) => {
 
 
 app.get('/updateProfileEmployer', function (req, res) {
-    res.render('pages/updateProfileEmployer');
+
+    MongoClient.connect(url, function (err, db) {
+        if (err) throw err;
+        var dbo = db.db("eventSaver");
+        //var query = { _id: Uid };
+        var query = { _id: "208394700" };
+        dbo.collection("Employers").find(query).toArray(function (err, result) {
+            if (err) throw err;
+            if (result.length != 0) {
+                console.log(result[0].phoneNumbers); //test
+                //info = result[0];
+                res.render('pages/updateProfileEmployer', result[0]);
+            }
+            db.close();
+        });
+    });
+
+    //res.render('pages/updateProfileEmployer');
 });
 
+
+app.post('/updateProfileEmployer', function (req, res) {
+    //res.render('pages/updateProfileEmployer');
+    console.log(req.body.firstName);
+    res.end();
+});
 
 // https://project1sprint1.herokuapp.com
 

@@ -9,7 +9,7 @@
     <header>
         <%- include('../partials/_header') %>
     </header>
-    <form id="updateContractor" action="/updateContractor" method="POST" onsubmit="beforeSubmit()">
+    <form id="updateContractor" action="/updateContractor" method="POST" onsubmit="return beforeSubmit()">
         <label for="firstname"><b>First Name: </b></label>
         <input type="text" name="firstname" id="firstname" value="<%= firstName %>"
             oninput="this.value = this.value.replace(/[^a-zA-Z]/g, '').replace(/(\..?)\../g, '$1');" required>
@@ -22,12 +22,12 @@
         <input type="email" name="email" id="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" required>
         <!-- TODO: check if really working -->
         <br />
-        <label for="adress" style="font-size:18px;">Do you have a business adress?</label>
-        <input type="checkbox" style="width: 18px; height: 18px;" name="adressC" id="adressC" onchange="addBusiness()"
-            checked>
+        <label for="address" style="font-size:18px;">Do you have a business address?</label>
+        <input type="checkbox" style="width: 18px; height: 18px;" name="addressC" id="addressC" value="true"
+            onchange="addBusiness()" checked>
         <br />
-        <label for="adress" id="adressL"><b>Business Adress: </b></label>
-        <input type="text" name="adress" id="adress" required>
+        <label for="address" id="addressL"><b>Business Address: </b></label>
+        <input type="text" name="address" id="address" required>
         <!-- TODO: if the check box is checked but this is empty -->
         <br />
 
@@ -44,7 +44,8 @@
             style="padding: 8px 15px;">add another phone number</button>
         <button id="addPhoneB" type="button" class=button onclick="addPhone()"
             style="padding: 8px 15px; display: none;">Add</button>
-        <input type="hidden" id="phoneNumbers" name="phone"> <!--to POST-->
+        <input type="hidden" id="phoneNumbers" name="phone">
+        <!--to POST-->
         <br />
 
         <label for="jobTypesL"><b>Job Types </b></label><label style="font-size:18px;">select the services you provide:
@@ -63,7 +64,8 @@
         <label id="jobTypesErrorL" style="font-size:18px; color: red; display: none;"><br>please add a new job type
             before you delete the only one.</label>
         <ul id="selectedTypes"></ul>
-        <input type="hidden" id="types" name="types"><!--to POST-->
+        <input type="hidden" id="types" name="types">
+        <!--to POST-->
         <br />
 
         <label for="gender"><b>Gender: </b></label><br>
@@ -96,8 +98,9 @@
         <button id="addAreaB" type="button" class=button onclick="addArea()"
             style="padding: 8px 15px; display: none;">Add</button>
         <br />
-        <input type="hidden" id="areas" name="areas"><!--to POST-->
-        
+        <input type="hidden" id="areas" name="areas">
+        <!--to POST-->
+
 
         <br><button type="submit" class="button">update ditails</button>
     </form>
@@ -112,28 +115,26 @@
     //TODO: take all information from the data base and put in the right places in the form
     //console.log("<%= firstName %>");
 
-    function show(id)
-    {
+    function show(id) {
         document.getElementById(id).style.display = 'block';
     }
 
-    function hide(id)
-    {
+    function hide(id) {
         document.getElementById(id).style.display = 'none';
     }
 
-    function addBusiness() {/* this function shows and hides the business adress label so that if the contractor worker
+    function addBusiness() {/* this function shows and hides the business address label so that if the contractor worker
     doesn't have one then he can't enter one, and changes rather it is required.*/
-        if (document.getElementById("adress").style.display == 'none') {
+        if (document.getElementById("address").style.display == 'none') {
             //show elemnets
-            show("adress");
-            show("adressL");
-            document.getElementById("adress").required = true; //TODO: check if works
+            show("address");
+            show("addressL");
+            document.getElementById("address").required = true; //TODO: check if works
         }
         else {
-            hide("adress");
-            hide("adressL");
-            document.getElementById("adress").required = false; //TODO: check if works
+            hide("address");
+            hide("addressL");
+            document.getElementById("address").required = false; //TODO: check if works
         }
 
     }
@@ -213,7 +214,7 @@
 
     function addAnotherPhone() {
         show("phonenumber");
-        hide("addAnotherPhoneB"); 
+        hide("addAnotherPhoneB");
         show("addPhoneB");
     }
 
@@ -223,9 +224,9 @@
     function addPhone() {
         var text = document.getElementById("phonenumber")
         hide("phonenumber");
-        show("addAnotherPhoneB"); 
+        show("addAnotherPhoneB");
         hide("addPhoneB");
-        
+
 
         //add the phone to the list:
         var newPhone = text.value;
@@ -303,36 +304,73 @@
         /*
             this function gets the information already in the database for this specific contractor worker
         */
-        var MongoClient = require('mongodb').MongoClient;
-        var url = "mongodb+srv://ymon:ymonashdod@cluster.0qqlp.mongodb.net/eventSaver?retryWrites=true&w=majority";
-        var doc;
-
-        MongoClient.connect(url, function (err, db) {
-            if (err) throw err;
-            var dbo = db.db("eventSaver");
-            var query = { _id: loggedId }; //find the logged user 
-            dbo.collection("ContractorWorkers").find(query).toArray(function (err, result) {
-                if (err) throw err;
-                doc = result;
-                db.close();
-            });
-        });
-
         //---first name
-        document.getElementById("firstname").value=doc["firstName"];
+        document.getElementById("firstname").value = "<%= firstName %>";
 
         //---last name
-        document.getElementById("lastname").value=doc["lastName"];
+        document.getElementById("lastname").value = "<%= lastName %>";
+
+        if ("<%=email%>")
+            document.getElementById("email").value = "<%= email %>";
+
+        console.log("<%=hasAddress%>");
+        if ("<%=hasAddress%>" == "false") {
+            document.getElementById("addressC").checked = false;
+            addBusiness();
+        }
+        else {
+            document.getElementById("address").value = "<%= address %>";
+        }
+
+        var numbers;
+        if (numbers = "<%= phoneNumbers %>") {
+            numbers = numbers.split(",");
+            console.log(numbers.toString);
+            for (var n of numbers) {
+                document.getElementById("phonenumber").value = n.trim();
+                addPhone();
+            }
+
+        }
+
+        var jobs;
+        if (jobs = "<%= jobTypes %>") {
+            jobs = jobs.split(",");
+            console.log(jobs.toString);
+            for (var j of jobs) {
+                document.getElementById("jobTypes").value = j.trim();
+                addType();
+            }
+
+        }
+
+        //GENDER
+
+        var areas;
+        if (areas = "<%= countryAreas %>") {
+            areas = areas.split(",");
+            console.log(areas.toString);
+            for (var a of areas) {
+                document.getElementById("areas").value = a.trim();
+                addAnotherArea();
+            }
+        }
+
 
     }
+
+    initialDitails();
 
     function beforeSubmit() {
         /* 
             this function will update the inforamtion in the database, according to the new one.
         */
-        document.getElementById("phoneNumbers").value=phoneNumbers.toString();
-        document.getElementById("types").value=jobTypes.toString();
-        document.getElementById("areas").value=countryAreas.toString();
+        if (!(phoneNumbers.length) || !(jobTypes.length))
+            return false;
+
+        document.getElementById("phoneNumbers").value = phoneNumbers.toString();
+        document.getElementById("types").value = jobTypes.toString();
+        document.getElementById("areas").value = countryAreas.toString();
     }
 
 </script>
