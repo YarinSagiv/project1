@@ -9,7 +9,7 @@ const app_port = process.env.PORT || 4000;
 const MongoClient = require('mongodb').MongoClient;
 const { request } = require("express");
 const url = "mongodb+srv://ymon:ymonashdod@cluster.0qqlp.mongodb.net/eventSaver?retryWrites=true&w=majority";
-var Uid = "208394700";
+var Uid = "208394701";
 
 
 // Set the view engine to ejs
@@ -54,7 +54,7 @@ app.get('/updateProfileContractor', function (req, res) {
         if (err) throw err;
         var dbo = db.db("eventSaver");
         //var query = { _id: Uid };
-        var query = { _id: "208394700" };
+        var query = { _id: Uid };
         dbo.collection("ContractorWorkers").find(query).toArray(function (err, result) {
             if (err) throw err;
             if (result.length != 0) {
@@ -79,9 +79,9 @@ app.post('/updateContractor', (req, res) => {
     MongoClient.connect(url, function (err, db) {
         if (err) throw err;
         var dbo = db.db("eventSaver");
-        var myquery = { _id: "208394700" };
+        var myquery = { _id: Uid };
 
-        var hasA, theA; //address
+        var hasA, theA, area; //address
         if (typeof req.body.addressC != "undefined"){
             hasA = true;
             console.log("hasA 1");
@@ -92,8 +92,10 @@ app.post('/updateContractor', (req, res) => {
             theA=req.body.address;
         else
             theA=null;
+        if(req.body.areas=="")
+            area=null;
 
-        var newvalues = { $set: { firstName: req.body.firstname, lastName: req.body.lastname, email: req.body.email, hasAddress: hasA, address: theA, phoneNumbers:req.body.phone, countryAreas:req.body.areas, jobTypes:req.body.types } };
+        var newvalues = { $set: { firstName: req.body.firstname, lastName: req.body.lastname, email: req.body.email, hasAddress: hasA, address: theA, phoneNumbers:req.body.phone, countryAreas:area, jobTypes:req.body.types } };
 
         dbo.collection("ContractorWorkers").updateOne(myquery, newvalues, function (err, res) {
             if (err) throw err;
@@ -102,7 +104,8 @@ app.post('/updateContractor', (req, res) => {
         });
     });
 
-    res.render("pages/firstpage");
+    //res.send({redirect: '/blog'});
+    res.redirect('/');
 });
 
 // function that input to the data base the details that the user enter when he register to the website

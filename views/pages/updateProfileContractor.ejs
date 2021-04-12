@@ -10,6 +10,7 @@
         <%- include('../partials/_header') %>
     </header>
     <form id="updateContractor" action="/updateContractor" method="POST" onsubmit="return beforeSubmit()">
+        <label id="noField" style="display: none; font-size: 18px; color: red;">please enter at least one phone number and at least one job type</label>
         <label for="firstname"><b>First Name: </b></label>
         <input type="text" name="firstname" id="firstname" value="<%= firstName %>"
             oninput="this.value = this.value.replace(/[^a-zA-Z]/g, '').replace(/(\..?)\../g, '$1');" required>
@@ -142,6 +143,7 @@
     function addType() {/* This function is to add a job type to the list of jobs. */
         var selElement = document.getElementById("jobTypes");
         hide("jobTypesErrorL");
+        hide("noField");
 
         //add all selected values into the array
         for (var option of selElement.options) {
@@ -216,12 +218,14 @@
         show("phonenumber");
         hide("addAnotherPhoneB");
         show("addPhoneB");
+        hide("noField");
     }
 
     /*
         add phone adds a phone to the phones list and shows it on screen
     */
     function addPhone() {
+        hide("noField");
         var text = document.getElementById("phonenumber")
         hide("phonenumber");
         show("addAnotherPhoneB");
@@ -365,8 +369,11 @@
         /* 
             this function will update the inforamtion in the database, according to the new one.
         */
-        if (!(phoneNumbers.length) || !(jobTypes.length))
+        if (!(phoneNumbers.length) || !(jobTypes.length)){
+            show("noField");
+            document.getElementById("noField").focus({preventScroll:false});
             return false;
+        }
 
         document.getElementById("phoneNumbers").value = phoneNumbers.toString();
         document.getElementById("types").value = jobTypes.toString();
