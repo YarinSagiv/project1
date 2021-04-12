@@ -10,7 +10,8 @@
         <%- include('../partials/_header') %>
     </header>
     <form id="updateContractor" action="/updateContractor" method="POST" onsubmit="return beforeSubmit()">
-        <label id="noField" style="display: none; font-size: 18px; color: red;">please enter at least one phone number and at least one job type</label>
+        <label id="noField" style="display: none; font-size: 18px; color: red;">please enter at least one phone number
+            and at least one job type</label>
         <label for="firstname"><b>First Name: </b></label>
         <input type="text" name="firstname" id="firstname" value="<%= firstName %>"
             oninput="this.value = this.value.replace(/[^a-zA-Z]/g, '').replace(/(\..?)\../g, '$1');" required>
@@ -33,7 +34,7 @@
         <br />
 
         <label for="phonenumber"><b>Phone numbers: </b></label>
-        <br /><label id="phoneError"></label>
+        <br /><label id="phoneError" style="color: red; font-size: 18px; display: none;"></label>
         <ul id="addedPhoneNumbers">
             <!-- TODO: change place holders to the number from the db if initial log in then no phone numbers yet-->
             <!--<li style="font-size: 18px;" id="thePhoneNumber">place holder (phone from db)<span style="cursor: pointer;"
@@ -53,11 +54,15 @@
         </label>
         <br />
         <select name="jobTypes" id="jobTypes" multiple>
-            <!-- TODO: change style? -->
             <option style="font-size:18px;" value="Hair Styling">Hair Styling</option>
             <option style="font-size:18px;" value="Makeup">Makeup</option>
+            <option style="font-size:18px;" value="Event Stylist">Event Stylist</option>
+            <option style="font-size:18px;" value="Sitting Organizer">Sitting Organizer</option>
             <option style="font-size:18px;" value="Photography">Photography</option>
             <option style="font-size:18px;" value="DJ">DJ</option>
+            <option style="font-size:18px;" value="Musician">Musician</option>
+            <option style="font-size:18px;" value="Atraction Provider">Attraction Provider</option>
+            <option style="font-size:18px;" value="Invitation Printer">Invitation Printer</option>
         </select>
         <button type="button" class=button onclick="addType()" style="padding: 8px 15px;">add job</button>
         <!-- a list of the selected job types-->
@@ -203,7 +208,6 @@
         if (phoneNumbers.length == 1) {
             var l = document.getElementById("phoneError");
             l.innerHTML = "please add a new phone number before you delete the only one."
-            l.style = "font-size:18px; color: red;"
         }
         else {
             li.style.display = 'none';
@@ -219,6 +223,7 @@
         hide("addAnotherPhoneB");
         show("addPhoneB");
         hide("noField");
+        hide("phoneError");
     }
 
     /*
@@ -226,10 +231,20 @@
     */
     function addPhone() {
         hide("noField");
-        var text = document.getElementById("phonenumber")
+        var text = document.getElementById("phonenumber");
+        if (text.value.length <= 9) {
+            var pho = document.getElementById("phoneError");
+            show("phoneError");
+            pho.innerHTML = "a phone number should have 10 digist"
+            console.log("1");
+            return;
+        }
+        console.log("leng: "+text.length);
+
         hide("phonenumber");
         show("addAnotherPhoneB");
         hide("addPhoneB");
+        hide("phoneError");
 
 
         //add the phone to the list:
@@ -369,9 +384,9 @@
         /* 
             this function will update the inforamtion in the database, according to the new one.
         */
-        if (!(phoneNumbers.length) || !(jobTypes.length)){
+        if (!(phoneNumbers.length) || !(jobTypes.length)) {
             show("noField");
-            document.getElementById("noField").focus({preventScroll:false});
+            document.getElementById("noField").focus({ preventScroll: false });
             return false;
         }
 
@@ -381,6 +396,5 @@
     }
 
 </script>
-
 
 </html>
