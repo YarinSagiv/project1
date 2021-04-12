@@ -115,7 +115,6 @@ app.post('/inputDataBase', (req, res) => {
       MongoClient.connect(url, function(err, db) {
         if (err) throw err;
         var dbo = db.db("eventSaver");
-        try{
         var myobj = { _id: req.body.iduser,
                       firstName:  req.body.firstname,
                       lastName: req.body.secname,
@@ -129,8 +128,13 @@ app.post('/inputDataBase', (req, res) => {
 
           if (err) 
           {
-            myobj[suc1]='false';
-            res.render("pages/newu",myobj); 
+            
+            res.render("pages/newu",{suc1 : "false"}); 
+            console.log("ilanit");
+          }
+          else
+          {
+            res.render("pages/firstpage",{suc1 : "true"}); //the response 
           }
 
         
@@ -139,16 +143,11 @@ app.post('/inputDataBase', (req, res) => {
          
           });
 
-        }
-        catch
-        {
-            console.log(succ);
-        }
         });
+        
     
 
         
-        //res.render("pages/firstpage"); //the response 
         
       
     
@@ -164,6 +163,7 @@ app.post('/loginInCheck',(req, res) => {
     
 });
 });
+
 
 
 app.get('/updateProfileEmployer', function (req, res) {

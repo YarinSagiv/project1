@@ -69,7 +69,7 @@
     l.style = "font-size:18px; color: red;"
     newusucc=false;
 
-    enterToTextBox();
+    
 
   }
   else
@@ -198,15 +198,7 @@
   function emailIsValid (email) {
    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
-  function enterToTextBox()
-  {
-    document.getElementById('firstname').value="<%= firstName %>"
-    document.getElementById('secname').value="<%= lastName %>"
-    document.getElementById('iduser').value="<%= _id %>"
-    document.getElementById('phone').value="<%= phoneNumbers %>"
-    document.getElementById('username').value="<%= userName %>"
-    document.getElementById('email').value="<%= email %>"
-  }
+
   
 
   
