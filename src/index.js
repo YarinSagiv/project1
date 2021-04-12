@@ -32,7 +32,7 @@ app.get("/", function (req, res) {
 });
 
 app.get("/logIn", function (req, res) {
-    res.render("pages/logIn");
+    res.render("pages/logIn",{suc2: true});
 });
 
 app.get("/connectpage", function (req, res) {
@@ -130,11 +130,10 @@ app.post('/inputDataBase', (req, res) => {
           {
             
             res.render("pages/newu",{suc1 : "false"}); 
-            console.log("ilanit");
           }
           else
           {
-            res.render("pages/firstpage",{suc1 : "true"}); //the response 
+            res.render("pages/firstpage"); //the response 
           }
 
         
@@ -159,8 +158,24 @@ app.post('/loginInCheck',(req, res) => {
     MongoClient.connect(url, function(err, db) {
         if (err) throw err;
         var dbo = db.db("eventSaver");
+
+        var query = { userName: req.body.uname,password:req.body.psw };
+        dbo.collection("Employers").find(query).toArray(function(err, result) {
+        if (result.length==0)
+        {
+            
+            res.render("pages/logIn",{suc2 : "false"}); 
+
+        }
+        else
+        {
+            res.render("pages/firstpage"); //the response 
+
+        }
+        db.close();
     
     
+});
 });
 });
 
@@ -195,9 +210,3 @@ app.post('/updateProfileEmployer', function (req, res) {
 });
 
 // https://project1sprint1.herokuapp.com
-
-
-
-
-
-
