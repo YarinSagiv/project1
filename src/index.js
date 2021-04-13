@@ -163,7 +163,6 @@ app.post('/loginInCheck',(req, res) => {
         dbo.collection("Employers").find(query).toArray(function(err, result) {
         if (result.length==0)
         {
-            
             res.render("pages/logIn",{suc2 : "false"}); 
 
         }
