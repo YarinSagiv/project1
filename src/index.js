@@ -9,7 +9,7 @@ const app_port = process.env.PORT || 4000;
 const MongoClient = require('mongodb').MongoClient;
 const { request } = require("express");
 const url = "mongodb+srv://ymon:ymonashdod@cluster.0qqlp.mongodb.net/eventSaver?retryWrites=true&w=majority";
-var Uid = "208394701";
+var Uid = "208394700";
 
 
 // Set the view engine to ejs
@@ -207,6 +207,28 @@ app.post('/updateProfileEmployer', function (req, res) {
     //res.render('pages/updateProfileEmployer');
     console.log(req.body.firstName);
     res.end();
+});
+
+
+
+app.get("/profileEmployerPage", function (req, res)
+ {
+    var info = "";
+
+    MongoClient.connect(url, function (err, db) {
+        if (err) throw err;
+        var dbo = db.db("eventSaver");
+        //var query = { _id: Uid };
+        var query = { _id: Uid };
+        dbo.collection("Employers").find(query).toArray(function (err, result) {
+            if (err) throw err;
+            if (result.length != 0) {
+                console.log(result[0].lastName); //test
+                res.render('pages/profileEmployerPage', result[0]);
+            }
+            db.close();
+        });
+    });
 });
 
 // https://project1sprint1.herokuapp.com
