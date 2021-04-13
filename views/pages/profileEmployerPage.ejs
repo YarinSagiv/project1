@@ -1,0 +1,24 @@
+<html>
+
+<head>
+  <link href="css/sty.css" rel="stylesheet">
+</head>
+
+<body>
+
+  <header>
+    <%- include('../partials/_header') %>
+  </header>
+
+  <form action="/ProfileEmployerPage" method="post" >
+    <label for="firstname"><b>FirstName: <%=firstName%></b></label><br>
+    <label for="lastname"><b>LastName: <%=lastName%></b></label><br>
+    <label for="userName"><b>userName: <%=userName%></b></label><br>
+    <label for="email"><b>email: <%=email%></b></label><br>
+    <label for="phoneNumber"><b>phoneNumber: <%=phoneNumber%></b></label><br>
+    
+
+    </form>
+</body>
+
+</html>
