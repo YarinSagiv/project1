@@ -160,14 +160,31 @@ app.post('/loginInCheck',(req, res) => {
         var dbo = db.db("eventSaver");
 
         var query = { userName: req.body.uname,password:req.body.psw };
-        dbo.collection("Employers").find(query).toArray(function(err, result) {
+        dbo.collection("Employers").find(query).toArray(function(err, result) { //search in collection Employers
         if (result.length==0)
         {
-            res.render("pages/logIn",{suc2 : "false"}); 
+            dbo.collection("ContractorWorkers").find(query).toArray(function(err, result) {//search in collection ContractorWorkers
+                if (result.length==0)
+                {
+                    res.render("pages/logIn",{suc2 : "false"}); 
+
+                }
+                else
+                {
+                    res.render("pages/firstpage"); //the response 
+
+                }
+            
+
+
+
+                
+            });
 
         }
         else
         {
+
             res.render("pages/firstpage"); //the response 
 
         }
