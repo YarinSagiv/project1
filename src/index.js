@@ -174,11 +174,7 @@ app.post('/loginInCheck',(req, res) => {
                     res.render("pages/firstpage"); //the response 
 
                 }
-            
-
-
-
-                
+             
             });
 
         }
