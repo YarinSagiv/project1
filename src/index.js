@@ -55,6 +55,7 @@ app.get("/connectpage", function (req, res) {
 });
 
 app.get('/newu', function (req, res) {
+<<<<<<< HEAD
 
     if(Uid!="")
     {
@@ -64,6 +65,9 @@ app.get('/newu', function (req, res) {
     {
         res.render('pages/newu',{suc1: true});
     }
+=======
+    res.render('pages/newu', { suc1: true });
+>>>>>>> 19d1c51ac395ef56c0cfeb7f6329d50877556275
 });
 
 app.get('/updateProfileContractor', function (req, res) {
@@ -71,7 +75,9 @@ app.get('/updateProfileContractor', function (req, res) {
         get ditails from db
     */
     //the user's ID after logging in //TODO
-    var info = "";
+
+    if (Uid == "")
+        res.redirect("/");
 
     MongoClient.connect(url, function (err, db) {
         if (err) throw err;
@@ -92,7 +98,6 @@ app.get('/updateProfileContractor', function (req, res) {
     /*
       redirect to the update page and send the ditails
     */
-    console.log("info " + info);
     //res.render('pages/updateProfileContractor', { name: "mor" });
 });
 
@@ -105,20 +110,20 @@ app.post('/updateContractor', (req, res) => {
         var myquery = { _id: Uid };
 
         var hasA, theA, area; //address
-        if (typeof req.body.addressC != "undefined"){
+        if (typeof req.body.addressC != "undefined") {
             hasA = true;
             console.log("hasA 1");
         }
         else
             hasA = false;
-        if(hasA)
-            theA=req.body.address;
+        if (hasA)
+            theA = req.body.address;
         else
-            theA=null;
-        if(req.body.areas=="")
-            area=null;
+            theA = null;
+        if (req.body.areas == "")
+            area = null;
 
-        var newvalues = { $set: { firstName: req.body.firstname, lastName: req.body.lastname, email: req.body.email, hasAddress: hasA, address: theA, phoneNumbers:req.body.phone, countryAreas:area, jobTypes:req.body.types } };
+        var newvalues = { $set: { firstName: req.body.firstname, lastName: req.body.lastname, email: req.body.email, hasAddress: hasA, address: theA, phoneNumbers: req.body.phone, countryAreas: area, jobTypes: req.body.types } };
 
         dbo.collection("ContractorWorkers").updateOne(myquery, newvalues, function (err, res) {
             if (err) throw err;
@@ -135,9 +140,34 @@ app.post('/updateContractor', (req, res) => {
 app.post('/inputDataBase', (req, res) => {
 
 
-      MongoClient.connect(url, function(err, db) {
+    MongoClient.connect(url, function (err, db) {
         if (err) throw err;
         var dbo = db.db("eventSaver");
+        var myobj = {
+            _id: req.body.iduser,
+            firstName: req.body.firstname,
+            lastName: req.body.secname,
+            phoneNumbers: req.body.phone,
+            userName: req.body.username,
+            email: req.body.email,
+            password: req.body.psw
+        };
+
+
+        var succ = dbo.collection("Employers").insertOne(myobj, function (err, res1) {
+
+            if (err) {
+
+                res.render("pages/newu", { suc1: "false" });
+                console.log("ilanit");
+            }
+            else {
+                res.render("pages/firstpage", { suc1: "true" }); //the response 
+            }
+
+
+            console.log("1 document inserted");
+            db.close();
         var myobj = { _id: req.body.iduser,
                       firstName:  req.body.firstname,
                       lastName: req.body.secname,
@@ -166,22 +196,12 @@ app.post('/inputDataBase', (req, res) => {
           });
 
         });
-        
-    
 
-        
-        
-      
-    
-});
+    });
 
 
-app.post('/loginInCheck',(req, res) => {
-    
-    MongoClient.connect(url, function(err, db) {
-        if (err) throw err;
-        var dbo = db.db("eventSaver");
 
+<<<<<<< HEAD
         var query = { userName: req.body.uname,password:req.body.psw };
         dbo.collection("Employers").find(query).toArray(function(err, result1) { //search in collection Employers
         if (result1.length==0)
@@ -213,11 +233,13 @@ app.post('/loginInCheck',(req, res) => {
                     typeUser="ContractorWorkers";
                     Uid= result2._id;
                     res.redirect("/"); //the response 
+=======
 
-                }
-             
-            });
 
+>>>>>>> 19d1c51ac395ef56c0cfeb7f6329d50877556275
+
+
+<<<<<<< HEAD
         }
         else
         {
@@ -230,12 +252,27 @@ app.post('/loginInCheck',(req, res) => {
     
     
 });
+=======
+>>>>>>> 19d1c51ac395ef56c0cfeb7f6329d50877556275
 });
+
+
+app.post('/loginInCheck', (req, res) => {
+
+    MongoClient.connect(url, function (err, db) {
+        if (err) throw err;
+        var dbo = db.db("eventSaver");
+
+
+    });
 });
 
 
 
 app.get('/updateProfileEmployer', function (req, res) {
+
+    if (Uid == "")
+        res.redirect("/");
 
     MongoClient.connect(url, function (err, db) {
         if (err) throw err;
@@ -258,9 +295,22 @@ app.get('/updateProfileEmployer', function (req, res) {
 
 
 app.post('/updateProfileEmployer', function (req, res) {
-    //res.render('pages/updateProfileEmployer');
-    console.log(req.body.firstName);
-    res.end();
+    MongoClient.connect(url, function (err, db) {
+        if (err) throw err;
+        var dbo = db.db("eventSaver");
+        var myquery = { _id: Uid };
+
+        var newvalues = { $set: { firstName: req.body.firstname, lastName: req.body.lastname, email: req.body.email, phoneNumbers: req.body.phone } };
+
+        dbo.collection("Employers").updateOne(myquery, newvalues, function (err, res) {
+            if (err) throw err;
+            console.log("1 document updated");
+            db.close();
+        });
+    });
+
+    //res.send({redirect: '/blog'});
+    res.redirect('/');
 });
 
 
