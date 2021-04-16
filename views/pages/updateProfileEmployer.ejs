@@ -1,157 +1,179 @@
 <html>
 
 <head>
-  <link href="css/sty.css" rel="stylesheet">
+    <link href="css/sty.css" rel="stylesheet">
 </head>
 
 <body>
 
-  <header>
-    <%- include('../partials/_header') %>
-  </header>
+    <header>
+        <%- include('../partials/_header') %>
+    </header>
+    <form id="updateEmployer" action="/updateProfileEmployer" method="POST" onsubmit="return beforeSubmit()">
+        <label id="noField" style="display: none; font-size: 18px; color: red;">please enter at least one phone number
+            and at least one job type</label>
+        <label for="firstname"><b>First Name: </b></label>
+        <input type="text" name="firstname" id="firstname" value="<%= firstName %>"
+            oninput="this.value = this.value.replace(/[^a-zA-Z]/g, '').replace(/(\..?)\../g, '$1');" required>
+        <br />
+        <label for="lastname"><b>Last Name: </b></label>
+        <input type="text" name="lastname" id="lastname" value="<%= lastName %>"
+            oninput="this.value = this.value.replace(/[^a-zA-Z]/g, '').replace(/(\..?)\../g, '$1');" required>
+        <br />
+        <label for="email"><b>Email: </b></label>
+        <input type="email" name="email" id="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" required>
+        <!-- TODO: check if really working -->
+        <br />
+        <label for="phonenumber"><b>Phone numbers: </b></label>
+        <br /><label id="phoneError" style="color: red; font-size: 18px; display: none;"></label>
+        <ul id="addedPhoneNumbers">
 
-
-  <form action="/updateProfileEmployer" method="POST" onsubmit="beforeSubmit()">
-
-    <label for="firstName"><b>First Name: </b></label>
-    <input type="text" name="firstName" id="firstName" value="<%= firstName %>"
-      oninput="this.value = this.value.replace(/[^a-zA-Z]/g, '').replace(/(\..?)\../g, '$1');" required>
-    <br />
-    <label for="lastName"><b>Last Name: </b></label>
-    <input type="text" name="lastName" id="lastName" value="<%= lastName %>"
-      oninput="this.value = this.value.replace(/[^a-zA-Z]/g, '').replace(/(\..?)\../g, '$1');" required>
-    <br />
-
-
-    <label for="email"><b>Email: </b></label>
-    <br>
-    <input type="email" name="email" id="email" value="<%= email %>" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
-      required>
-
-
-    <!--add phone-->
-
-    <label for="phonenumber"><b>Phone numbers: </b></label>
-    <br /><label id="phoneError"></label>
-    <ul id="addedPhoneNumbers">
-      <!-- TODO: change place holders to the number from the db if initial log in then no phone numbers yet-->
-      <!--<li style="font-size: 18px;" id="thePhoneNumber">place holder (phone from db)<span style="cursor: pointer;"
-                    onclick="delPhone('thePhoneNumber')">&#215;</span></li>-->
-    </ul>
-    <input type="text" style="display: none;" name="phonenumber" id="phonenumber" maxlength="10"
-      oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');">
-    <button id="addAnotherPhoneB" type="button" class=button onclick="addAnotherPhone()" style="padding: 8px 15px;">add
-      another phone number</button>
-    <button id="addPhoneB" type="button" class=button onclick="addPhone()"
-      style="padding: 8px 15px; display: none;">Add</button>
-    <input type="hidden" id="phoneNumbers" name="phone">
-    <!--to POST-->
-    <br /><br />
-
-    <button type="submit" class="button">update ditails</button>
-
-
-  </form>
-
+        </ul>
+        <input type="text" style="display: none;" name="phonenumber" id="phonenumber" maxlength="10"
+            oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');">
+        <button id="addAnotherPhoneB" type="button" class=button onclick="addAnotherPhone()"
+            style="padding: 8px 15px;">add another phone number</button>
+        <button id="addPhoneB" type="button" class=button onclick="addPhone()"
+            style="padding: 8px 15px; display: none;">Add</button>
+        <input type="hidden" id="phoneNumbers" name="phone">
+        <!--to POST-->
+        
+        <br><button type="submit" class="button">update ditails</button>
+    </form>
 </body>
 
 <script type="text/javascript">
+    var phoneNumbers = []; //get initial from db
 
-  var phoneNumbers = []; //get initial from db
+    //console.log("<%= firstName %>");
 
-  function initialDitails() {
-    var numbers = "<%= phoneNumbers %>";
-    if (numbers) {
-      numbers = numbers.split(" ,");
-      console.log(numbers.toString);
-      for (var n of numbers) {
-        document.getElementById("phonenumber").value = n.trim();
-        addPhone();
-      }
+    function show(id) {
+        document.getElementById(id).style.display = 'block';
     }
-  }
 
-  initialDitails();
-
-  function show(id) {
-    document.getElementById(id).style.display = 'block';
-  }
-
-  function hide(id) {
-    document.getElementById(id).style.display = 'none';
-  }
-
-
-  function delPhone(li, id1) {
-    console.log(phoneNumbers.length);
-    console.log("id1=" + id1);
-    if (phoneNumbers.length == 1) {
-      var l = document.getElementById("phoneError");
-      l.innerHTML = "please add a new phone number before you delete the only one."
-      l.style = "font-size:18px; color: red;"
+    function hide(id) {
+        document.getElementById(id).style.display = 'none';
     }
-    else {
-      li.style.display = 'none';
-      //remove the phone from the phones list:
-      phoneNumbers = phoneNumbers.filter(phone => phone != id1);
-      //for checking
-      console.log(phoneNumbers);
+
+    function delPhone(li, id1) {
+        console.log(phoneNumbers.length);
+        console.log("id1=" + id1);
+        if (phoneNumbers.length == 1) {
+            var l = document.getElementById("phoneError");
+            l.innerHTML = "please add a new phone number before you delete the only one."
+            show("phoneError");
+        }
+        else {
+            li.style.display = 'none';
+            //remove the phone from the phones list:
+            phoneNumbers = phoneNumbers.filter(phone => phone != id1);
+            //for checking
+            console.log(phoneNumbers);
+        }
     }
-  }
 
-  function addAnotherPhone() {
-    show("phonenumber");
-    hide("addAnotherPhoneB");
-    show("addPhoneB");
-  }
+    function addAnotherPhone() {
+        show("phonenumber");
+        hide("addAnotherPhoneB");
+        show("addPhoneB");
+        hide("noField");
+        hide("phoneError");
+        document.getElementById("phonenumber").focus();
+    }
 
-  /*
-      add phone adds a phone to the phones list and shows it on screen
-  */
-  function addPhone() {
-    var text = document.getElementById("phonenumber")
-    hide("phonenumber");
-    show("addAnotherPhoneB");
-    hide("addPhoneB");
-
-
-    //add the phone to the list:
-    var newPhone = text.value;
-    phoneNumbers.push(newPhone);
-
-    var ul = document.getElementById("addedPhoneNumbers");
-    var li = document.createElement("li");
-    li.appendChild(document.createTextNode(newPhone));
-    li.setAttribute("id", newPhone);
-    li.setAttribute("style", "font-size:18px;");
-
-    //------span -> X symbol : REMOVE the phone number
-    var span = document.createElement("span");
-    span.appendChild(document.createTextNode('\u00D7'));
-    span.setAttribute("style", "cursor: pointer;");
-    //onclick
-    span.addEventListener("click", function () {
-      delPhone(this.parentElement, this.parentElement.id);
-    });
-
-    text.value = "";
-
-    //----adding the childs
-    li.appendChild(span);
-    ul.appendChild(li);
-  }
-
-  function beforeSubmit() {
-    /* 
-        this function will update the inforamtion in the database, according to the new one.
+    /*
+        add phone adds a phone to the phones list and shows it on screen
     */
+    function addPhone() {
+        hide("noField");
+        var text = document.getElementById("phonenumber").value;
+        if (text.length <= 9) {
+            var pho = document.getElementById("phoneError");
+            show("phoneError");
+            pho.innerHTML = "a phone number should have 10 digist"
+            return;
+        }
+        else if(phoneNumbers.includes(text))
+        {
+          var pho = document.getElementById("phoneError");
+            show("phoneError");
+            pho.innerHTML = "that phone number already exist"
+            return;
+        }
 
-    document.getElementById("phoneNumbers").value = phoneNumbers.toString();
 
-  }
+        console.log("leng: "+text.length);
+
+        hide("phonenumber");
+        show("addAnotherPhoneB");
+        hide("addPhoneB");
+        hide("phoneError");
+
+
+        //add the phone to the list:
+        var newPhone = text;
+        phoneNumbers.push(newPhone);
+
+        var ul = document.getElementById("addedPhoneNumbers");
+        var li = document.createElement("li");
+        li.appendChild(document.createTextNode(newPhone));
+        li.setAttribute("id", newPhone);
+        li.setAttribute("style", "font-size:18px;");
+
+        //------span -> X symbol : REMOVE the phone number
+        var span = document.createElement("span");
+        span.appendChild(document.createTextNode('\u00D7'));
+        span.setAttribute("style", "cursor: pointer;");
+        //onclick
+        span.addEventListener("click", function () {
+            delPhone(this.parentElement, this.parentElement.id);
+        });
+
+        text.value = "";
+
+        //----adding the childs
+        li.appendChild(span);
+        ul.appendChild(li);
+    }
+
+    function initialDitails() {
+        /*
+            this function gets the information already in the database for this specific contractor worker
+        */
+        //---first name
+        document.getElementById("firstname").value = "<%= firstName %>";
+
+        //---last name
+        document.getElementById("lastname").value = "<%= lastName %>";
+
+        if ("<%=email%>")
+            document.getElementById("email").value = "<%= email %>";
+
+        var numbers;
+        if (numbers = "<%= phoneNumbers %>") {
+            numbers = numbers.split(",");
+            console.log(numbers.toString);
+            for (var n of numbers) {
+                document.getElementById("phonenumber").value = n.trim();
+                addPhone();
+            }
+
+        }
+
+        
+
+    }
+
+    initialDitails();
+
+    function beforeSubmit() {
+        /* 
+            this function will update the inforamtion in the database, according to the new one.
+        */
+
+        document.getElementById("phoneNumbers").value = phoneNumbers.toString();
+    }
 
 </script>
-
-
 
 </html>
