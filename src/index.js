@@ -34,7 +34,7 @@ app.get("/", function (req, res) {
 
 app.get("/logIn", function (req, res) {
     if (Uid != "") {
-        res.render('/');
+        res.redirect("/");
     }
     else {
         res.render("pages/logIn", { suc2: true });
@@ -43,7 +43,7 @@ app.get("/logIn", function (req, res) {
 
 app.get("/connectpage", function (req, res) {
     if (Uid != "") {
-        res.render('/');
+        res.redirect("/");
     }
     else {
         res.render('pages/connectpage');
@@ -53,7 +53,7 @@ app.get("/connectpage", function (req, res) {
 app.get('/newu', function (req, res) {
 
     if (Uid != "") {
-        res.render('/');
+        res.redirect("/");
     }
     else {
         res.render('pages/newu', { suc1: true });
@@ -190,51 +190,45 @@ app.post('/inputDataBase', (req, res) => {
     });
 });
 
-app.post('/loginInCheck', (req, res) => {
+app.post('/loginInCheck', async (req, res) => {
 
-    MongoClient.connect(url, function (err, db) {
+    MongoClient.connect(url,async function (err, db) {
         if (err) throw err;
         var dbo = db.db("eventSaver");
 
         var query = { userName: req.body.uname, password: req.body.psw };
-        dbo.collection("Employers").find(query).toArray(function (err, result1) { //search in collection Employers
-            if (result1.length == 0) {
-                dbo.collection("ContractorWorkers").find(query).toArray(function (err, result2) {//search in collection ContractorWorkers
-                    if (result2.length == 0) {
-
-                        dbo.collection("resourcesCompanyWorkers").find(query).toArray(function (err, result3) {//search in collection ContractorWorkers
-                            console.log(result3);
-                            if (result3.length == 0) {
-                                res.render("pages/logIn", { suc2: "false" });
-                            }
-                            else {
-                                typeUser = "resourcesCompanyWorkers";
-                                Uid = result3._id;
-                                res.redirect("/"); //the response 
-
-                            }
-
-                        });
-
-
-                    }
-                    else {
-                        typeUser = "ContractorWorkers";
-                        Uid = result2._id;
-                        res.redirect("/"); //the response 
-                    }
-                });
-            }
-            else {
-                typeUser = "Employers";
-                Uid = result1._id;
-                res.redirect("/"); //the response 
-
-            }
+        let EmployersArray1 = await dbo.collection("Employers").find(query).toArray()
+        let EmployersArray2 = await dbo.collection("ContractorWorkers").find(query).toArray()
+        let EmployersArray3 = await dbo.collection("resourcesCompanyWorkers").find(query).toArray()
+        console.log(EmployersArray3);
+        if(EmployersArray1.length==0 && EmployersArray2.length==0 && EmployersArray3.length==0 )
+        {
+            res.render("pages/logIn", { suc2: "false" });
+    
+        }
+        else if(EmployersArray1.length!=0)
+        {
+            typeUser = "Employers";
+            Uid = EmployersArray1._id;
+            res.redirect("/"); //the response 
+        }
+        else if(EmployersArray2.length!=0)
+        {
+            typeUser = "ContractorWorkers";
+            Uid = EmployersArray2._id;
+            res.redirect("/"); //the response 
+        }
+        else if(EmployersArray3.length!=0)
+        {
+            typeUser = "resourcesCompanyWorkers";
+            Uid = EmployersArray3._id;
+            res.redirect("/"); //the response 
+        }
+            
             db.close();
         });
     });
-});
+
 
 
 app.get('/updateProfileEmployer', function (req, res) {
