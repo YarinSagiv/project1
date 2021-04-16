@@ -162,13 +162,13 @@ app.post('/loginInCheck',(req, res) => {
 
         var query = { userName: req.body.uname,password:req.body.psw };
         dbo.collection("Employers").find(query).toArray(function(err, result1) { //search in collection Employers
-        if (result.length==0)
+        if (result1.length==0)
         {
             dbo.collection("ContractorWorkers").find(query).toArray(function(err, result2) {//search in collection ContractorWorkers
-                if (result.length==0)
+                if (result2.length==0)
                 {
                     dbo.collection("resourcesCompanyWorkers").find(query).toArray(function(err, result3) {//search in collection ContractorWorkers
-                        if (result.length==0)
+                        if (result3.length==0)
                         {
                             res.render("pages/logIn",{suc2 : "false"}); 
                         }
