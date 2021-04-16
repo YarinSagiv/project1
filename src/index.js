@@ -33,15 +33,37 @@ app.get("/", function (req, res) {
 });
 
 app.get("/logIn", function (req, res) {
-    res.render("pages/logIn",{suc2: true});
+    if(Uid!="")
+    {
+        res.render('/');
+    }
+    else
+    {
+        res.render("pages/logIn",{suc2: true});
+    }
 });
 
 app.get("/connectpage", function (req, res) {
-    res.render('pages/connectpage');
+    if(Uid!="")
+    {
+        res.render('/');
+    }
+    else
+    {
+        res.render('pages/connectpage');
+    }
 });
 
 app.get('/newu', function (req, res) {
-    res.render('pages/newu',{suc1: true});
+
+    if(Uid!="")
+    {
+        res.render('/');
+    }
+    else
+    {
+        res.render('pages/newu',{suc1: true});
+    }
 });
 
 app.get('/updateProfileContractor', function (req, res) {
@@ -167,6 +189,7 @@ app.post('/loginInCheck',(req, res) => {
             dbo.collection("ContractorWorkers").find(query).toArray(function(err, result2) {//search in collection ContractorWorkers
                 if (result2.length==0)
                 {
+                    
                     dbo.collection("resourcesCompanyWorkers").find(query).toArray(function(err, result3) {//search in collection ContractorWorkers
                         console.log(result3);
                         if (result3.length==0)
@@ -177,18 +200,19 @@ app.post('/loginInCheck',(req, res) => {
                         {
                             typeUser="resourcesCompanyWorkers";
                             Uid= result3._id;
-                            res.render("pages/firstpage"); //the response 
+                            res.redirect("/"); //the response 
         
                         }
 
                     });
+                    
 
                 }
                 else
                 {
                     typeUser="ContractorWorkers";
                     Uid= result2._id;
-                    res.render("pages/firstpage"); //the response 
+                    res.redirect("/"); //the response 
 
                 }
              
@@ -199,7 +223,7 @@ app.post('/loginInCheck',(req, res) => {
         {
             typeUser="Employers";
             Uid= result1._id;
-            res.render("pages/firstpage"); //the response 
+            res.redirect("/"); //the response 
 
         }
         db.close();
