@@ -168,6 +168,7 @@ app.post('/loginInCheck',(req, res) => {
                 if (result2.length==0)
                 {
                     dbo.collection("resourcesCompanyWorkers").find(query).toArray(function(err, result3) {//search in collection ContractorWorkers
+                        console.log(result3);
                         if (result3.length==0)
                         {
                             res.render("pages/logIn",{suc2 : "false"}); 
@@ -175,7 +176,7 @@ app.post('/loginInCheck',(req, res) => {
                         else
                         {
                             typeUser="resourcesCompanyWorkers";
-                            uid= result3._id;
+                            Uid= result3._id;
                             res.render("pages/firstpage"); //the response 
         
                         }
@@ -186,7 +187,7 @@ app.post('/loginInCheck',(req, res) => {
                 else
                 {
                     typeUser="ContractorWorkers";
-                    uid= result2._id;
+                    Uid= result2._id;
                     res.render("pages/firstpage"); //the response 
 
                 }
@@ -197,7 +198,7 @@ app.post('/loginInCheck',(req, res) => {
         else
         {
             typeUser="Employers";
-            uid= result1._id;
+            Uid= result1._id;
             res.render("pages/firstpage"); //the response 
 
         }
