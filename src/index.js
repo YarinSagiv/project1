@@ -10,7 +10,7 @@ const MongoClient = require('mongodb').MongoClient;
 const { request } = require("express");
 const url = "mongodb+srv://ymon:ymonashdod@cluster.0qqlp.mongodb.net/eventSaver?retryWrites=true&w=majority";
 var Uid = "208375709";
-var typeUser=""
+var typeUser = ""
 
 
 // Set the view engine to ejs
@@ -33,41 +33,31 @@ app.get("/", function (req, res) {
 });
 
 app.get("/logIn", function (req, res) {
-    if(Uid!="")
-    {
+    if (Uid != "") {
         res.render('/');
     }
-    else
-    {
-        res.render("pages/logIn",{suc2: true});
+    else {
+        res.render("pages/logIn", { suc2: true });
     }
 });
 
 app.get("/connectpage", function (req, res) {
-    if(Uid!="")
-    {
+    if (Uid != "") {
         res.render('/');
     }
-    else
-    {
+    else {
         res.render('pages/connectpage');
     }
 });
 
 app.get('/newu', function (req, res) {
-<<<<<<< HEAD
 
-    if(Uid!="")
-    {
+    if (Uid != "") {
         res.render('/');
     }
-    else
-    {
-        res.render('pages/newu',{suc1: true});
+    else {
+        res.render('pages/newu', { suc1: true });
     }
-=======
-    res.render('pages/newu', { suc1: true });
->>>>>>> 19d1c51ac395ef56c0cfeb7f6329d50877556275
 });
 
 app.get('/updateProfileContractor', function (req, res) {
@@ -168,94 +158,37 @@ app.post('/inputDataBase', (req, res) => {
 
             console.log("1 document inserted");
             db.close();
-        var myobj = { _id: req.body.iduser,
-                      firstName:  req.body.firstname,
-                      lastName: req.body.secname,
-                      phoneNumbers: req.body.phone,
-                      userName: req.body.username,
-                      email: req.body.email,
-                      password:req.body.psw };
-       
-        
-        var succ=dbo.collection("Employers").insertOne(myobj, function(err, res1) {
+            var myobj = {
+                _id: req.body.iduser,
+                firstName: req.body.firstname,
+                lastName: req.body.secname,
+                phoneNumbers: req.body.phone,
+                userName: req.body.username,
+                email: req.body.email,
+                password: req.body.psw
+            };
 
-          if (err) 
-          {
-            
-            res.render("pages/newu",{suc1 : "false"}); 
-          }
-          else
-          {
-            res.render("pages/firstpage"); //the response 
-          }
 
-        
-          console.log("1 document inserted");
-          db.close();
-         
-          });
+            var succ = dbo.collection("Employers").insertOne(myobj, function (err, res1) {
+
+                if (err) {
+
+                    res.render("pages/newu", { suc1: "false" });
+                }
+                else {
+                    res.render("pages/firstpage"); //the response 
+                }
+
+
+                console.log("1 document inserted");
+                db.close();
+
+            });
 
         });
 
     });
-
-
-
-<<<<<<< HEAD
-        var query = { userName: req.body.uname,password:req.body.psw };
-        dbo.collection("Employers").find(query).toArray(function(err, result1) { //search in collection Employers
-        if (result1.length==0)
-        {
-            dbo.collection("ContractorWorkers").find(query).toArray(function(err, result2) {//search in collection ContractorWorkers
-                if (result2.length==0)
-                {
-                    
-                    dbo.collection("resourcesCompanyWorkers").find(query).toArray(function(err, result3) {//search in collection ContractorWorkers
-                        console.log(result3);
-                        if (result3.length==0)
-                        {
-                            res.render("pages/logIn",{suc2 : "false"}); 
-                        }
-                        else
-                        {
-                            typeUser="resourcesCompanyWorkers";
-                            Uid= result3._id;
-                            res.redirect("/"); //the response 
-        
-                        }
-
-                    });
-                    
-
-                }
-                else
-                {
-                    typeUser="ContractorWorkers";
-                    Uid= result2._id;
-                    res.redirect("/"); //the response 
-=======
-
-
->>>>>>> 19d1c51ac395ef56c0cfeb7f6329d50877556275
-
-
-<<<<<<< HEAD
-        }
-        else
-        {
-            typeUser="Employers";
-            Uid= result1._id;
-            res.redirect("/"); //the response 
-
-        }
-        db.close();
-    
-    
 });
-=======
->>>>>>> 19d1c51ac395ef56c0cfeb7f6329d50877556275
-});
-
 
 app.post('/loginInCheck', (req, res) => {
 
@@ -263,10 +196,45 @@ app.post('/loginInCheck', (req, res) => {
         if (err) throw err;
         var dbo = db.db("eventSaver");
 
+        var query = { userName: req.body.uname, password: req.body.psw };
+        dbo.collection("Employers").find(query).toArray(function (err, result1) { //search in collection Employers
+            if (result1.length == 0) {
+                dbo.collection("ContractorWorkers").find(query).toArray(function (err, result2) {//search in collection ContractorWorkers
+                    if (result2.length == 0) {
 
+                        dbo.collection("resourcesCompanyWorkers").find(query).toArray(function (err, result3) {//search in collection ContractorWorkers
+                            console.log(result3);
+                            if (result3.length == 0) {
+                                res.render("pages/logIn", { suc2: "false" });
+                            }
+                            else {
+                                typeUser = "resourcesCompanyWorkers";
+                                Uid = result3._id;
+                                res.redirect("/"); //the response 
+
+                            }
+
+                        });
+
+
+                    }
+                    else {
+                        typeUser = "ContractorWorkers";
+                        Uid = result2._id;
+                        res.redirect("/"); //the response 
+                    }
+                });
+            }
+            else {
+                typeUser = "Employers";
+                Uid = result1._id;
+                res.redirect("/"); //the response 
+
+            }
+            db.close();
+        });
     });
 });
-
 
 
 app.get('/updateProfileEmployer', function (req, res) {
@@ -315,8 +283,7 @@ app.post('/updateProfileEmployer', function (req, res) {
 
 
 
-app.get("/profileEmployerPage", function (req, res)
- {
+app.get("/profileEmployerPage", function (req, res) {
     var info = "";
 
     MongoClient.connect(url, function (err, db) {
@@ -335,8 +302,7 @@ app.get("/profileEmployerPage", function (req, res)
     });
 });
 
-app.get("/profileContractorPage", function (req, res)
- {
+app.get("/profileContractorPage", function (req, res) {
     var info = "";
 
     MongoClient.connect(url, function (err, db) {
