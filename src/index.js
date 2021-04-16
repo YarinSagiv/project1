@@ -10,6 +10,7 @@ const MongoClient = require('mongodb').MongoClient;
 const { request } = require("express");
 const url = "mongodb+srv://ymon:ymonashdod@cluster.0qqlp.mongodb.net/eventSaver?retryWrites=true&w=majority";
 var Uid = "208375709";
+var typeUser=""
 
 
 // Set the view engine to ejs
@@ -160,17 +161,32 @@ app.post('/loginInCheck',(req, res) => {
         var dbo = db.db("eventSaver");
 
         var query = { userName: req.body.uname,password:req.body.psw };
-        dbo.collection("Employers").find(query).toArray(function(err, result) { //search in collection Employers
+        dbo.collection("Employers").find(query).toArray(function(err, result1) { //search in collection Employers
         if (result.length==0)
         {
-            dbo.collection("ContractorWorkers").find(query).toArray(function(err, result) {//search in collection ContractorWorkers
+            dbo.collection("ContractorWorkers").find(query).toArray(function(err, result2) {//search in collection ContractorWorkers
                 if (result.length==0)
                 {
-                    res.render("pages/logIn",{suc2 : "false"}); 
+                    dbo.collection("resourcesCompanyWorkers").find(query).toArray(function(err, result3) {//search in collection ContractorWorkers
+                        if (result.length==0)
+                        {
+                            res.render("pages/logIn",{suc2 : "false"}); 
+                        }
+                        else
+                        {
+                            typeUser="resourcesCompanyWorkers";
+                            uid= result3._id;
+                            res.render("pages/firstpage"); //the response 
+        
+                        }
+
+                    });
 
                 }
                 else
                 {
+                    typeUser="ContractorWorkers";
+                    uid= result2._id;
                     res.render("pages/firstpage"); //the response 
 
                 }
@@ -180,7 +196,8 @@ app.post('/loginInCheck',(req, res) => {
         }
         else
         {
-
+            typeUser="Employers";
+            uid= result1._id;
             res.render("pages/firstpage"); //the response 
 
         }
