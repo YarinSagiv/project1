@@ -10,11 +10,12 @@
     <%- include('../partials/_header') %>
   </header>
 
-<form action="/loginInCheck" method="post" >
+<form action="/loginInCheck" method="post" onsubmit="return backtohome2()" >
   <div class="imgcontainer">
   </div>
 
   <div class="container">
+    <br><label id="errorinput2"></label><br>
     <label for="uname"><b>Username</b></label>
     <input type="text" placeholder="Enter Username" name="uname" required>
 
@@ -34,6 +35,27 @@
 </form>
 
 <script>
+  console.log("error inside");
+  logusucc=true;
+  if ("<%= suc2 %>" == 'false')
+  {
+    console.log("mor2");
+    var l = document.getElementById("errorinput2");
+    l.innerHTML = "The user name / password not correct.";
+    l.style = "font-size:18px; color: red;";
+    logusucc=false;
+  }
+  else
+  {
+    document.getElementById('errorinput2').style.display = 'none';
+
+
+  }
+
+  function backtohome2() {
+    return logusucc;
+
+  }
 
   
    

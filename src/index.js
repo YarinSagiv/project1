@@ -9,7 +9,8 @@ const app_port = process.env.PORT || 4000;
 const MongoClient = require('mongodb').MongoClient;
 const { request } = require("express");
 const url = "mongodb+srv://ymon:ymonashdod@cluster.0qqlp.mongodb.net/eventSaver?retryWrites=true&w=majority";
-var Uid = "208394700";
+var Uid = "208375709";
+var typeUser=""
 
 
 // Set the view engine to ejs
@@ -32,7 +33,7 @@ app.get("/", function (req, res) {
 });
 
 app.get("/logIn", function (req, res) {
-    res.render("pages/logIn");
+    res.render("pages/logIn",{suc2: true});
 });
 
 app.get("/connectpage", function (req, res) {
@@ -141,6 +142,32 @@ app.post('/inputDataBase', (req, res) => {
 
             console.log("1 document inserted");
             db.close();
+        var myobj = { _id: req.body.iduser,
+                      firstName:  req.body.firstname,
+                      lastName: req.body.secname,
+                      phoneNumbers: req.body.phone,
+                      userName: req.body.username,
+                      email: req.body.email,
+                      password:req.body.psw };
+       
+        
+        var succ=dbo.collection("Employers").insertOne(myobj, function(err, res1) {
+
+          if (err) 
+          {
+            
+            res.render("pages/newu",{suc1 : "false"}); 
+          }
+          else
+          {
+            res.render("pages/firstpage"); //the response 
+          }
+
+        
+          console.log("1 document inserted");
+          db.close();
+         
+          });
 
         });
 
@@ -211,10 +238,45 @@ app.post('/updateProfileEmployer', function (req, res) {
     res.redirect('/');
 });
 
+
+
+app.get("/profileEmployerPage", function (req, res)
+ {
+    var info = "";
+
+    MongoClient.connect(url, function (err, db) {
+        if (err) throw err;
+        var dbo = db.db("eventSaver");
+        //var query = { _id: Uid };
+        var query = { _id: Uid };
+        dbo.collection("Employers").find(query).toArray(function (err, result) {
+            if (err) throw err;
+            if (result.length != 0) {
+                console.log(result[0].lastName); //test
+                res.render('pages/profileEmployerPage', result[0]);
+            }
+            db.close();
+        });
+    });
+});
+
+app.get("/profileContractorPage", function (req, res)
+ {
+    var info = "";
+
+    MongoClient.connect(url, function (err, db) {
+        if (err) throw err;
+        var dbo = db.db("eventSaver");
+        //var query = { _id: Uid };
+        var query = { _id: Uid };
+        dbo.collection("ContractorWorkers").find(query).toArray(function (err, result) {
+            if (err) throw err;
+            if (result.length != 0) {
+                console.log(result[0].lastName); //test
+                res.render('pages/profileContractorPage', result[0]);
+            }
+            db.close();
+        });
+    });
+});
 // https://project1sprint1.herokuapp.com
-
-
-
-
-
-

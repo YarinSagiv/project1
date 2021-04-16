@@ -1,0 +1,37 @@
+<html>
+
+<head>
+  <link href="css/sty.css" rel="stylesheet">
+</head>
+
+<body>
+
+  <header>
+    <%- include('../partials/_header') %>
+  </header>
+
+  <form action="/profileContractorPage" method="post" >
+    <label style="font-size:22px;">
+    <label for="firstname"><b>First Name :</b><label style="font-size:19px;"> <%= firstName %></label></label><br>
+    <label for="lastname"><b>Last Name :</b> <label style="font-size:19px;"><%= lastName %></label></label><br>
+    <label for="userName"><b>user Name : </b><label style="font-size:19px;"><%= userName %></label></label><br>
+    <label for="email"><b>email :</b> <label style="font-size:19px;"><%= email %></label></label><br>
+    <label for="phoneNumber"><b>phone Number : </b><label style="font-size:19px;"><%= phoneNumbers %></label></label><br>
+    <label for="Job rate:"><b>Job rate : </b></label><br>
+    <label for="jobTypes"><b>Job Types :</b><label style="font-size:19px;"><%= jobTypes %> </label></label><br>
+    <label for="gender:"><b>gender :</b> <label style="font-size:19px;"><%= gender %></label></label><br>
+    <label for="Dates not available:"><b>Dates not available : </b></label><br>
+    <label for="business place:"><b>business place(Y/N) :</b> <label style="font-size:19px;"><%= hasAddress %></label></label><br>
+    <label for="business address:"><b> business address : </b><label style="font-size:19px;"><%= address %></label></label><br>
+    <label for="countryAreas"><b>areas where i can't work in :</b> <label style="font-size:19px;"><%=countryAreas%></label></label><br>
+    <label for="salary"><b>salary:</b> <label style="font-size:19px;"></label></label><br>
+    </label>
+   
+    
+    
+
+
+    </form>
+</body>
+
+</html>

@@ -1,0 +1,25 @@
+<html>
+
+<head>
+  <link href="css/sty.css" rel="stylesheet">
+</head>
+
+<body>
+
+  <header>
+    <%- include('../partials/_header') %>
+  </header>
+
+  <form action="/ProfileEmployerPage" method="post" >
+    <label style="font-size:22px;">
+    <label for="firstname"><b>First name :</b> <label style="font-size:19px;"><%=firstName%></label></label><br>
+    <label for="lastname"><b>Last name :</b> <label style="font-size:19px;"><%=lastName%></label></label><br>
+    <label for="userName"><b>User name :</b><label style="font-size:19px;"> <%=userName%></label></label><br>
+    <label for="email"><b>Email : </b><label style="font-size:19px;"><%=email%> </label></label><br>
+    <label for="phoneNumber"><b>phone Number :</b><label style="font-size:19px;"> <%=phoneNumbers%></label></label><br>
+    </label>
+
+    </form>
+</body>
+
+</html>
