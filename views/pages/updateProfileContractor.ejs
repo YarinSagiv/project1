@@ -208,6 +208,7 @@
         if (phoneNumbers.length == 1) {
             var l = document.getElementById("phoneError");
             l.innerHTML = "please add a new phone number before you delete the only one."
+            show("phoneError");
         }
         else {
             li.style.display = 'none';
@@ -224,6 +225,7 @@
         show("addPhoneB");
         hide("noField");
         hide("phoneError");
+        document.getElementById("phonenumber").focus();
     }
 
     /*
@@ -231,14 +233,22 @@
     */
     function addPhone() {
         hide("noField");
-        var text = document.getElementById("phonenumber");
-        if (text.value.length <= 9) {
+        var text = document.getElementById("phonenumber").value;
+        if (text.length <= 9) {
             var pho = document.getElementById("phoneError");
             show("phoneError");
             pho.innerHTML = "a phone number should have 10 digist"
-            console.log("1");
             return;
         }
+        else if(phoneNumbers.includes(text))
+        {
+          var pho = document.getElementById("phoneError");
+            show("phoneError");
+            pho.innerHTML = "that phone number already exist"
+            return;
+        }
+
+
         console.log("leng: "+text.length);
 
         hide("phonenumber");
@@ -248,7 +258,7 @@
 
 
         //add the phone to the list:
-        var newPhone = text.value;
+        var newPhone = text;
         phoneNumbers.push(newPhone);
 
         var ul = document.getElementById("addedPhoneNumbers");
@@ -364,6 +374,13 @@
         }
 
         //GENDER
+        switch("<%=gender%>")
+        {
+          case "male": radiobtn = document.getElementById("male").checked = true; break;
+          case "female": radiobtn = document.getElementById("female").checked = true; break;
+          default: radiobtn = document.getElementById("other").checked = true; break;
+        }
+
 
         var areas;
         if (areas = "<%= countryAreas %>") {

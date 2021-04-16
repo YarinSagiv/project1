@@ -10,7 +10,7 @@
     <%- include('../partials/_header') %>
   </header>
 
-<form action="/loginInCheck" method="post" onsubmit="return backtohome2()" >
+<form action="/loginInCheck" method="post" >
   <div class="imgcontainer">
   </div>
 
@@ -36,7 +36,7 @@
 
 <script>
   console.log("error inside");
-  logusucc=true;
+  //logusucc=true;
   if ("<%= suc2 %>" == 'false')
   {
     console.log("mor2");
@@ -48,14 +48,11 @@
   else
   {
     document.getElementById('errorinput2').style.display = 'none';
-
-
-  }
-
-  function backtohome2() {
-    return logusucc;
+    
 
   }
+
+  
 
   
    
