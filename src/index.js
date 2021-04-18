@@ -10,7 +10,7 @@ const MongoClient = require('mongodb').MongoClient;
 const { request } = require("express");
 const url = "mongodb+srv://ymon:ymonashdod@cluster.0qqlp.mongodb.net/eventSaver?retryWrites=true&w=majority";
 var Uid = "";
-var typeUser = ""
+var typeUser = "";
 
 
 // Set the view engine to ejs
@@ -66,7 +66,7 @@ app.get('/updateProfileContractor', function (req, res) {
     */
     //the user's ID after logging in //TODO
 
-    if (Uid == "")
+    if (Uid == "" || typeUser!="ContractorWorkers")
         res.redirect("/");
 
     MongoClient.connect(url, function (err, db) {
@@ -201,9 +201,9 @@ app.post('/loginInCheck', async (req, res) => {
         var dbo = db.db("eventSaver");
 
         var query = { userName: req.body.uname, password: req.body.psw };
-        let EmployersArray1 = await dbo.collection("Employers").find(query).toArray()
-        let EmployersArray2 = await dbo.collection("ContractorWorkers").find(query).toArray()
-        let EmployersArray3 = await dbo.collection("resourcesCompanyWorkers").find(query).toArray()
+        let EmployersArray1 = await dbo.collection("Employers").find(query).toArray();
+        let EmployersArray2 = await dbo.collection("ContractorWorkers").find(query).toArray();
+        let EmployersArray3 = await dbo.collection("resourcesCompanyWorkers").find(query).toArray();
         console.log(EmployersArray3);
         if(EmployersArray1.length==0 && EmployersArray2.length==0 && EmployersArray3.length==0 )
         {
@@ -237,7 +237,7 @@ app.post('/loginInCheck', async (req, res) => {
 
 app.get('/updateProfileEmployer', function (req, res) {
 
-    if (Uid == "")
+    if (Uid == "" || typeUser!="Employers")
         res.redirect("/");
 
     MongoClient.connect(url, function (err, db) {
