@@ -36,9 +36,6 @@
         <label for="phonenumber"><b>Phone numbers: </b></label>
         <br /><label id="phoneError" style="color: red; font-size: 18px; display: none;"></label>
         <ul id="addedPhoneNumbers">
-            <!-- TODO: change place holders to the number from the db if initial log in then no phone numbers yet-->
-            <!--<li style="font-size: 18px;" id="thePhoneNumber">place holder (phone from db)<span style="cursor: pointer;"
-                    onclick="delPhone('thePhoneNumber')">&#215;</span></li>-->
         </ul>
         <input type="text" style="display: none;" name="phonenumber" id="phonenumber" maxlength="10"
             oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');">
@@ -81,14 +78,11 @@
         <label for="female" style="font-size:22px;">Female&emsp;</label>
         <input type="radio" id="other" name="gender" value="other">
         <label for="other" style="font-size:22px;">Other</label>
+        <br />
 
-        <!-- TODO: add areas in the country -->
-
+        <!--Areas:
         <br /><br /><label for="countryAreas"><b>areas where i can't work in: </b></label>
         <ul id="addedCountryAreas">
-            <!-- TODO: change place holders to the number from the db if initial log in then no phone numbers yet-->
-            <!--<li style="font-size: 18px;" id="thePhoneNumber">place holder (phone from db)<span style="cursor: pointer;"
-                    onclick="delPhone('thePhoneNumber')">&#215;</span></li>-->
         </ul>
         <label id="noCountryAreas" style="font-size:22px;">no areas to show<br><br></label>
         <label style="font-size:18px;">choose another area:</label>
@@ -96,27 +90,39 @@
         <select name="countryAreas" id="countryAreas">
             <option style="font-size:18px;" value="Golan Heights">Golan Heights</option>
             <option style="font-size:18px;" value="Galilee">Galilee</option>
-            <option style="font-size:18px;" value="Coastal Plain">Coastal Plain</option>
-            <!--TODO: add more areas-->
-        </select>
+            <option style="font-size:18px;" value="Coastal Plain">Coastal Plain</option>-->
+        <!--TODO: add more areas-->
+        <!--</select>
         <button id="addAountryAreaB" type="button" class=button onclick="addAnotherArea()"
             style="padding: 8px 15px;">add area</button>
         <button id="addAreaB" type="button" class=button onclick="addArea()"
             style="padding: 8px 15px; display: none;">Add</button>
         <br />
-        <input type="hidden" id="areas" name="areas">
+        <input type="hidden" id="areas" name="areas">-->
         <!--to POST-->
 
-
-        <br><button type="submit" class="button">update ditails</button>
+        <!--DATES OF UNAVAILABILITY-->
+        <br /><label for="addedDates"><b>Dates when I am not available: </b></label>
+        <br /><label id="dateError" style="color: red; font-size: 18px; display: none;"></label>
+        <ul id="addedDates">
+        </ul>
+        <input type="date" style="display: none;" name="date" id="date">
+        <button id="addAnotherDateB" type="button" class=button onclick="addAnotherDate()" style="padding: 8px 15px;">add another date</button>
+        <button id="addDateB" type="button" class=button onclick="addDate()" style="padding: 8px 15px; display: none;">Add</button>
+        <input type="hidden" id="dates" name="dates">
+        <!--to POST-->
+        <br />
+        
+        <button type="submit" class="button">update ditails</button>
     </form>
 </body>
 
 <script type="text/javascript">
     var loggedId;
-    var jobTypes = []; // get initial from db
-    var phoneNumbers = []; //get initial from db
-    var countryAreas = []; //get initial from db
+    var jobTypes = [];
+    var phoneNumbers = [];
+    var dates = [] //TODO: get initial from db
+    //var countryAreas = []; 
 
     //TODO: take all information from the data base and put in the right places in the form
     //console.log("<%= firstName %>");
@@ -226,6 +232,7 @@
         hide("noField");
         hide("phoneError");
         document.getElementById("phonenumber").focus();
+        document.getElementById("phonenumber").value = "";
     }
 
     /*
@@ -240,16 +247,15 @@
             pho.innerHTML = "a phone number should have 10 digist"
             return;
         }
-        else if(phoneNumbers.includes(text))
-        {
-          var pho = document.getElementById("phoneError");
+        else if (phoneNumbers.includes(text)) {
+            var pho = document.getElementById("phoneError");
             show("phoneError");
             pho.innerHTML = "that phone number already exist"
             return;
         }
 
 
-        console.log("leng: "+text.length);
+        console.log("leng: " + text.length);
 
         hide("phonenumber");
         show("addAnotherPhoneB");
@@ -283,7 +289,7 @@
         ul.appendChild(li);
     }
 
-    function addAnotherArea() {
+    /*function addAnotherArea() {
         var selElement = document.getElementById("countryAreas");
         //document.getElementById("jobTypesErrorL").style.display='none';
 
@@ -306,9 +312,9 @@
                 span.setAttribute("style", "cursor: pointer;");
                 //onclick
                 span.addEventListener("click", function () {
-                    /*
-                        function to delete an area
-                    */
+                    
+                        //function to delete an area
+                    
 
                     this.parentElement.style.display = 'none';
 
@@ -327,7 +333,68 @@
             }
         }
 
+    }*/
+
+    function addAnotherDate() {
+        show("date");
+        hide("addAnotherDateB");
+        show("addDateB");
+        hide("noField");
+        document.getElementById("date").focus();
+        //document.getElementById("phonenumber").value = "";
     }
+
+    function addDate() {
+        hide("noField");
+        var newDate = document.getElementById("date").value;
+
+        if (dates.includes(newDate)) {
+            var pho = document.getElementById("dateError");
+            show("dateError");
+            pho.innerHTML = "that date already exist"
+            return;
+        }
+
+        hide("date");
+        show("addAnotherDateB");
+        hide("addDateB");
+        hide("dateError");
+
+
+        //add the phone to the list:
+
+        dates.push(newDate);
+
+        var ul = document.getElementById("addedDates");
+        var li = document.createElement("li");
+        li.appendChild(document.createTextNode(newDate));
+        li.setAttribute("id", newDate);
+        li.setAttribute("style", "font-size:18px;");
+
+        //------span -> X symbol : REMOVE the phone number
+        var span = document.createElement("span");
+        span.appendChild(document.createTextNode('\u00D7'));
+        span.setAttribute("style", "cursor: pointer;");
+        //onclick
+        span.addEventListener("click", function () {
+            delDate(this.parentElement, this.parentElement.id);
+        });
+
+        //----adding the childs
+        li.appendChild(span);
+        ul.appendChild(li);
+    }
+
+    function delDate(li, id1) {
+
+        li.style.display = 'none';
+        //remove the phone from the phones list:
+        dates = dates.filter(date => date != id1);
+        //for checking
+        console.log(dates);
+
+    }
+
 
     function initialDitails() {
         /*
@@ -374,24 +441,36 @@
         }
 
         //GENDER
-        switch("<%=gender%>")
-        {
-          case "male": radiobtn = document.getElementById("male").checked = true; break;
-          case "female": radiobtn = document.getElementById("female").checked = true; break;
-          default: radiobtn = document.getElementById("other").checked = true; break;
+        switch ("<%=gender%>") {
+            case "male": radiobtn = document.getElementById("male").checked = true; break;
+            case "female": radiobtn = document.getElementById("female").checked = true; break;
+            default: radiobtn = document.getElementById("other").checked = true; break;
         }
 
 
-        var areas;
-        if (areas = "<%= countryAreas %>") {
-            areas = areas.split(",");
-            console.log(areas.toString);
-            for (var a of areas) {
-                document.getElementById("areas").value = a.trim();
-                addAnotherArea();
+        //DATES:
+        var today = new Date();
+        var dd = String(today.getDate()).padStart(2, '0');
+        var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+        var yyyy = today.getFullYear();
+
+        today = yyyy + '-' + mm + '-' + dd;
+        //document.write(today);
+        document.getElementById("date").min = today;
+
+
+        
+        var date;
+        console.log("1 <%= dates %>");
+        if (date = "<%= dates %>") {
+            date = date.split(",");
+            for (var a of date) {
+                console.log("a: "+a);
+                document.getElementById("date").value = a;
+                addDate();
             }
         }
-
+        
 
     }
 
@@ -409,7 +488,8 @@
 
         document.getElementById("phoneNumbers").value = phoneNumbers.toString();
         document.getElementById("types").value = jobTypes.toString();
-        document.getElementById("areas").value = countryAreas.toString();
+        document.getElementById("dates").value = dates.toString();
+        //document.getElementById("areas").value = countryAreas.toString();
     }
 
 </script>

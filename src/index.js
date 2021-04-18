@@ -9,7 +9,7 @@ const app_port = process.env.PORT || 4000;
 const MongoClient = require('mongodb').MongoClient;
 const { request } = require("express");
 const url = "mongodb+srv://ymon:ymonashdod@cluster.0qqlp.mongodb.net/eventSaver?retryWrites=true&w=majority";
-var Uid = "";
+var Uid = "208394700";
 var typeUser = ""
 
 
@@ -77,7 +77,7 @@ app.get('/updateProfileContractor', function (req, res) {
         dbo.collection("ContractorWorkers").find(query).toArray(function (err, result) {
             if (err) throw err;
             if (result.length != 0) {
-                console.log(result[0].lastName); //test
+                //console.log(result[0].lastName); //test
                 //info = result[0];
                 res.render('pages/updateProfileContractor', result[0]);
             }
@@ -92,14 +92,13 @@ app.get('/updateProfileContractor', function (req, res) {
 });
 
 app.post('/updateContractor', (req, res) => {
-    console.log("phone+" + req.body.addressC);
 
     MongoClient.connect(url, function (err, db) {
         if (err) throw err;
         var dbo = db.db("eventSaver");
         var myquery = { _id: Uid };
 
-        var hasA, theA, area; //address
+        var hasA, theA, date; //address
         if (typeof req.body.addressC != "undefined") {
             hasA = true;
             console.log("hasA 1");
@@ -110,10 +109,15 @@ app.post('/updateContractor', (req, res) => {
             theA = req.body.address;
         else
             theA = null;
-        if (req.body.areas == "")
-            area = null;
+        /*if (req.body.areas == "")
+            area = null;*/
+        console.log("dates "+req.body.dates);
+        if (req.body.dates == "")
+            date = null;
+        else
+            date=req.body.dates;
 
-        var newvalues = { $set: { firstName: req.body.firstname, lastName: req.body.lastname, email: req.body.email, hasAddress: hasA, address: theA, phoneNumbers: req.body.phone, countryAreas: area, jobTypes: req.body.types } };
+        var newvalues = { $set: { firstName: req.body.firstname, lastName: req.body.lastname, email: req.body.email, hasAddress: hasA, address: theA, phoneNumbers: req.body.phone, dates: date, jobTypes: req.body.types } };
 
         dbo.collection("ContractorWorkers").updateOne(myquery, newvalues, function (err, res) {
             if (err) throw err;
