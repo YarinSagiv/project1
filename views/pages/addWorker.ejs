@@ -1,0 +1,30 @@
+<html>
+
+<head>
+    <link href="css/sty.css" rel="stylesheet">
+</head>
+
+<body>
+
+    <header>
+        <%- include('../partials/_header') %>
+    </header>
+
+    <button type="button" class=button onclick="newContractor()">add contractor worker</button>
+    <button type="button" class=button onclick="newHumanResource()">add human resource company worker</button>
+
+    <script>
+        function newContractor() {
+          window.location.href = "newC";
+      
+        }
+      
+        function newHumanResource() {
+          window.location.href = "newHR";
+      
+        }
+        
+    </script>
+</body>
+
+</html>
