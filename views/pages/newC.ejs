@@ -1,0 +1,81 @@
+<html>
+<head>
+    <link href="css/sty.css" rel="stylesheet">
+</head>
+
+<body>
+
+    <header>
+        <%- include('../partials/_header') %>
+    </header>
+
+<form id="form1" action="/inputDBcontractor" method="POST" onsubmit="return backtohome()">
+    <div class="container">
+        <p>Please fill in the contractor worker details to add him to the system</p>
+        <hr>
+        <br><label id="errorinput"></label><br>
+        <label for="firstname"><b>First Name</b></label>
+        <input type="text" placeholder="Enter First Name" name="firstname" id="firstname" oninput="this.value = this.value.replace(/[^a-zA-Z]/g, '').replace(/(\..?)\../g, '$1');"required>
+        <br/>
+        <label for="lastname"><b>last Name</b></label>
+        <input type="text" placeholder="Enter Secones Name" name="secname" id="secname" oninput="this.value = this.value.replace(/[^a-zA-Z]/g, '').replace(/(\..?)\../g, '$1');" required>
+        <br/>
+        <label for="iduser"><b>ID</b></label>
+        <br><label id="id"></label><br>
+        <input type="text" placeholder="Enter ID" name="iduser" id="iduser" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..?)\../g, '$1');" required>
+        <br/>
+        <label for="psw"><b>Password</b></label>
+        <input type="password" placeholder="Enter Constractor worker Password" name="psw" id="psw" required>
+        <br/>
+        <hr>
+
+        <button type="submit" class="registerbtn" >Add</button>
+    </div>
+
+    <div class="container signin">
+        <p> this user already have an account? </p> 
+        <button onclick="login()" class="registerbtn">Log In</button>
+      </div>
+
+</form>
+    
+<span id = "message" style="color:red"> </span> <br><br>  
+
+<script>
+    /*check if the name or id is already used*/   
+    if ("<%= temp1 %>" == 'false')
+    {
+        var l = document.getElementById("errorinput");
+        l.innerHTML = "The ID already exixt in the website, please change id."
+        l.style = "font-size:18px; color: red;"
+        newCons=false;
+    }
+        
+    else{
+        document.getElementById('errorinput').style.display = 'none';
+    }
+
+    function backtohome()
+    {
+        newCons=true;
+
+        /* check if the ID have 9 digits */
+        if((document.getElementById('iduser').value.length)!=9)
+        {
+            var l = document.getElementById("id");
+            l.innerHTML = "The ID need to be with 9 digits."
+            l.style = "font-size:18px; color: red;"
+            newCons=false
+        }
+
+        else{
+            document.getElementById('id').style.display = 'none';
+        }
+
+        return newCons;
+    }
+</script>
+
+</body>
+</html>
+
