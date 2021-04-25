@@ -9,8 +9,8 @@ const app_port = process.env.PORT || 4000;
 const MongoClient = require('mongodb').MongoClient;
 const { request } = require("express");
 const url = "mongodb+srv://ymon:ymonashdod@cluster.0qqlp.mongodb.net/eventSaver?retryWrites=true&w=majority";
-var Uid = "";
-var typeUser = "";
+var Uid = "208394700";
+var typeUser = "ContractorWorkers";
 
 
 // Set the view engine to ejs
