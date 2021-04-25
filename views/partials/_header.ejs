@@ -5,16 +5,113 @@
 <header>
 
     <div class="header">
-        <h2>Event Saver</h2>
+        <h2 style="text-align: center;">Event Saver</h2>
+        <label id="name" style="text-align: left; font-size: 20px;">Hey, Guest</label>
     </div>
 
     <div id="navbar">
-        <a class="active" href="/">Home </a>
-        <a href="/connectpage">connect</a>
-        <a href="#">help</a>
-        <a class="form-group">
-            <input type="text" class="form-control" placeholder="Search"> </a>
+        <a id="home" class="active" href="/">Home </a>
+        <a id="reg" href="/newu">registration</a>
+        <a id="log" href="/logIn">log in</a>
+        <a id="profile" style="display: none;">my profile</a>
+        <a id="contact" href="/contactUs">contact us</a>
+        <a id="password" href="/changeHR" style="display: none;">change password</a>
+        <a id="logOut" href="/logOut" style="display: none; float: right;">log out</a>
+        <label id="addNew" style="display: none;"><br><br><a id="addC" href="/newC">add new Contractor worker</a>
+            <a id="addHR" href="/newHR">add new HR worker</a></label>
+
+        <!--<a class="form-group">
+            <input type="text" class="form-control" placeholder="Search"> </a>-->
+
     </div>
 
 
 </header>
+
+<script>
+    function activate(id) {
+        document.getElementById(id).className = "active";
+    }
+    function deactivate(id) {
+        document.getElementById(id).className = null;
+    }
+    function show(id) {
+        document.getElementById(id).style.display = 'block';
+    }
+    function hide(id) {
+        document.getElementById(id).style.display = 'none';
+    }
+    function setRef(id, page) {
+        document.getElementById("profile").href = "/" + page;
+    }
+    var currentPage = window.location.pathname;
+    if (currentPage == "/logIn") {
+        activate("log");
+        deactivate("home");
+        deactivate("reg");
+        deactivate("contact");
+        deactivate("password");
+        deactivate("profile");
+        deactivate("addC");
+        deactivate("addHR");
+    }
+    else if (currentPage == "/newu") {
+        deactivate("log");
+        deactivate("home");
+        activate("reg");
+        deactivate("contact");
+        deactivate("password");
+        deactivate("profile");
+        deactivate("addC");
+        deactivate("addHR");
+    }
+    else if (currentPage == "/changeHR") {
+        deactivate("log");
+        deactivate("home");
+        deactivate("reg");
+        deactivate("contact");
+        deactivate("profile");
+        activate("password");
+        deactivate("addC");
+        deactivate("addHR");
+    }
+    else if (currentPage == "/updateProfileContractor" || currentPage == "/updateProfileEmployer" || currentPage == "/profileEmployerPage" || currentPage == "/profileContractorPage" || currentPage == "/changeC" || currentPage == "/changeHR") {
+        deactivate("log");
+        deactivate("home");
+        deactivate("reg");
+        deactivate("contact");
+        activate("profile");
+        deactivate("password");
+        deactivate("addC");
+        deactivate("addHR");
+    }
+
+    if ("<%= Uname %>" != "")
+        document.getElementById("name").innerHTML = "Hey, <%= Uname %>";
+    if ("<%= typeUser %>" == "ContractorWorkers") {
+        show("profile");
+        setRef("profile", "profileContractorPage");
+        hide("log");
+        hide("reg");
+        show("logOut");
+        hide("password");
+        hide("addNew");
+    }
+    else if ("<%= typeUser %>" == "Employers") {
+        show("profile");
+        setRef("profile", "profileEmployerPage");
+        hide("log");
+        hide("reg");
+        show("logOut");
+        hide("password");
+        hide("addNew");
+    }
+    else if ("<%= typeUser %>" == "resourcesCompanyWorkers") {
+        hide("log");
+        hide("reg");
+        show("logOut");
+        show("password");
+        show("addNew");
+    }
+
+</script>

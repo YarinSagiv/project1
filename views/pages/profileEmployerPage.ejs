@@ -12,11 +12,11 @@
 
   <form action="/ProfileEmployerPage" method="post" >
     <label style="font-size:22px;">
-    <label for="firstname"><b>First name :</b> <label style="font-size:19px;"><%=firstName%></label></label><br>
-    <label for="lastname"><b>Last name :</b> <label style="font-size:19px;"><%=lastName%></label></label><br>
-    <label for="userName"><b>User name :</b><label style="font-size:19px;"> <%=userName%></label></label><br>
-    <label for="email"><b>Email : </b><label style="font-size:19px;"><%=email%> </label></label><br>
-    <label for="phoneNumber"><b>phone Number :</b><label style="font-size:19px;"> <%=phoneNumbers%></label></label><br>
+    <label class="profile" for="firstname"><b>First name :</b> <label style="font-size:19px;"><%=firstName%></label></label><a class="button" style="float: right;" href="/updateProfileEmployer">Update Profile</a><br>
+    <label class="profile" for="lastname"><b>Last name :</b> <label style="font-size:19px;"><%=lastName%></label></label><br>
+    <label class="profile" for="userName"><b>User name :</b><label style="font-size:19px;"> <%=userName%></label></label><br>
+    <label class="profile" for="email"><b>Email : </b><label style="font-size:19px;"><%=email%> </label></label><br>
+    <label class="profile" for="phoneNumber"><b>phone Number/s :</b><label style="font-size:19px;"> <%=phoneNumbers%></label></label><br>
     </label>
 
     </form>

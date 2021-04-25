@@ -19,6 +19,12 @@ body {
     cursor: pointer;
     font-family: Felix Titling, Helvetica, sans-serif;
   }
+  .profile
+  {
+    display: 'block';
+    line-height: 30px;
+
+  }
   
   select {
     width: 100%;
@@ -39,8 +45,8 @@ body {
   
   .header {
     background-color: #f1f1f1;
-    padding: 30px;
-    text-align: center;
+    padding: 10px;
+    /*text-align: center;*/
   }
   
   #navbar a {
@@ -129,4 +135,5 @@ input[type=text], input[type=password],input[type=email] {
     background-color: #f1f1f1;
     text-align: center;
   }
+
 
