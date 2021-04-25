@@ -1,0 +1,74 @@
+
+<html>
+
+<head>
+    <link href="css/sty.css" rel="stylesheet">
+</head>
+
+<body>
+
+    <header>
+        <%- include('../partials/_header') %>
+    </header>
+<form id="form1" action="/updatePasswordC" method="POST" onsubmit="return backtohome()"> 
+    <div class="container">
+        <p>Please fill in this form to change your password</p>
+        <hr>  
+        <label for="psw"><b>Password</b></label>
+        <input type="password" placeholder="Enter New Password" name="psw" id="psw" required>
+        <br/>
+        <label for="psw-repeat"><b>Repeat Password</b></label>
+        <br><label id="pswerror"></label><br>
+        <input type="password" placeholder="Repeat New Password" name="psw-repeat" id="psw-repeat" required>
+        <hr>
+
+        <button type="submit" class="registerbtn" >OK</button>
+    </div>
+</form>
+
+<span id = "message" style="color:red"> </span> <br><br>  
+
+<script>
+  function backtohome() {
+    newusucc=true;
+
+    /* check if  the password and the repeat password are the same */
+    if(!checkPassword())
+    {
+      var l = document.getElementById("pswerror");
+      l.innerHTML = "The new passrord and the repeat new password not the same."
+      l.style = "font-size:18px; color: red;"
+      newusucc=false
+
+    }
+    else
+    {
+      document.getElementById('pswerror').style.display = 'none';
+    }
+  }
+
+  /* check if  the password and the repeat password are the same */
+  function checkPassword()
+  {
+    var pw = document.getElementById("psw").value;
+    console.log(pw);  
+    var pw2=document.getElementById("psw-repeat").value;  
+    console.log(pw2);  
+
+    //check if the password are equal 
+    if (pw!= pw2)
+    {
+      return false;
+    }
+    else
+    {
+      return true;
+
+    }
+  
+  }
+
+</script>
+
+</body>
+</html>
