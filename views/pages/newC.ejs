@@ -20,13 +20,16 @@
         <label for="lastname"><b>last Name</b></label>
         <input type="text" placeholder="Enter Secones Name" name="secname" id="secname" oninput="this.value = this.value.replace(/[^a-zA-Z]/g, '').replace(/(\..?)\../g, '$1');" required>
         <br/>
+        <label for="username"><b>User Name</b></label>
+        <input type="text" placeholder="Enter User Name" name="username" id="uname" required>
+        <br/>
         <label for="iduser"><b>ID</b></label>
         <br><label id="id"></label><br>
         <input type="text" placeholder="Enter ID" name="iduser" id="iduser" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..?)\../g, '$1');" required>
         <br/>
         <label for="psw"><b>Password</b></label>
-        <input type="password" placeholder="Enter Constractor worker Password" name="psw" id="psw" required>
-        <br/>
+        <input type="password" placeholder="Enter Constractor worker Password" name="psw" id="document.getElementById(firstName)+temp1" required>
+         <br/>
         <hr>
 
         <button type="submit" class="registerbtn" >Add</button>
@@ -42,6 +45,8 @@
 <span id = "message" style="color:red"> </span> <br><br>  
 
 <script>
+    var temp1 = math.random>10;
+    var temp2=math.random<10;
     /*check if the name or id is already used*/   
     if ("<%= temp1 %>" == 'false')
     {
@@ -78,4 +83,3 @@
 
 </body>
 </html>
-

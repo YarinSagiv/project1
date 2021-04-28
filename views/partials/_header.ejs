@@ -17,8 +17,10 @@
         <a id="contact" href="/contactUs">contact us</a>
         <a id="password" href="/changeHR" style="display: none;">change password</a>
         <a id="logOut" href="/logOut" style="display: none; float: right;">log out</a>
-        <label id="addNew" style="display: none;"><br><br><a id="addC" href="/newC">add new Contractor worker</a>
-            <a id="addHR" href="/newHR">add new HR worker</a></label>
+        <label id="HR" style="display: none;"><br><br><a id="addC" href="/newC">add new Contractor worker</a>
+            <a id="addHR" href="/newHR">add new HR worker</a><a id="deleteHR" style="float: right;"
+                onclick="toDelete()">delete my account</a>
+        </label>
 
         <!--<a class="form-group">
             <input type="text" class="form-control" placeholder="Search"> </a>-->
@@ -95,7 +97,7 @@
         hide("reg");
         show("logOut");
         hide("password");
-        hide("addNew");
+        hide("HR");
     }
     else if ("<%= typeUser %>" == "Employers") {
         show("profile");
@@ -104,14 +106,20 @@
         hide("reg");
         show("logOut");
         hide("password");
-        hide("addNew");
+        hide("HR");
     }
     else if ("<%= typeUser %>" == "resourcesCompanyWorkers") {
         hide("log");
         hide("reg");
         show("logOut");
         show("password");
-        show("addNew");
+        show("HR");
+    }
+
+    function toDelete() {
+        var r = confirm("are you sure you want to delete yout account?");
+        if (r == true)
+            window.location.href = "/deleteHR";
     }
 
 </script>

@@ -20,6 +20,10 @@
         <label for="lastname"><b>last Name: </b></label>
         <input type="text" placeholder="Enter last Name" name="secname" id="secname" oninput="this.value = this.value.replace(/[^a-zA-Z]/g, '').replace(/(\..?)\../g, '$1');" required>
         <br/>
+        
+        <label for="username"><b>User Name</b></label>
+        <input type="text" placeholder="Enter User Name" name="username" id="uname" required>
+        <br />
         <label for="iduser"><b>ID:</b></label>
         <label id="id"></label>
         <input type="text" placeholder="Enter ID" name="iduser" id="iduser" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..?)\../g, '$1');" required>

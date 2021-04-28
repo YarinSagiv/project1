@@ -133,7 +133,7 @@ app.post('/inputDBcontractor', (req, res) => {
             lastName: req.body.secname,
             password: req.body.psw,
             phoneNumbers: null,
-            userName: null,
+            userName: req.body.username,
             email: null,
             hasAddress: false,
             adress: null,
@@ -171,13 +171,13 @@ app.post('/inputDBHR', (req, res) => {
             lastName: req.body.secname,
             password: req.body.psw,
             phoneNumbers: null,
-            userName: null,
+            userName: req.body.username,
             email: null
         };
         var succ = dbo.collection("resourcesCompanyWorkers").insertOne(myobj, function (err, resault2) {
 
             if (err) {
-                res.view("pages/newC", { temp2: "false" });
+                res.view("pages/newHR", { temp2: "false" });
             }
             else {
                 res.redirect("/"); //the response 
@@ -198,6 +198,7 @@ app.post('/updatePasswordC', (req, res) => {
         dbo.collection("ContractorWorkers").updateOne(myquery, newvalues, function (err, res1) {
             if (err) throw err;
             else {
+                //alert("password changed successfully!");
                 res.redirect("/"); //the response 
             }
             console.log("1 document updated");
@@ -215,6 +216,7 @@ app.post('/updatePasswordHR', (req, res) => {
         dbo.collection("resourcesCompanyWorkers").updateOne(myquery, newvalues, function (err, res2) {
             if (err) throw err;
             else {
+                //alert("password changed successfully!");
                 res.redirect("/"); //the response 
             }
             console.log("1 document updated");
@@ -232,6 +234,7 @@ app.post('/updatePasswordE', (req, res) => {
         dbo.collection("Employers").updateOne(myquery, newvalues, function (err, res3) {
             if (err) throw err;
             else {
+                //alert("password changed successfully!");
                 res.redirect("/"); //the response 
             }
             console.log("1 document updated");
@@ -239,7 +242,8 @@ app.post('/updatePasswordE', (req, res) => {
         });
     });
 });
-app.post('/deleteC', (req, res) => {
+
+app.get('/deleteC', (req, res) => {
     //-- delete document example:
     MongoClient.connect(url, function (err, db) {
         if (err) throw err;
@@ -247,13 +251,15 @@ app.post('/deleteC', (req, res) => {
         var myquery = { _id: Uid };
         dbo.collection("ContractorWorkers").deleteOne(myquery, function (err, obj) {
             if (err) throw err;
+            //alert("account deleted successfully!");
             console.log("1 document deleted");
+            res.redirect("/logOut");
             db.close();
         });
     });
 });
 
-app.post('/deleteHR', (req, res) => {
+app.get('/deleteHR', (req, res) => {
     //-- delete document example:
     MongoClient.connect(url, function (err, db) {
         if (err) throw err;
@@ -262,12 +268,14 @@ app.post('/deleteHR', (req, res) => {
         dbo.collection("resourcesCompanyWorkers").deleteOne(myquery, function (err, obj) {
             if (err) throw err;
             console.log("1 document deleted");
+            //alert("account deleted successfully!");
+            res.redirect("/logOut");
             db.close();
         });
     });
 });
 
-app.post('/deleteE', (req, res) => {
+app.get('/deleteE', (req, res) => {
     //-- delete document example:
     MongoClient.connect(url, function (err, db) {
         if (err) throw err;
@@ -275,7 +283,9 @@ app.post('/deleteE', (req, res) => {
         var myquery = { _id: Uid };
         dbo.collection("Employers").deleteOne(myquery, function (err, obj) {
             if (err) throw err;
+            //alert("account deleted successfully!");
             console.log("1 document deleted");
+            res.redirect("/logOut");
             db.close();
         });
     });
@@ -340,15 +350,22 @@ app.post('/updateContractor', (req, res) => {
 
         var newvalues = { $set: { firstName: req.body.firstname, lastName: req.body.lastname, email: req.body.email, hasAddress: hasA, address: theA, phoneNumbers: req.body.phone, dates: date, jobTypes: req.body.types } };
 
-        dbo.collection("ContractorWorkers").updateOne(myquery, newvalues, function (err, res) {
+        dbo.collection("ContractorWorkers").updateOne(myquery, newvalues, function (err, res1) {
             if (err) throw err;
+            //alert("account updated successfully!");
+
             console.log("1 document updated");
+
+            fullName = req.body.firstname + " " + req.body.lastname;
+
+            res.view("pages/firstpage");
+
             db.close();
         });
     });
 
     //res.send({redirect: '/blog'});
-    res.redirect('/');
+    //res.redirect('/');
 });
 
 // function that input to the data base the details that the user enter when he register to the website
@@ -376,12 +393,14 @@ app.post('/inputDataBase', (req, res) => {
                 res.view("pages/newu", { suc1: "false" });
             }
             else {
+                //alert("account added successfully!");
+                console.log("1 document inserted");
                 res.redirect("/"); //the response 
+                db.close();
+
             }
 
 
-            console.log("1 document inserted");
-            db.close();
 
         });
 
@@ -446,10 +465,11 @@ app.get('/updateProfileEmployer', function (req, res) {
             dbo.collection("Employers").find(query).toArray(function (err, result) {
                 if (err) throw err;
                 if (result.length != 0) {
-                    console.log(result[0].phoneNumbers); //test
-                    //info = result[0];
                     res.view('pages/updateProfileEmployer', result[0]);
                 }
+                else
+                    res.redirect("/");
+
                 db.close();
             });
         });
@@ -457,7 +477,6 @@ app.get('/updateProfileEmployer', function (req, res) {
     else
         res.redirect("/");
 
-    //res.render('pages/updateProfileEmployer');
 });
 
 
@@ -469,15 +488,20 @@ app.post('/updateProfileEmployer', function (req, res) {
 
         var newvalues = { $set: { firstName: req.body.firstname, lastName: req.body.lastname, email: req.body.email, phoneNumbers: req.body.phone } };
 
-        dbo.collection("Employers").updateOne(myquery, newvalues, function (err, res) {
-            if (err) throw err;
+        dbo.collection("Employers").updateOne(myquery, newvalues, function (err, res1) {
+            if (err) { throw err; }
+            //alert("account updated successfully!");
             console.log("1 document updated");
+
+            fullName = req.body.firstname + " " + req.body.lastname;
+
             db.close();
         });
     });
 
     //res.send({redirect: '/blog'});
-    res.redirect('/');
+    fullName = req.body.firstname + " " + req.body.lastname;
+    res.view("pages/firstpage");
 });
 
 
@@ -535,53 +559,12 @@ app.post('/updatePasswordE', (req, res) => {
             else {
                 res.render("pages/firstpage"); //the response 
             }
+            //alert("password updated successfully!");
             console.log("1 document updated");
             db.close();
         });
     });
 });
-app.post('/deleteC', (req, res) => {
-    //-- delete document example:
-    MongoClient.connect(url, function (err, db) {
-        if (err) throw err;
-        var dbo = db.db("eventSaver");
-        var myquery = { _id: Uid };
-        dbo.collection("ContractorWorkers").deleteOne(myquery, function (err, obj) {
-            if (err) throw err;
-            console.log("1 document deleted");
-            db.close();
-        });
-    });
-});
-
-app.post('/deleteHR', (req, res) => {
-    //-- delete document example:
-    MongoClient.connect(url, function (err, db) {
-        if (err) throw err;
-        var dbo = db.db("eventSaver");
-        var myquery = { _id: Uid };
-        dbo.collection("resourcesCompanyWorkers").deleteOne(myquery, function (err, obj) {
-            if (err) throw err;
-            console.log("1 document deleted");
-            db.close();
-        });
-    });
-});
-
-app.post('/deleteE', (req, res) => {
-    //-- delete document example:
-    MongoClient.connect(url, function (err, db) {
-        if (err) throw err;
-        var dbo = db.db("eventSaver");
-        var myquery = { _id: Uid };
-        dbo.collection("Employers").deleteOne(myquery, function (err, obj) {
-            if (err) throw err;
-            console.log("1 document deleted");
-            db.close();
-        });
-    });
-});
-
 
 
 
