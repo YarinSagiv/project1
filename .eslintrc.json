@@ -16,6 +16,6 @@
         "no-unsafe-negation":["warn"],  // disallow negating the left operand of relational operators like: !key in object instead of !(key in object)
         "consistent-return":["warn"],  // require return statements to either always or never specify values
         "no-unused-vars":["warn"],
-		"camelcase":["warn"]  //enforce camelcase naming convention
+		"camelcase":["error"]  //enforce camelcase naming convention
     }
 }

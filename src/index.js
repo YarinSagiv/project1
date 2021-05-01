@@ -4,7 +4,7 @@ const ejs = require('ejs');
 // Initialise Express
 const app = express();
 
-const app_port = process.env.PORT || 4000;
+const appPort = process.env.PORT || 4000;
 
 const MongoClient = require('mongodb').MongoClient;
 const { request } = require("express");
@@ -24,9 +24,9 @@ app.use(express.urlencoded({
 }));
 
 
-app.listen(app_port);
-console.log(`app is running. port: ${app_port}`);
-console.log(`http://127.0.0.1:${app_port}/`);
+app.listen(appPort);
+console.log(`app is running. port: ${appPort}`);
+console.log(`http://127.0.0.1:${appPort}/`);
 
 function addViewer(req, res, next) {
     req.state = {};
@@ -136,10 +136,10 @@ app.post('/inputDBcontractor', (req, res) => {
             userName: req.body.username,
             email: null,
             hasAddress: false,
-            adress: null,
+            address: null,
             jobTypes: null,
             dates: null,
-            gender: null
+            gender: "other"
         };
 
 
@@ -297,30 +297,20 @@ app.get('/updateProfileContractor', function (req, res) {
     /* 
         get ditails from db
     */
-    //the user's ID after logging in //TODO
-    var info = "";
 
     MongoClient.connect(url, function (err, db) {
         if (err) throw err;
         var dbo = db.db("eventSaver");
-        //var query = { _id: Uid };
         var query = { _id: Uid };
         dbo.collection("ContractorWorkers").find(query).toArray(function (err, result) {
             if (err) throw err;
             if (result.length != 0) {
-                console.log(result[0].lastName); //test
-                //info = result[0];
                 res.view('pages/updateProfileContractor', result[0]);
             }
             db.close();
         });
     });
 
-    /*
-      redirect to the update page and send the ditails
-    */
-    console.log("info " + info);
-    //res.render('pages/updateProfileContractor', { name: "mor" });
 });
 
 app.post('/updateContractor', (req, res) => {
@@ -332,7 +322,6 @@ app.post('/updateContractor', (req, res) => {
         var hasA, theA, date; //address
         if (typeof req.body.addressC != "undefined") {
             hasA = true;
-            console.log("hasA 1");
         }
         else
             hasA = false;
@@ -342,13 +331,12 @@ app.post('/updateContractor', (req, res) => {
             theA = null;
         /*if (req.body.areas == "")
             area = null;*/
-        console.log("dates " + req.body.dates);
         if (req.body.dates == "")
             date = null;
         else
             date = req.body.dates;
 
-        var newvalues = { $set: { firstName: req.body.firstname, lastName: req.body.lastname, email: req.body.email, hasAddress: hasA, address: theA, phoneNumbers: req.body.phone, dates: date, jobTypes: req.body.types } };
+        var newvalues = { $set: { firstName: req.body.firstname, lastName: req.body.lastname, email: req.body.email, hasAddress: hasA, address: theA, phoneNumbers: req.body.phone, dates: date, jobTypes: req.body.types, gender:req.body.gender } };
 
         dbo.collection("ContractorWorkers").updateOne(myquery, newvalues, function (err, res1) {
             if (err) throw err;
@@ -424,17 +412,14 @@ app.post('/loginInCheck', async (req, res) => {
         let EmployersArray1 = await dbo.collection("Employers").find(query).toArray();
         let EmployersArray2 = await dbo.collection("ContractorWorkers").find(query).toArray();
         let EmployersArray3 = await dbo.collection("resourcesCompanyWorkers").find(query).toArray();
-        console.log("emp3: " + EmployersArray3);
         if (EmployersArray1.length == 0 && EmployersArray2.length == 0 && EmployersArray3.length == 0) {
             res.view("pages/logIn", { suc2: "false" });
 
         }
         else if (EmployersArray1.length != 0) {
-            console.log("1");
             typeUser = "Employers";
             Uid = EmployersArray1[0]._id;
             fullName = EmployersArray1[0].firstName + " " + EmployersArray1[0].lastName;
-            //console.log("id: "+EmployersArray1[0]._id);
             res.redirect("/"); //the response 
         }
         else if (EmployersArray2.length != 0) {
@@ -494,20 +479,18 @@ app.post('/updateProfileEmployer', function (req, res) {
             console.log("1 document updated");
 
             fullName = req.body.firstname + " " + req.body.lastname;
-
-            db.close();
+            res.redirect("/");
+            
         });
-    });
+        db.close();
 
-    //res.send({redirect: '/blog'});
-    fullName = req.body.firstname + " " + req.body.lastname;
-    res.view("pages/firstpage");
+    });
+ 
 });
 
 
 app.get("/profileEmployerPage", function (req, res) {
     if (Uid != "" && typeUser == "Employers") {
-        console.log("1");
         MongoClient.connect(url, function (err, db) {
             if (err) throw err;
             var dbo = db.db("eventSaver");
@@ -515,7 +498,6 @@ app.get("/profileEmployerPage", function (req, res) {
             dbo.collection("Employers").find(query).toArray(function (err, result) {
                 if (err) throw err;
                 if (result.length != 0) {
-                    console.log(result[0].lastName); //test
                     res.view('pages/profileEmployerPage', result[0]);
                 }
                 db.close();
@@ -538,7 +520,6 @@ app.get("/profileContractorPage", function (req, res) {
         dbo.collection("ContractorWorkers").find(query).toArray(function (err, result) {
             if (err) throw err;
             if (result.length != 0) {
-                console.log(result[0].lastName); //test
                 res.view('pages/profileContractorPage', result[0]);
             }
             db.close();
