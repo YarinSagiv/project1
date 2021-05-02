@@ -117,9 +117,6 @@ app.get('/changeE', function (req, res) {
 });
 
 
-app.get('/removeUser', function (req, res) {
-    res.view('pages/removeUser');
-});
 
 // function that input to the data base the details that the user enter when he add contractor worker to the website
 app.post('/inputDBcontractor', (req, res) => {
@@ -267,8 +264,8 @@ app.get('/deleteHR', (req, res) => {
         var myquery = { _id: Uid };
         dbo.collection("resourcesCompanyWorkers").deleteOne(myquery, function (err, obj) {
             if (err) throw err;
-            console.log("1 document deleted");
             //alert("account deleted successfully!");
+            console.log("1 document deleted");
             res.redirect("/logOut");
             db.close();
         });
