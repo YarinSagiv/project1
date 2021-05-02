@@ -46,7 +46,7 @@
       <label class="profile" for="Dates not available:" id="dates" style="display: none;"><b>Dates not available : </b>
         <label style="font-size:19px;">
             <%= dates %>
-          </label></label>
+        </label></label>
       <!--<label for="salary"><b>salary:</b> <label style="font-size:19px;"></label></label><br>-->
     </label>
   </form>
@@ -58,7 +58,7 @@
     else
     document.getElementById("hasAddress").style.display = 'block';
   
-  if ("<%= dates %>" != 'null')
+  if ("<%= dates %>" != '')
     document.getElementById("dates").style.display = 'block';
 
 
