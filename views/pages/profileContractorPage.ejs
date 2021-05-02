@@ -31,21 +31,22 @@
       <label class="profile" for="jobTypes"><b>Job Types :</b><label style="font-size:19px;">
           <%= jobTypes %>
         </label></label><br>
-      <label class="profile" for="gender:"><b>gender :</b> <label style="font-size:19px;">
-          <%= gender %>
-        </label></label><br>
-      <label class="profile" for="Dates not available:" id="dates" style="display: none;"><b>Dates not available : </b>
+      <label class="profile" for="gender:"><b>gender :</b> 
         <label style="font-size:19px;">
-          <%= dates %>
-        </label></label><br>
-      <label class="profile" for="business place:" id="hasAddress" style="display: none;"></label><b>business place(T/F) :</b> 
-      <label style="font-size:19px;">
+          <%= gender %>
+        </label></label>
+      <label class="profile" for="business place:" id="hasAddress" style="display: none;"><b>business place(T/F) :</b> 
+        <label style="font-size:19px;">
           <%= hasAddress %>
-        </label></label><br>
+        </label></label>
       <label class="profile" for="business address:" id="address" style="display: none;"><b> business address :
         </b><label style="font-size:19px;">
           <%= address %>
-        </label></label><br>
+        </label></label>
+      <label class="profile" for="Dates not available:" id="dates" style="display: none;"><b>Dates not available : </b>
+        <label style="font-size:19px;">
+            <%= dates %>
+          </label></label>
       <!--<label for="salary"><b>salary:</b> <label style="font-size:19px;"></label></label><br>-->
     </label>
   </form>
@@ -54,8 +55,7 @@
 <script>
   if ("<%= hasAddress %>" != 'false')
     document.getElementById("address").style.display = 'block';
-
-  if ("<%= hasAddress %>" != 'true')
+    else
     document.getElementById("hasAddress").style.display = 'block';
   
   if ("<%= dates %>" != 'null')
