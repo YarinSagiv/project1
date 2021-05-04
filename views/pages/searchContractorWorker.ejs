@@ -10,45 +10,83 @@
     <%- include('../partials/_header') %>
   </header>
   
-  <form name="searchingInput" id="searchContractor" action="/searchContractorWorker" method="get">
+<form name="searchingInput" id="searchContractor" action="/searchContractorWorker" method="get">
     <label style="font-size:20px;">
         <label class="searching" for="LsearchingBy:"><b>searching by: </b></label>
         <select name="searchingBy" id="searchingBy" onChange="myFunction()" >
-            <option style="font-size:18px;" id='fName'  value="firstname">first name</option>
-            <option style="font-size:18px;" id='lName' value="lastName">last name</option>
-            <option style="font-size:18px;" id='jT' value="jobTypes">job Types</option>
-            <option style="font-size:18px;" id='jR' value="jobRate">job Rate</option>
-            <option style="font-size:18px;" id='daates' value="dates">dates</option>
-            <option style="font-size:18px;" id='gender' value="gender" onChange="getElementById('g1').innerHTML"></option>>gender</option>
-            <option style="font-size:18px;" id='aServices' value="accompaniedServices">accompanied services</option>
-            <option style="font-size:18px;" id='rP' value="rangePrice">range of price</option>
+            <option class="searching" style="font-size:18px;" id='fName'  value="firstname">first name</option>
+            <option class="searching" style="font-size:18px;" id='lName' value="lastName">last name</option>
+            <option class="searching" style="font-size:18px;" id='jT' value="jobTypes">job Types</option>
+            <option class="searching" style="font-size:18px;" id='jR' value="jobRate">job Rate</option>
+            <option class="searching" style="font-size:18px;" id='daates' value="dates">dates</option>
+            <option class="searching" style="font-size:18px;" id='gender' value="gender" style="display: none;">gender</option>
+            <option class="searching" style="font-size:18px;" id='aServices' value="accompaniedServices">accompanied services</option>
+            <option class="searching" style="font-size:18px;" id='rP' value="rangePrice">range of price</option>
         </select>
-        <input type="submit" name="send" value="search" />
-        <input type="reset" name="reset1" value="reset">
+        <label class="searching" id='selectGender' style="display: none;">
+            <input type="radio" id="male" name="gender" value="male" checked>
+            <label for="male" style="font-size:22px;">Male&emsp;</label>
+            <input type="radio" id="female" name="gender" value="female">
+            <label for="female" style="font-size:22px;">Female&emsp;</label>
+            <input type="radio" id="other" name="gender" value="other">
+            <label for="other" style="font-size:22px;">Other</label>
+        </label>
+    <input type="submit" name="send" value="search" />
+    <input type="reset" name="reset1" value="reset">
 
- </form>
-<p id='g1'>
-    <label for="gender"><b>Gender: </b></label><br>
-    <input type="radio" id="male" name="gender" value="male" checked>
-    <label for="male" style="font-size:22px;">Male&emsp;</label>
-    <input type="radio" id="female" name="gender" value="female">
-    <label for="female" style="font-size:22px;">Female&emsp;</label>
-    <input type="radio" id="other" name="gender" value="other">
-    <label for="other" style="font-size:22px;">Other</label>
-</p>
+
+</form>
 
 <p id="demo"></p>
 
 <script >
+db.ContractorWorkers.find({"gander":female}).toArray(function (err, result){
+console.log(result);}
+db.getUsers( {
+   showCredentials: <Boolean>,
+   filter: <document>
+} )
+
+ /*let EmployersArray2 = await dbo.collection("ContractorWorkers").find(query).toArray();
+ if (EmployersArray2.length != 0) {
+    Nser = "ContractorWorkers";
+    Uid = EmployersArray1[0]._id;
+    fullName = EmployersArray1[0].firstName + " " + EmployersArray1[0].lastName;
+    res.redirect("/"); //the response 
+
+    if (id == "male" ) {
+
+        
+MongoClient.connect(url, function (err, db) 
+{
+    if (err) throw err;
+    var dbo = db.db("eventSaver");
+    //var query = { _id: Uid };
+    var query = { gender: "female" };
+    dbo.collection("ContractorWorkers").findOne(query).toArray(function (err, result) {
+        if (err) throw err;
+        console.log(result);
+        if (result.length != 0) {
+            console.log(result[0]);
+            res.view('pages/searchContractorWorker', result[0]);
+        }
+        else
+            res.redirect("/");
+            db.close();
+    });
+            
+});
+*/
+
+
     
 function myFunction() {
   var x = document.getElementById("searchingBy").value;
   document.getElementById("demo").innerHTML = "You selected: " + x;  
+  if (x == 'gender')
+    document.getElementById("selectGender").style.display = 'block';
 } 
-function myFunction1() {
-  var x = document.getElementById("gender").value;
-  document.getElementById("demo").innerHTML = "You selected: " + x;  
-} 
+
 
 function show(id) {
     document.getElementById(id).style.display = 'block';
