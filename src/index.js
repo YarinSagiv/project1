@@ -136,7 +136,13 @@ app.post('/inputDBcontractor', (req, res) => {
             address: null,
             jobTypes: null,
             dates: null,
-            gender: "other"
+            gender: "other",
+            jobRate:null,
+            accompaniedServices=null,
+            rangePrice=null,
+            minPrice=null,
+            maxPrice=null
+
         };
 
 
@@ -544,7 +550,26 @@ app.post('/updatePasswordE', (req, res) => {
     });
 });
 
-
-
+/*
+app.get("/searchContractorWorker", function (req, res) {
+    if (Uid != "" && (typeUser == "Employers"||typeUser=="resourcesCompanyWorkers")) {
+        MongoClient.connect(url, function (err, db) {
+            if (err) throw err;
+            var dbo = db.db("eventSaver");
+            var query = { _id: Uid };
+            dbo.collection("ContractorWorkers").find(query).toArray(function (err, result) {
+                if (err) throw err;
+                if (result.length != 0) {
+                    res.view('pages/searchContractorWorker', result[0]);
+                }
+                db.close();
+            });
+        });
+    }
+    else {
+        res.redirect('/');
+    }
+});
+*/
 
 // https://project1sprint1.herokuapp.com

@@ -1,0 +1,57 @@
+<html>
+
+<head>
+  <link href="css/sty.css" rel="stylesheet">
+</head>
+
+<body>
+    firstConection = true,
+  <header>
+    <%- include('../partials/_header') %>
+  </header>
+  
+  <form name="searchingInput" id="searchContractor" action="/searchContractorWorker" method="get">
+    <label style="font-size:22px;">
+        <label class="searching" for="firstname"><b>First Name :</b><label style="font-size:19px;">
+        <label for="LsearchingBy:"><b>searching by: </b></label>
+        <select name="searchingBy" id="searchingBy" multiple>
+            <option style="font-size:18px;" id='fName' name='click' value="firstname">first name</option>
+            <option style="font-size:18px;" id='lName' value="lastName">last name</option>
+            <option style="font-size:18px;" id='jT' value="jobTypes">job Types</option>
+            <option style="font-size:18px;" id='jR' value="jobRate">job Rate</option>
+            <option style="font-size:18px;" id='daates' value="dates">dates</option>
+            <option style="font-size:18px;" id='gender' value="gender">gender</option>
+            <option style="font-size:18px;" id='aServices' value="accompaniedServices">accompanied services</option>
+            <option style="font-size:18px;" id='rP' value="rangePrice">range of price</option>
+        </select>
+        <input type="submit" name="send" value="Submit" />
+        <input type="reset" name="reset1" value="reset">
+
+        
+    </div>
+</form>
+
+</body>
+
+<script type="text/javascript">
+
+function show(id) {
+    document.getElementById(id).style.display = 'block';
+}
+
+function hide(id) {
+    document.getElementById(id).style.display = 'none';
+}
+
+/*function type1(id){
+    var s1 = document.getElementById(id);
+    if(id=='fName')
+    {
+        document.write()
+    }
+    
+}*/
+
+</script>
+
+</html>

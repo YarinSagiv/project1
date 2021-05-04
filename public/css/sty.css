@@ -26,6 +26,13 @@ body {
 
   }
   
+  .searching
+  {
+    display: 'block';
+    line-height: 30px;
+
+  }
+
   select {
     width: 100%;
     padding: 15px;
