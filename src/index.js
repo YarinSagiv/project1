@@ -125,7 +125,13 @@ app.get('/changeE', function (req, res) {
         res.redirect("/");
 });
 
+app.post('/inputEvent'), (req,res) =>
+{
+    MongoClient.connect(url, function (err, db) {
+        if (err) throw err;
 
+    });
+}
 
 // function that input to the data base the details that the user enter when he add contractor worker to the website
 app.post('/inputDBcontractor', (req, res) => {

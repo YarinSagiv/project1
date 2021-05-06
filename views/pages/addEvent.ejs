@@ -9,7 +9,7 @@
     <%- include('../partials/_header') %>
   </header>
 
-<form id="form1" action="/inputEvent" method="POST" onsubmit="return initdit()">
+<form id="form1" action="/inputEvent" method="POST" onsubmit="return backhome2()">
     <div class="container">
       <p>Please fill in this form the details to create an event</p>
       <hr>
@@ -21,7 +21,7 @@
       <label for="eventLoc"><b>Event Location</b></label>
       <input type="text" placeholder="Enter event location" name="eventloc" id="eventloc" oninput="this.value = this.value.replace(/[^a-zA-Z]/g, '').replace(/(\..?)\../g, '$1');" required>
       <br/>
-      <label for="numGuest"><b>num guest</b></label>
+      <label for="numGuest"><b>Number of guests</b></label>
       <input type="text" placeholder="Enter number of guests" name="numGuest" id="numguest" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..?)\../g, '$1');" required>
       <br/>
       <label for="date"><b>Event date</b></label>
@@ -50,6 +50,6 @@
     //document.write(today);
     document.getElementById("date").min = today;
   }
-
+  initdit();
 
 </script>
