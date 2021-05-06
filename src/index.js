@@ -338,16 +338,108 @@ app.post('/inputEvent',async (req,res) =>
 
         let rec1 = await dbo.collection("recuitment").find(query).toArray();
         let con1 = await dbo.collection("ContractorWorkers").find(rec1["idC"]).toArray();
-        var unDates=con1.split(",");
-        if(req.date in unDates)
+        var i;
+        for (i=0;i<con1.length; i++)
         {
-             res.view('pages/addEvent', { suc3: false });
+            var unDates=con1[i][dates].split(",");
+            if (unDates.includes(req.date))
+            {
+                 res.view('pages/addEvent', { suc3: false });
+            }
+
+            else
+        {
+            
+            // if the location of the event change - email will send to all the contructors
+            lastLoc==con1[i][event][location];
+            if(lastLoc!=req.body.eventloc)
+            {
+                  emaildate(i);
+            }
+            
+
+        
+            // if the date of the event change - email will send to the contructor
+            lastDate=con1[i][event][date];
+                
+            if(lastDate!=req.body.date)
+            {
+                emailLoc(i);
+            }
+           
+            
+
+
         }
+        }
+      
+        
 
         
 
     });
 });
+//send email with the new date to  the contructor worker
+
+function emaildate(index)
+{
+    var nodemailer = require('nodemailer');
+
+    var transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: 'eventsaver2@gmail.com',
+        pass: 'eventsaver2323!'
+      }
+    });
+    
+    var mailOptions = {
+      from: 'eventsaver2@gmail.com',
+      to: con1[index][email],
+      subject: 'Sending Email using Node.js',
+      text: 'The location of the event change to'+String(req.body.eventloc)
+    };
+    
+    transporter.sendMail(mailOptions, function(error, info){
+      if (error) {
+        console.log(error);
+      } else {
+        console.log('Email sent: ' + info.response);
+      }
+    });
+}
+
+
+
+
+//send email with the new location to  the contructor worker
+function emailLoc(index)
+{
+    var nodemailer = require('nodemailer');
+
+    var transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: 'eventsaver2@gmail.com',
+        pass: 'eventsaver2323!'
+      }
+    });
+    
+    var mailOptions = {
+      from: 'eventsaver2@gmail.com',
+      to: con1[index][email],
+      subject: 'Sending Email using Node.js',
+      text: 'The date of the event change to'+String(req.body.date)
+    };
+    
+    transporter.sendMail(mailOptions, function(error, info){
+      if (error) {
+        console.log(error);
+      } else {
+        console.log('Email sent: ' + info.response);
+      }
+    });
+}
 
 
 app.post('/updateContractor', (req, res) => {
