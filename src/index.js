@@ -325,9 +325,9 @@ app.get('/updateProfileContractor', function (req, res) {
 });
 
 
-app.post('/inputEvent', (req,res) =>
+app.post('/inputEvent',async (req,res) =>
 {
-    MongoClient.connect(url, function (err, db) {
+    MongoClient.connect(url,async function (err, db) {
         if (err) throw err;
         var dbo = db.db("eventSaver");
 
