@@ -2,11 +2,13 @@ body {
     margin: 0;
     font-size: 28px;
     font-family: Felix Titling, Helvetica, sans-serif;
-  }
-  * {
+}
+
+* {
     box-sizing: border-box;
-  }
-  .button {
+}
+
+.button {
     background-color: #a70d48;
     border: none;
     color: white;
@@ -18,45 +20,41 @@ body {
     margin: 4px 2px;
     cursor: pointer;
     font-family: Felix Titling, Helvetica, sans-serif;
-  }
-  .profile
-  {
+}
+
+.profile {
     display: 'block';
     line-height: 30px;
+}
 
-  }
-  
-  .searching
-  {
+.searching {
     display: 'block';
     line-height: 30px;
+}
 
-  }
-
-  select {
+select {
     width: 100%;
     padding: 15px;
     margin: 5px 0 22px 0;
     display: inline-block;
     border: none;
     background: #f1f1f1;
-    font-family: Felix Titling, Helvetica, sans-serif; /*TODO: maybe different style?*/
-  }
+    font-family: Felix Titling, Helvetica, sans-serif;
+    /*TODO: maybe different style?*/
+}
 
-  #navbar {
+#navbar {
     overflow: hidden;
     background-color: #333;
-  
-  
-  }
-  
-  .header {
+}
+
+.header {
     background-color: #f1f1f1;
     padding: 10px;
     /*text-align: center;*/
-  }
-  
-  #navbar a {
+}
+
+#navbar a {
     float: left;
     display: block;
     color: #fbfdfc;
@@ -64,60 +62,63 @@ body {
     padding: 14px 16px;
     text-decoration: none;
     font-size: 17px;
-  }
-  
-  #navbar a:hover {
+}
+
+#navbar a:hover {
     background-color: #ddd;
     color: black;
-  }
-  
-  #navbar a.active {
+}
+
+#navbar a.active {
     background-color: #a70d48;
     color: white;
-  }
-  
-  .content {
+}
+
+.content {
     padding: 16px;
-  }
-  
-  .sticky {
+}
+
+.sticky {
     position: fixed;
     top: 0;
     width: 100%;
-  }
-  
-  .sticky + .content {
-    padding-top: 60px;
-  }
+}
 
-  .container {
+.sticky+.content {
+    padding-top: 60px;
+}
+
+.container {
     padding: 16px;
     background-color: white;
-  }
+}
 
-  /* Full-width input fields */
-input[type=text], input[type=password],input[type=email] {
+/* Full-width input fields */
+
+input[type=text], input[type=password], input[type=email] {
     width: 100%;
     padding: 15px;
     margin: 5px 0 22px 0;
     display: inline-block;
     border: none;
     background: #f1f1f1;
-  }
-  
-  input[type=text]:focus, input[type=password]:focus {
+}
+
+input[type=text]:focus, input[type=password]:focus {
     background-color: #ddd;
     outline: none;
-  }
-  
-  /* Overwrite default styles of hr */
-  hr {
+}
+
+/* Overwrite default styles of hr */
+
+hr {
     border: 1px solid #f1f1f1;
     margin-bottom: 25px;
-  }
-  
-  /* Set a style for the submit button */
-  .registerbtn {
+}
+
+/* Set a style for the submit button */
+
+.registerbtn {
     background-color: #a70d48;
     color: white;
     padding: 16px 20px;
@@ -126,21 +127,51 @@ input[type=text], input[type=password],input[type=email] {
     cursor: pointer;
     width: 100%;
     opacity: 0.9;
-  }
-  
-  .registerbtn:hover {
-    opacity: 1;
-  }
-  
-  /* Add a blue text color to links */
-  a {
-    color: dodgerblue;
-  }
+}
 
-  /* Set a grey background color and center the text of the "sign in" section */
+.registerbtn:hover {
+    opacity: 1;
+}
+
+/* Add a blue text color to links */
+
+a {
+    color: dodgerblue;
+}
+
+/* Set a grey background color and center the text of the "sign in" section */
+
 .signin {
     background-color: #f1f1f1;
     text-align: center;
-  }
+}
 
+h3.report {
+    padding-left: 15px;
+}
 
+label.report {
+    font-size: 20px;
+    padding-left: 15px;
+}
+
+button.report {
+    font-size: 18px;
+    font-family: Felix Titling, Helvetica, sans-serif;
+    background-color: #a70d48;
+    color: white;
+    padding: 16px 20px;
+    border: none;
+    cursor: pointer;
+    width: 35%;
+    display: block;
+    margin: 0 auto;
+    text-align: center;
+}
+
+select.report {
+    width: 200px;
+    font-size: 18px;
+    background: #f1f1f1;
+    font-family: Felix Titling, Helvetica, sans-serif;
+}

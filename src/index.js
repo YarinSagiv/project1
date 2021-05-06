@@ -51,9 +51,7 @@ app.get("/contactUs", function (req, res) {
     res.view("pages/contactUs");
 });
 
-app.get("/contractorReports", function (req, res) {
-    res.view("pages/contractorReports");
-});
+
 
 app.get("/logOut", function (req, res) {
     Uid = "";
@@ -72,11 +70,10 @@ app.get("/logIn", function (req, res) {
 });
 
 app.get("/addEvent", function (req, res) {
-    if (Uid != "" && typeUser!="Employers") {
+    if (Uid != "" && typeUser != "Employers") {
         res.redirect("/");
     }
-    else
-    {
+    else {
         res.view("pages/addEvent", { suc3: true });
 
     }
@@ -329,26 +326,24 @@ app.get('/updateProfileContractor', function (req, res) {
 });
 
 
-app.post('/inputEvent',async (req,res) =>
-{
-    MongoClient.connect(url,async function (err, db) {
+app.post('/inputEvent', async (req, res) => {
+    MongoClient.connect(url, async function (err, db) {
         if (err) throw err;
         var dbo = db.db("eventSaver");
 
         var query = { _id: Uid }; //id employer
-        var newvalues = { $set: {  } };
+        var newvalues = { $set: {} };
 
-        var date=req.body.date;
+        var date = req.body.date;
 
-        let rec1 = await dbo.collection("recuitment").find(query).toArray();
+        let rec1 = await dbo.collection("Recuitment").find(query).toArray();
         let con1 = await dbo.collection("ContractorWorkers").find(rec1["idC"]).toArray();
-        var unDates=con1.split(",");
-        if(req.date in unDates)
-        {
-             res.view('pages/addEvent', { suc3: false });
+        var unDates = con1.split(",");
+        if (req.date in unDates) {
+            res.view('pages/addEvent', { suc3: false });
         }
 
-        
+
 
     });
 });
@@ -377,7 +372,7 @@ app.post('/updateContractor', (req, res) => {
         else
             date = req.body.dates;
 
-        var newvalues = { $set: { firstName: req.body.firstname, lastName: req.body.lastname, email: req.body.email, hasAddress: hasA, address: theA, phoneNumbers: req.body.phone, dates: date, jobTypes: req.body.types, gender:req.body.gender } };
+        var newvalues = { $set: { firstName: req.body.firstname, lastName: req.body.lastname, email: req.body.email, hasAddress: hasA, address: theA, phoneNumbers: req.body.phone, dates: date, jobTypes: req.body.types, gender: req.body.gender } };
 
         dbo.collection("ContractorWorkers").updateOne(myquery, newvalues, function (err, res1) {
             if (err) throw err;
@@ -522,12 +517,12 @@ app.post('/updateProfileEmployer', function (req, res) {
 
             fullName = req.body.firstname + " " + req.body.lastname;
             res.redirect("/");
-            
+
         });
         db.close();
 
     });
- 
+
 });
 
 
@@ -591,15 +586,15 @@ app.post('/updatePasswordE', (req, res) => {
 
 
 app.get("/searchContractor", function (req, res) {
-    if (Uid != "" && (typeUser == "Employers"||typeUser=="resourcesCompanyWorkers")) {
+    if (Uid != "" && (typeUser == "Employers" || typeUser == "resourcesCompanyWorkers")) {
         MongoClient.connect(url, function (err, db) {
             if (err) throw err;
             var dbo = db.db("eventSaver");
-            var query ={};
-            
-            var firstname=req.body.firstname1;
-            if (firstname != "") 
-                query["firstName"] =firstname;
+            var query = {};
+
+            var firstname = req.body.firstname1;
+            if (firstname != "")
+                query["firstName"] = firstname;
 
             dbo.collection("ContractorWorkers").find(query).toArray(function (err, result) {
                 if (err) throw err;
@@ -618,5 +613,90 @@ app.get("/searchContractor", function (req, res) {
 app.get("/searchContractorWorker", function (req, res) {
     res.view('pages/searchContractorWorker');
 });
+
+
+app.get("/contractorReports", function (req, res) {
+    res.view("pages/contractorReports", { Recruits: null });
+});
+
+app.post('/contractorReports', async (req, res) => {
+    MongoClient.connect(url, async function (err, db) {
+        if (err) throw err;
+        var dbo = db.db("eventSaver");
+
+
+
+        //db.inventory.find( { status: "A" }, { item: 1, status: 1, _id: 0 } )
+
+        //projection
+        var fieldsE = { _id: 0 }; //do not bring id field
+        var fieldsR = {};
+
+        if (typeof req.body.nameEmp != undefined) {
+            fieldsE.firstName = 1;
+            fieldsE.lastName = 1;
+        }
+        if (typeof req.body.phone != undefined) {
+            fieldsE.phoneNumbers = 1;
+        }
+        if (typeof req.body.email != undefined) {
+            fieldsE.email = 1;
+        }
+        if (typeof req.body.date != undefined) {
+            fieldsR.date = 1;
+            fieldsR.startTime = 1;
+        }
+        if (typeof req.body.location != undefined) {
+            fieldsR.location = 1;
+        }
+
+        //-------
+        Uid = "208375709";
+        //-------
+
+        let recruits = await dbo.collection("Recuitment").find({ idC: Uid }, fieldsR).toArray();
+        console.log("recruits:   "+JSON.stringify(recruits));
+        console.log("recruits[0].idEmployer = "+recruits[0].idEmployer);
+
+        var united = [];
+        for (var i=0;i<recruits.length;++i) {
+            let employer = await dbo.collection("Employers").find({ _id: recruits[i].idEmployer }).toArray();
+            console.log("employer  " + JSON.stringify(employer[0]));
+
+            united.push({ ...recruits[i], ...employer[0] });
+            console.log("united  " + JSON.stringify(united));
+
+        }
+
+        if (recruits.length != 0) {
+            var send = {
+                nameEmp: req.body.nameEmp,
+                phone: req.body.phone,
+                email1: req.body.email,
+                date: req.body.date,
+                location: req.body.location,
+                Recruits: united
+            };
+
+            res.view("pages/contractorReports", send);
+        }
+        //if (typeof req.body.nameEmp != "undefined")
+
+
+
+    });
+});
+
+
+
+
+
+
+
+
+
+
+
+
 
 // https://project1sprint1.herokuapp.com

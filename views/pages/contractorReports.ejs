@@ -1,30 +1,165 @@
 <html>
 
 <head>
-  <link href="css/sty.css" rel="stylesheet">
+    <link href="css/sty.css" rel="stylesheet">
+<style>
+    td{
+        border: 1px solid #ddd;
+  padding: 8px;
+    }
+    tr{
+        border: 1px solid #ddd;
+  padding: 8px;
+  
+    }
+    tr:nth-child(even){background-color: #f2f2f2;}
+    tr:hover {background-color: #ddd;}
+
+    th{
+        padding-top: 12px;
+  padding-bottom: 12px;
+  padding-left: 6px;
+    padding-right: 6px;
+  text-align: center;
+  background-color: #a70d48;
+  opacity: 0.9;
+  color: white;
+    }
+</style>
 </head>
 
 <body>
 
-  <header>
-    <%- include('../partials/_header') %>
-  </header>
+    <header>
+        <%- include('../partials/_header') %>
+    </header>
 
-  <form action="/contractorReports" method="POST">
-    <h2>get report of my recruits with:</h2><br />
-    <label>name</label>  
-    <input type="checkbox" id="name" ><br />
-    <label>phone</label>  
-    <input type="checkbox" id="phone" ><br />
-    <label>email</label>  
-    <input type="checkbox" id="email" >
-    <label>dates</label>  
-    <input type="checkbox" id="dates" >
-    <label>email</label>  
-    <input type="checkbox" id="email" >
+    <form action="/contractorReports" method="POST">
+        <h3 class="report">report of my recruits with:</h3>
+        <label class="report">name of employer</label>
+        <input type="checkbox" id="nameEmp" name="nameEmp">&emsp;
+        <label class="report">phone</label>
+        <input type="checkbox" id="phone" name="phone">&emsp;
+        <label class="report">email</label>
+        <input type="checkbox" id="email" name="email">&emsp;
+        <label class="report">date</label>
+        <input type="checkbox" id="date" name="date">&emsp;
+        <label class="report">location</label>
+        <input type="checkbox" id="location" name="location">&emsp;
+        <label class="report">price</label>
+        <input type="checkbox" id="price" name="price"><br />
+        <!------ TODO: ADD SEE RATES -->
 
-  </form>
+        <label class="report">at month</label>
+        <select class="report">
+            <option value="0">All</option>
+            <option value="1">January</option>
+            <option value="2">February</option>
+            <option value="3">March</option>
+            <option value="4">April</option>
+            <option value="5">May</option>
+            <option value="6">June</option>
+            <option value="7">July</option>
+            <option value="8">August</option>
+            <option value="9">September</option>
+            <option value="10">October</option>
+            <option value="11">November</option>
+            <option value="12">December</option>
+        </select><label class="report" id="year"></label>
 
+
+
+
+        <button type="reset">clear all</button>
+        <button class="report" type="submit">find</button>
+
+        <br/>
+        <table id="results" style="width:90%; margin: 0 auto; text-align: center; border-collapse: collapse;">
+            <tr id="head">
+
+            </tr>
+
+            <% if(Recruits!=null && typeof Recruits !=undefined) Recruits.forEach(function(dat) { %>
+                <tr>
+                    <% if(typeof dat.firstName != undefined && dat.firstName) { %>
+                        <td><%= dat.firstName %></td>
+                    <% } %>
+                    <% if(typeof dat.lastName != undefined && dat.lastName) { %>
+                        <td><%= dat.lastName %></td>
+                    <% } %>
+                    <% if(typeof dat.phoneNumbers != undefined && dat.phoneNumbers) { %>
+                        <td><%= dat.phoneNumbers %></td>
+                    <% } %>
+                    <% if(typeof dat.email != undefined && dat.email) { %>
+                        <td><%= dat.email %></td>
+                    <% } %>
+                    <% if(typeof dat.date != undefined && dat.date) { %>
+                        <td><%= dat.date %>&emsp;<%= dat.startTime %>/td> <!-- TODO: fix format-->
+                    <% } %>
+                    <% if(typeof dat.location != undefined && dat.location) { %>
+                        <td><%= dat.location %></td>
+                    <% } %>
+                    <% if(typeof dat.price != undefined && dat.price) { %>
+                        <td><%= dat.price %></td>
+                    <% } %>
+                </tr>
+                <% }); %>
+
+        </table>
+
+    </form>
+
+
+    <script type="text/javascript">
+
+        //write today's year in the label
+        var today = new Date();
+        document.getElementById("year").innerHTML = "/ " + today.getFullYear();
+
+        function isChecked(id) {
+            return typeof "<%=" + id + "%>" != undefined;
+        }
+
+        //add header row to table
+        var tr, th;
+        tr = document.getElementById("head");
+        if ("<%=Recruits%>" != "") {
+            if (isChecked("nameEmp")) { 
+                th = document.createElement('th');
+                th.innerHTML = "first name";
+                tr.appendChild(th);
+                th = document.createElement('th');
+                th.innerHTML = "last name";
+                tr.appendChild(th);
+            }
+            if (isChecked("phone")) { 
+                th = document.createElement('th');
+                th.innerHTML = "phone number";
+                tr.appendChild(th);
+            }
+            if (isChecked("email1")) { // todo - לשלוח שוב מהאינדקס איזה דברים הוא סימן ואיזה לא...
+                th = document.createElement('th');
+                th.innerHTML = "email";
+                tr.appendChild(th);
+            }
+            if (isChecked("date")) { // todo - לשלוח שוב מהאינדקס איזה דברים הוא סימן ואיזה לא...
+                th = document.createElement('th');
+                th.innerHTML = "event date";
+                tr.appendChild(th);
+            }
+            if (isChecked("location")) { // todo - לשלוח שוב מהאינדקס איזה דברים הוא סימן ואיזה לא...
+                th = document.createElement('th');
+                th.innerHTML = "location";
+                tr.appendChild(th);
+            }
+            if (isChecked("price")) { // todo - לשלוח שוב מהאינדקס איזה דברים הוא סימן ואיזה לא...
+                th = document.createElement('th');
+                th.innerHTML = "price";
+                tr.appendChild(th);
+            }
+        }
+    </script>
 
 </body>
+
 </html>
