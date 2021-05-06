@@ -9,7 +9,7 @@
     <%- include('../partials/_header') %>
   </header>
 
-<form id="form1" action="/inputEvent" method="POST" onsubmit="return backtohome1()">
+<form id="form1" action="/inputEvent" method="POST" onsubmit="return initdit()">
     <div class="container">
       <p>Please fill in this form the details to create an event</p>
       <hr>
@@ -31,19 +31,24 @@
       <input type="time" name="time" id="time">
       <br/>
 
-
-     
-      
-      <button type="submit" class="registerbtn" >Create Event</button>
+     <button type="submit" class="registerbtn" >Create Event</button>
     </div>
   
     
 </form>
 
 <script>
-  function backtohome1()
+  function initdit()
   {
+    //DATES:
+    var today = new Date();
+        var dd = String(today.getDate()).padStart(2, '0');
+        var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+        var yyyy = today.getFullYear();
 
+        today = yyyy + '-' + mm + '-' + dd;
+        //document.write(today);
+        document.getElementById("date").min = today;
   }
 
 
