@@ -138,11 +138,11 @@ app.post('/inputDBcontractor', (req, res) => {
             address: null,
             jobTypes: null,
             dates: null,
-            jobRate=null,
-            accompaniedServices=null,
-            rangeOfPrice=null,
-            min_price=null,
-            max_price=null,
+            jobRate: null,
+            accompaniedServices: null,
+            rangeOfPrice: null,
+            min_price: null,
+            max_price: null,
             gender: "other"
 
 
