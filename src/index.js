@@ -125,13 +125,14 @@ app.get('/changeE', function (req, res) {
         res.redirect("/");
 });
 
-app.post('/inputEvent'), (req,res) =>
+app.post('/inputEvent', (req,res) =>
 {
     MongoClient.connect(url, function (err, db) {
         if (err) throw err;
+        var dbo = db.db("eventSaver");
 
     });
-}
+});
 
 // function that input to the data base the details that the user enter when he add contractor worker to the website
 app.post('/inputDBcontractor', (req, res) => {
@@ -154,8 +155,8 @@ app.post('/inputDBcontractor', (req, res) => {
             jobRate: null,
             accompaniedServices: null,
             rangeOfPrice: null,
-            min_price: null,
-            max_price: null,
+            minPrice: null,
+            maxPrice: null,
             gender: "other"
 
 
