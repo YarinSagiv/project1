@@ -67,8 +67,15 @@ app.get("/logIn", function (req, res) {
     }
 });
 
-app.get('/addEvent', function (req, res) {
-    res.view("pages/addEvent");
+app.get("/addEvent", function (req, res) {
+    if (Uid != "" && typeUser=="Employers") {
+        res.redirect("/");
+    }
+    else
+    {
+        res.view("pages/addEvent");
+
+    }
 });
 
 app.get('/newu', function (req, res) {
