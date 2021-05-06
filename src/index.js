@@ -77,7 +77,7 @@ app.get("/addEvent", function (req, res) {
     }
     else
     {
-        res.view("pages/addEvent");
+        res.view("pages/addEvent", { suc3: true });
 
     }
 });
@@ -127,15 +127,6 @@ app.get('/changeE', function (req, res) {
         res.view('pages/changeE');
     else
         res.redirect("/");
-});
-
-app.post('/inputEvent', (req,res) =>
-{
-    MongoClient.connect(url, function (err, db) {
-        if (err) throw err;
-        var dbo = db.db("eventSaver");
-
-    });
 });
 
 // function that input to the data base the details that the user enter when he add contractor worker to the website
@@ -336,6 +327,32 @@ app.get('/updateProfileContractor', function (req, res) {
     });
 
 });
+
+
+app.post('/inputEvent',async (req,res) =>
+{
+    MongoClient.connect(url,async function (err, db) {
+        if (err) throw err;
+        var dbo = db.db("eventSaver");
+
+        var query = { _id: Uid }; //id employer
+        var newvalues = { $set: {  } };
+
+        var date=req.body.date;
+
+        let rec1 = await dbo.collection("recuitment").find(query).toArray();
+        let con1 = await dbo.collection("ContractorWorkers").find(rec1["idC"]).toArray();
+        var unDates=con1.split(",");
+        if(req.date in unDates)
+        {
+             res.view('pages/addEvent', { suc3: false });
+        }
+
+        
+
+    });
+});
+
 
 app.post('/updateContractor', (req, res) => {
     MongoClient.connect(url, function (err, db) {
@@ -573,21 +590,21 @@ app.post('/updatePasswordE', (req, res) => {
 });
 
 
-app.get("/searchContractorWorker", function (req, res) {
+app.get("/searchContractor", function (req, res) {
     if (Uid != "" && (typeUser == "Employers"||typeUser=="resourcesCompanyWorkers")) {
         MongoClient.connect(url, function (err, db) {
             if (err) throw err;
             var dbo = db.db("eventSaver");
-            var query ={}
+            var query ={};
             
-            var firstname=req.body.firstname1
+            var firstname=req.body.firstname1;
             if (firstname != "") 
-                query[firstName] =firstname;
+                query["firstName"] =firstname;
 
             dbo.collection("ContractorWorkers").find(query).toArray(function (err, result) {
                 if (err) throw err;
                 if (result.length != 0) {
-                    console.log(result[0][firstname])
+                    console.log(result[0][firstname]);
                     res.view('pages/searchContractorWorker', result[0]);
                 }
                 db.close();
@@ -598,6 +615,8 @@ app.get("/searchContractorWorker", function (req, res) {
         res.redirect('/');
     }
 });
-
+app.get("/searchContractorWorker", function (req, res) {
+    res.view('pages/searchContractorWorker');
+});
 
 // https://project1sprint1.herokuapp.com
