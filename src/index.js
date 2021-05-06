@@ -73,7 +73,7 @@ app.get("/addEvent", function (req, res) {
     }
     else
     {
-        res.view("pages/addEvent");
+        res.view("pages/addEvent", { suc3: true });
 
     }
 });
@@ -123,15 +123,6 @@ app.get('/changeE', function (req, res) {
         res.view('pages/changeE');
     else
         res.redirect("/");
-});
-
-app.post('/inputEvent', (req,res) =>
-{
-    MongoClient.connect(url, function (err, db) {
-        if (err) throw err;
-        var dbo = db.db("eventSaver");
-
-    });
 });
 
 // function that input to the data base the details that the user enter when he add contractor worker to the website
@@ -332,6 +323,32 @@ app.get('/updateProfileContractor', function (req, res) {
     });
 
 });
+
+
+app.post('/inputEvent', (req,res) =>
+{
+    MongoClient.connect(url, function (err, db) {
+        if (err) throw err;
+        var dbo = db.db("eventSaver");
+
+        var myquery = { _id: Uid }; //id employer
+        var newvalues = { $set: {  } };
+
+        date=req.body.date;
+
+        let rec1 = await dbo.collection("recuitment").find(query).toArray();
+        let con1 = await dbo.collection("ContractorWorkers").find(rec1[idC]).toArray();
+        unDates=con1.split(",");
+        if(req.date in unDates)
+        {
+             res.view('pages/addEvent', { suc3: false });
+        }
+
+        
+
+    });
+});
+
 
 app.post('/updateContractor', (req, res) => {
     MongoClient.connect(url, function (err, db) {
