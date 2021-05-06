@@ -574,10 +574,16 @@ app.get("/searchContractorWorker", function (req, res) {
         MongoClient.connect(url, function (err, db) {
             if (err) throw err;
             var dbo = db.db("eventSaver");
-            var query = { _id: Uid };
+            var query ={}
+            
+            var firstname=req.body.firstname1
+            if (firstname != "") 
+                query[firstName] =firstname;
+
             dbo.collection("ContractorWorkers").find(query).toArray(function (err, result) {
                 if (err) throw err;
                 if (result.length != 0) {
+                    console.log(result[0][firstname])
                     res.view('pages/searchContractorWorker', result[0]);
                 }
                 db.close();
