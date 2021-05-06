@@ -569,7 +569,7 @@ app.post('/updatePasswordE', (req, res) => {
 });
 
 
-app.get("/searchContractorWorker", function (req, res) {
+app.get("/searchContractor", function (req, res) {
     if (Uid != "" && (typeUser == "Employers"||typeUser=="resourcesCompanyWorkers")) {
         MongoClient.connect(url, function (err, db) {
             if (err) throw err;
@@ -578,7 +578,7 @@ app.get("/searchContractorWorker", function (req, res) {
             
             var firstname=req.body.firstname1
             if (firstname != "") 
-                query[firstName] =firstname;
+                query["firstName"] =firstname;
 
             dbo.collection("ContractorWorkers").find(query).toArray(function (err, result) {
                 if (err) throw err;
@@ -594,6 +594,8 @@ app.get("/searchContractorWorker", function (req, res) {
         res.redirect('/');
     }
 });
-
+app.get("/searchContractorWorker", function (req, res) {
+    res.view('pages/searchContractorWorker');
+});
 
 // https://project1sprint1.herokuapp.com
