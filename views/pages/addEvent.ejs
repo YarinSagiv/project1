@@ -11,7 +11,7 @@
 
 <form id="form1" action="/inputEvent" method="POST" onsubmit="return backtohome1()">
     <div class="container">
-      <p>Please fill in this form to create an event</p>
+      <p>Please fill in this form the details to create an event</p>
       <hr>
 
       <br/>
@@ -25,16 +25,10 @@
       <input type="text" placeholder="Enter number of guests" name="numGuest" id="numguest" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..?)\../g, '$1');" required>
       <br/>
       <label for="date"><b>Event date</b></label>
-      <input type="text" placeholder="Enter Event day" name="eventLocDay" id="eventLocDay" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..?)\../g, '$1');"required>
-      &nbsp;
-      <input type="text" placeholder="Enter Event month" name="eventLocMonth" id="eventLocMonth" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..?)\../g, '$1');"required>
-      &nbsp;
-      <input type="text" placeholder="Enter Event year" name="eventLocYear" id="eventLocYear" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..?)\../g, '$1');"required>
+      <input type="date"  name="date" id="date">
       <br/>
       <label for="date"><b>Start time</b></label>
-      <input type="text" placeholder="Enter hour" name="startHour" id="startHour" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..?)\../g, '$1');"required>
-      &nbsp;
-      <input type="text" placeholder="Enter minute" name="startMinute" id="startMinute" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..?)\../g, '$1');"required>
+      <input type="time" name="time" id="time">
       <br/>
 
 
