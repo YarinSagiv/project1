@@ -331,14 +331,14 @@ app.post('/inputEvent',async (req,res) =>
         if (err) throw err;
         var dbo = db.db("eventSaver");
 
-        var myquery = { _id: Uid }; //id employer
+        var query = { _id: Uid }; //id employer
         var newvalues = { $set: {  } };
 
-        date=req.body.date;
+        var date=req.body.date;
 
         let rec1 = await dbo.collection("recuitment").find(query).toArray();
-        let con1 = await dbo.collection("ContractorWorkers").find(rec1[idC]).toArray();
-        unDates=con1.split(",");
+        let con1 = await dbo.collection("ContractorWorkers").find(rec1["idC"]).toArray();
+        var unDates=con1.split(",");
         if(req.date in unDates)
         {
              res.view('pages/addEvent', { suc3: false });
@@ -591,16 +591,16 @@ app.get("/searchContractor", function (req, res) {
         MongoClient.connect(url, function (err, db) {
             if (err) throw err;
             var dbo = db.db("eventSaver");
-            var query ={}
+            var query ={};
             
-            var firstname=req.body.firstname1
+            var firstname=req.body.firstname1;
             if (firstname != "") 
                 query["firstName"] =firstname;
 
             dbo.collection("ContractorWorkers").find(query).toArray(function (err, result) {
                 if (err) throw err;
                 if (result.length != 0) {
-                    console.log(result[0][firstname])
+                    console.log(result[0][firstname]);
                     res.view('pages/searchContractorWorker', result[0]);
                 }
                 db.close();
