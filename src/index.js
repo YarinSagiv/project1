@@ -51,6 +51,10 @@ app.get("/contactUs", function (req, res) {
     res.view("pages/contactUs");
 });
 
+app.get("/contractorReports", function (req, res) {
+    res.view("pages/contractorReports");
+});
+
 app.get("/logOut", function (req, res) {
     Uid = "";
     typeUser = "";

@@ -1,0 +1,30 @@
+<html>
+
+<head>
+  <link href="css/sty.css" rel="stylesheet">
+</head>
+
+<body>
+
+  <header>
+    <%- include('../partials/_header') %>
+  </header>
+
+  <form action="/contractorReports" method="POST">
+    <h2>get report of my recruits with:</h2><br />
+    <label>name</label>  
+    <input type="checkbox" id="name" ><br />
+    <label>phone</label>  
+    <input type="checkbox" id="phone" ><br />
+    <label>email</label>  
+    <input type="checkbox" id="email" >
+    <label>dates</label>  
+    <input type="checkbox" id="dates" >
+    <label>email</label>  
+    <input type="checkbox" id="email" >
+
+  </form>
+
+
+</body>
+</html>
