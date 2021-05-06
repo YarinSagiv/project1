@@ -69,6 +69,7 @@ app.get("/logIn", function (req, res) {
 
 app.get("/addEvent", function (req, res) {
     if (Uid != "" && typeUser=="Employers") {
+        console.log("yaya")
         res.redirect("/");
     }
     else
