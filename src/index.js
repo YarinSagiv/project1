@@ -67,7 +67,9 @@ app.get("/logIn", function (req, res) {
     }
 });
 
-
+app.get('/addEvent', function (req, res) {
+    res.view("pages/addEvent");
+});
 
 app.get('/newu', function (req, res) {
 
@@ -136,7 +138,13 @@ app.post('/inputDBcontractor', (req, res) => {
             address: null,
             jobTypes: null,
             dates: null,
-            gender: "other"
+            gender: "other",
+            jobRate=null,
+            accompaniedServices=null,
+            rangeOfPrice=null,
+            min_price=null,
+            max_price=null
+
 
         };
 
@@ -368,7 +376,8 @@ app.post('/inputDataBase', (req, res) => {
             phoneNumbers: req.body.phone,
             userName: req.body.username,
             email: req.body.email,
-            password: req.body.psw
+            password: req.body.psw,
+            event: null
         };
 
 
