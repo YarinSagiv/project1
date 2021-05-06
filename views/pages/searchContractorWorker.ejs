@@ -13,7 +13,59 @@
 <form name="searchingInput" id="searchContractor" action="/searchContractorWorker" method="get">
     <label style="font-size:20px;">
         <label class="searching" for="LsearchingBy:"><b>searching by: </b></label>
-        <select name="searchingBy" id="searchingBy" onChange="myFunction()" >
+        <br>
+        <br>
+        <label for="firstname"><b>First Name: </b></label>
+        <input type="text" name="firstname1" id="firstname" 
+            oninput="this.value = this.value.replace(/[^a-zA-Z]/g, '').replace(/(\..?)\../g, '$1');" required>
+        <br >
+        <label for="lastname"><b>Last Name: </b></label>
+        <input type="text" name="lastname" id="lastname" 
+            oninput="this.value = this.value.replace(/[^a-zA-Z]/g, '').replace(/(\..?)\../g, '$1');" required>
+        <br>
+        <label for="jobTypesL"><b>Job Types: </b></label>
+        <select name="jobTypes" id="jobTypes" >
+            <option style="font-size:18px;" value="Hair Styling">Hair Styling</option>
+            <option style="font-size:18px;" value="Makeup">Makeup</option>
+            <option style="font-size:18px;" value="Event Stylist">Event Stylist</option>
+            <option style="font-size:18px;" value="Sitting Organizer">Sitting Organizer</option>
+            <option style="font-size:18px;" value="Photography">Photography</option>
+            <option style="font-size:18px;" value="DJ">DJ</option>
+            <option style="font-size:18px;" value="Musician">Musician</option>
+            <option style="font-size:18px;" value="Atraction Provider">Attraction Provider</option>
+            <option style="font-size:18px;" value="Invitation Printer">Invitation Printer</option>
+        </select>
+        <br>
+        <label for="jobRateL"><b>Job Rate: </b></label>
+        <select name="jobRate" id="jobRate" multiple>
+            <option style="font-size:18px;" value="0">0</option>
+            <option style="font-size:18px;" value="1">1</option>
+            <option style="font-size:18px;" value="2">2</option>
+            <option style="font-size:18px;" value="3">3</option>
+            <option style="font-size:18px;" value="4">4</option>
+            <option style="font-size:18px;" value="5">5</option>
+        </select>
+        <br>
+        <label for="DateA"><b>Date available: </b></label>
+        <input type="date" name="date" id="date">
+        <br>
+        <label for="gender"><b>Gender: </b></label>
+        <input type="radio" id="male" name="gender" value="male" checked>
+        <label for="male" style="font-size:22px;">Male&emsp;</label>
+        <input type="radio" id="female" name="gender" value="female">
+        <label for="female" style="font-size:22px;">Female&emsp;</label>
+        <input type="radio" id="other" name="gender" value="other">
+        <label for="other" style="font-size:22px;">Other</label>
+        <br >
+
+        <label for="accompaniedS"><b>accompanied services: </b></label>
+        <input type="radio" id="yes" name="gender" value="yes" checked>
+        <label for="yes" style="font-size:22px;">yes&emsp;</label>
+        <input type="radio" id="no" name="gender" value="no">
+        <label for="no" style="font-size:22px;">no&emsp;</label>
+        <br >
+
+        <!-- <select name="searchingBy" id="searchingBy" onChange="myFunction()" >
             <option class="searching" style="font-size:18px;" id='fName'  value="firstname">first name</option>
             <option class="searching" style="font-size:18px;" id='lName' value="lastName">last name</option>
             <option class="searching" style="font-size:18px;" id='jT' value="jobTypes">job Types</option>
@@ -22,7 +74,7 @@
             <option class="searching" style="font-size:18px;" id='gender' value="gender" style="display: none;">gender</option>
             <option class="searching" style="font-size:18px;" id='aServices' value="accompaniedServices">accompanied services</option>
             <option class="searching" style="font-size:18px;" id='rP' value="rangePrice">range of price</option>
-        </select>
+        </select>-->
         <label class="searching" id='selectGender' style="display: none;">
             <input type="radio" id="male" name="gender" value="male" checked>
             <label for="male" style="font-size:22px;">Male&emsp;</label>
@@ -40,45 +92,19 @@
 <p id="demo"></p>
 
 <script >
-db.ContractorWorkers.find({"gander":female}).toArray(function (err, result){
-console.log(result);}
-db.getUsers( {
-   showCredentials: <Boolean>,
-   filter: <document>
-} )
+function initdit()
+  {
+    //DATES:
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yyyy = today.getFullYear();
 
- /*let EmployersArray2 = await dbo.collection("ContractorWorkers").find(query).toArray();
- if (EmployersArray2.length != 0) {
-    Nser = "ContractorWorkers";
-    Uid = EmployersArray1[0]._id;
-    fullName = EmployersArray1[0].firstName + " " + EmployersArray1[0].lastName;
-    res.redirect("/"); //the response 
-
-    if (id == "male" ) {
-
-        
-MongoClient.connect(url, function (err, db) 
-{
-    if (err) throw err;
-    var dbo = db.db("eventSaver");
-    //var query = { _id: Uid };
-    var query = { gender: "female" };
-    dbo.collection("ContractorWorkers").findOne(query).toArray(function (err, result) {
-        if (err) throw err;
-        console.log(result);
-        if (result.length != 0) {
-            console.log(result[0]);
-            res.view('pages/searchContractorWorker', result[0]);
-        }
-        else
-            res.redirect("/");
-            db.close();
-    });
-            
-});
-*/
-
-
+    today = yyyy + '-' + mm + '-' + dd;
+    //document.write(today);
+    document.getElementById("date").min = today;
+  }
+  initdit();
     
 function myFunction() {
   var x = document.getElementById("searchingBy").value;
