@@ -13,7 +13,7 @@
     <div class="container">
       <p>Please fill in this form the details to create an event</p>
       <hr>
-
+      <br><label id="errorinput"></label><br>
       <br/>
       <label for="eventName"><b>Event Name</b></label>
       <input type="text" placeholder="Enter Event Name" name="eventname" id="eventname" oninput="this.value = this.value.replace(/[^a-zA-Z]/g, '').replace(/(\..?)\../g, '$1');"required>
@@ -38,6 +38,15 @@
 </form>
 
 <script>
+  if ("<%= suc3 %>" == 'false')
+  {
+    var l = document.getElementById("errorinput");
+    l.innerHTML = "In the date of the event, the contractor not available."
+    l.style = "font-size:18px; color: red;"
+    newusucc=false;
+
+  }
+
   function initdit()
   {
     //DATES:
