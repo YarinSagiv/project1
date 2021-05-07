@@ -79,6 +79,17 @@ app.get("/addEvent", function (req, res) {
     }
 });
 
+
+app.get("/updateEvent", function (req, res) {
+    if (Uid != "" && typeUser != "Employers") {
+        res.redirect("/");
+    }
+    else {
+        res.view("pages/updateEvent", { suc3: true });
+
+    }
+});
+
 app.get('/newu', function (req, res) {
 
     if (Uid != "") {
@@ -326,50 +337,70 @@ app.get('/updateProfileContractor', function (req, res) {
 });
 
 
+
+app.post('/updateEvent', async (req, res) => {
+
+
+    var query = { _id: Uid }; //id employer
+    var newvalues = { $set: {} };
+
+    var date = req.body.date;
+
+    let rec1 = await dbo.collection("Recuitment").find(query).toArray();
+    let con1 = await dbo.collection("ContractorWorkers").find(rec1[0].idC).toArray();
+    var i;
+    for (i=0;i<con1.length; i++)
+    {
+        var unDates=con1[i][dates].split(",");
+        if (unDates.includes(req.date))
+        {
+             res.view('pages/addEvent', { suc3: false });
+        }
+
+        else
+        {
+            // if the location of the event change - email will send to all the contructors
+            lastLoc==con1[i][event][location];
+            if(lastLoc!=req.body.eventloc)
+            {
+                emaildate(i);
+            }
+
+             // if the date of the event change - email will send to the contructor
+            lastDate=con1[i][event][date];            
+            if(lastDate!=req.body.date)
+            {
+                emailLoc(i);
+            }
+        }
+    
+    }
+
+});
+
+
 app.post('/inputEvent', async (req, res) => {
-    MongoClient.connect(url, { useUnifiedTopology: true }, async function (err, db) {
+    MongoClient.connect(url, async function (err, db) {
         if (err) throw err;
         var dbo = db.db("eventSaver");
 
-        var query = { _id: Uid }; //id employer
-        var newvalues = { $set: {} };
-
-        var date = req.body.date;
-
-        let rec1 = await dbo.collection("Recuitment").find(query).toArray();
-        let con1 = await dbo.collection("ContractorWorkers").find(rec1["idC"]).toArray();
-        var i;
-        for (i = 0; i < con1.length; i++) {
-            var unDates = con1[i][dates].split(",");
-            if (unDates.includes(req.date)) {
-                res.view('pages/addEvent', { suc3: false });
-            }
-
-            else {
-
-                // if the location of the event change - email will send to all the contructors
-                lastLoc == con1[i][event][location];
-                if (lastLoc != req.body.eventloc) {
-                    emaildate(i);
-                }
-
-
-
-                // if the date of the event change - email will send to the contructor
-                lastDate = con1[i][event][date];
-
-                if (lastDate != req.body.date) {
-                    emailLoc(i);
-                }
-
-
-
-
-            }
+        var myobj = {
+    
+            eventname: req.body.eventname,
+            eventLoc: req.body.eventLoc,
+            numGuest: req.body.numGuest,
+            date: req.body.date,
+            time: req.body.time,
+            idE: Uid
         }
 
+        var succ = dbo.collection("Event").insertOne(myobj, function (err, res1) {
 
+            console.log("1 document inserted");
+            res.redirect("/profileEmployerPage"); //the response 
+            db.close();
 
+        });
 
 
     });
@@ -493,7 +524,7 @@ app.post('/inputDataBase', (req, res) => {
             userName: req.body.username,
             email: req.body.email,
             password: req.body.psw,
-            event: null
+         
         };
 
 

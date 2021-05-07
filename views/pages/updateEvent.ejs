@@ -9,9 +9,9 @@
     <%- include('../partials/_header') %>
   </header>
 
-<form id="form1" action="/inputEvent" method="POST" >
+<form id="form1" action="/updateEvent" method="POST" >
     <div class="container">
-      <p>Please fill in this form the details to create an event</p>
+      <p>Please fill in this form the details to update an event</p>
       <hr>
       <br><label id="errorinput"></label><br>
       <br/>
@@ -31,7 +31,7 @@
       <input type="time" name="time" id="time">
       <br/>
 
-     <button type="submit" class="registerbtn" >Create Event</button>
+     <button type="submit" class="registerbtn" >Update Event</button>
     </div>
   
     
@@ -46,8 +46,8 @@
     newusucc=false;
 
   }
-
-  function initdit()
+  
+  function dates()
   {
     //DATES:
     var today = new Date();
@@ -59,6 +59,27 @@
     //document.write(today);
     document.getElementById("date").min = today;
   }
+  dates();
+
+
+  function initdit()
+  {
+        /*
+            this function gets the information already in the database for this specific event
+        */
+       //---event name 
+       document.getElementById("eventname").value = "<%= eventname %>";
+       //---event location 
+       document.getElementById("eventloc").value = "<%= eventloc %>";
+       //---num of guest
+       document.getElementById("numGuest").value = "<%= numGuest %>";
+       //---date
+       document.getElementById("date").value = "<%= date %>";
+       
+
+      
+  }
+
   initdit();
 
 </script>
