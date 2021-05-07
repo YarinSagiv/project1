@@ -336,8 +336,11 @@ app.post('/inputEvent', async (req, res) => {
 
         var date = req.body.date;
 
+        
+
+
         let rec1 = await dbo.collection("Recuitment").find(query).toArray();
-        let con1 = await dbo.collection("ContractorWorkers").find(rec1["idC"]).toArray();
+        let con1 = await dbo.collection("ContractorWorkers").find(rec1[0].idC).toArray();
         var i;
         for (i=0;i<con1.length; i++)
         {
@@ -365,6 +368,8 @@ app.post('/inputEvent', async (req, res) => {
             }
         
         }
+
+
 
     });
 });
