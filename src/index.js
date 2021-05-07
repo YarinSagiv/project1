@@ -348,34 +348,23 @@ app.post('/inputEvent', async (req, res) => {
             }
 
             else
-        {
-            
-            // if the location of the event change - email will send to all the contructors
-            lastLoc==con1[i][event][location];
-            if(lastLoc!=req.body.eventloc)
             {
-                  emaildate(i);
+                // if the location of the event change - email will send to all the contructors
+                lastLoc==con1[i][event][location];
+                if(lastLoc!=req.body.eventloc)
+                {
+                    emaildate(i);
+                }
+
+                 // if the date of the event change - email will send to the contructor
+                lastDate=con1[i][event][date];            
+                if(lastDate!=req.body.date)
+                {
+                    emailLoc(i);
+                }
             }
-            
-
         
-            // if the date of the event change - email will send to the contructor
-            lastDate=con1[i][event][date];
-                
-            if(lastDate!=req.body.date)
-            {
-                emailLoc(i);
-            }
-           
-            
-
-
         }
-        }
-      
-        
-
-
 
     });
 });

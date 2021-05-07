@@ -47,6 +47,9 @@
         <label style="font-size:19px;">
           <%= dates %>
         </label></label>
+        <label class="profile" for="jobRate" id="jobRate" style="display: none;"><b>job rates : </b><label style="font-size:19px;">
+          <%= jobRate %>
+        </label></label> 
       <!--<label for="salary"><b>salary:</b> <label style="font-size:19px;"></label></label><br>-->
     </label>
   </form>
@@ -60,6 +63,8 @@
 
   if ("<%= dates %>" != '')
     document.getElementById("dates").style.display = 'block';
+  if ("<%= jobRate %>" != '')
+    document.getElementById("jobRate").style.display = 'block';
 
 
   function toDelete() {
