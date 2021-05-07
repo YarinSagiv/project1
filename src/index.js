@@ -53,9 +53,11 @@ app.get("/contactUs", function (req, res) {
 
 app.get("/selectEventUp", async function (req, res)
 {
+    MongoClient.connect(url, { useUnifiedTopology: true }, function (err, db) {
     var dbo = db.db("eventSaver");
     let ev1= await dbo.collection("Event").find(query);
     res.view("pages/selectEventUp",ev1);
+    });
 
 });
 
@@ -92,14 +94,17 @@ app.get("/updateEvent", function (req, res) {
         res.redirect("/");
     }
     else {
+        MongoClient.connect(url, { useUnifiedTopology: true }, function (err, db) {
+
         dbo.collection("Event").find(query).toArray(function (err, result) {
             if (err) throw err;
             if (result.length != 0) {
-                result.suc3=true;
+                result[0].suc3=true;
                 res.view('pages/updateEvent', result[0]);
             }
             db.close();
         });
+    });
 
     }
 });
