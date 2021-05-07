@@ -898,12 +898,26 @@ app.post('/employerReports', async (req, res) => {
 
 
 app.get('/humanResourcesReports', (req, res) => {
-    res.view("pages/humanResourcesReports", { Recruits: null });
+    res.view("pages/humanResourcesReports", { Data: null , choise: null});
 });
 
 
-app.get('/humanResourcesReports', async (req, res) => {
-    res.view("pages/humanResourcesReports", { Recruits: null });
+app.post('/humanResourcesReports-getEmployers', async (req, res) => {
+    MongoClient.connect(url, { useUnifiedTopology: true }, async function (err, db) {
+        if (err) throw err;
+        var dbo = db.db("eventSaver");
+
+        let employers = await dbo.collection("Employers").find().project({firstName: 1, lastName: 1, phoneNumbers: 1, email: 1}).toArray();
+
+        res.view("pages/humanResourcesReports", { Data: employers, choise: "e" });
+
+
+    });
+
+
+
+
+    //res.view("pages/humanResourcesReports", { Data: null, choise: null });
 });
 
 

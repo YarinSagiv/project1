@@ -3,7 +3,7 @@
 <head>
     <link href="css/sty.css" rel="stylesheet">
     <style>
-        td {
+                td {
             border: 1px solid #ddd;
             padding: 8px;
         }
@@ -43,17 +43,54 @@
 
     <form id="myform">
 
+        <br/><br/>
         <button type="button" class="report" onclick="getAllEmployers()">see all employers</button>
+        <br/>
+        <button type="button" class="report" onclick="getAllContractors()">see all employers</button>
 
-        <input type="hidden" id="employers">
+
+        <!-- EMPLOYERS TABLE-->
+        <% if(Data!=null && typeof Data !="undefined" && choise == "e"){ %>
+        <br/>
+            <table id="results" style="width:90%; margin: 0 auto; text-align: center; border-collapse: collapse;">
+            <tr id="head">
+                    <th>first name</th>
+                    <th>last name</th>
+                    <th>phone numbers</th>
+                    <th>email</th>
+            </tr>
+                <tr>
+                    <% Data.forEach(function(dat) {%>
+                    <% if(typeof dat.firstName != undefined && dat.firstName) { %>
+                        <td><%= dat.firstName %></td>
+                    <% } %>
+                    <% if(typeof dat.lastName != undefined && dat.lastName) { %>
+                        <td><%= dat.lastName %></td>
+                    <% } %>
+                    <% if(typeof dat.phoneNumbers != undefined && dat.phoneNumbers) { %>
+                        <td><%= dat.phoneNumbers %></td>
+                    <% } %>
+                    <% if(typeof dat.email != undefined && dat.email) { %>
+                        <td><%= dat.email %></td>
+                        <% }%>
+                </tr>
+                <% }); %>
+
+        </table>
+        <% } %>
+
+
 
     </form>
 
     <script>
-        getAllEmployers()
-        {
-
+        function getAllEmployers() {
+            document.getElementById("myform").action = "humanResourcesReports-getEmployers";
+            document.getElementById("myform").method = "POST";
+            document.getElementById("myform").submit();
         }
+        
+
     </script>
 
 </body>
