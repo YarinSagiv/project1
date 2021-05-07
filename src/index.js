@@ -79,6 +79,17 @@ app.get("/addEvent", function (req, res) {
     }
 });
 
+
+app.get("/updateEvent", function (req, res) {
+    if (Uid != "" && typeUser != "Employers") {
+        res.redirect("/");
+    }
+    else {
+        res.view("pages/updateEvent", { suc3: true });
+
+    }
+});
+
 app.get('/newu', function (req, res) {
 
     if (Uid != "") {
