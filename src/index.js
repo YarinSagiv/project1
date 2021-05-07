@@ -51,8 +51,9 @@ app.get("/contactUs", function (req, res) {
     res.view("pages/contactUs");
 });
 
-app.get("/selectEventUp",function (req, res)
+app.get("/selectEventUp", async function (req, res)
 {
+    var dbo = db.db("eventSaver");
     let ev1= await dbo.collection("Event").find(query);
     res.view("pages/selectEventUp",ev1);
 
