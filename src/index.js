@@ -51,6 +51,12 @@ app.get("/contactUs", function (req, res) {
     res.view("pages/contactUs");
 });
 
+app.get("/selectEventUp",function (req, res)
+{
+    let ev1= await dbo.collection("Event").find(query);
+    res.view("pages/selectEventUp",ev1);
+
+});
 
 
 app.get("/logOut", function (req, res) {
@@ -85,7 +91,14 @@ app.get("/updateEvent", function (req, res) {
         res.redirect("/");
     }
     else {
-        res.view("pages/updateEvent", { suc3: true });
+        dbo.collection("Event").find(query).toArray(function (err, result) {
+            if (err) throw err;
+            if (result.length != 0) {
+                result.suc3=true;
+                res.view('pages/updateEvent', result[0]);
+            }
+            db.close();
+        });
 
     }
 });
@@ -337,11 +350,20 @@ app.get('/updateProfileContractor', function (req, res) {
 });
 
 
-
+/*
 app.post('/updateEvent', async (req, res) => {
 
 
     var query = { _id: Uid }; //id employer
+
+    res.redirect("/updateEvent",ev1); //the response 
+
+
+
+
+
+
+
     var newvalues = { $set: {} };
 
     var date = req.body.date;
@@ -377,6 +399,7 @@ app.post('/updateEvent', async (req, res) => {
     }
 
 });
+*/
 
 
 app.post('/inputEvent', async (req, res) => {
