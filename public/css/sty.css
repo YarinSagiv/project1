@@ -169,6 +169,18 @@ button.report {
     text-align: center;
 }
 
+button.report-reset {
+    font-size: 18px;
+    font-family: Felix Titling, Helvetica, sans-serif;
+    background-color: #a70d48;
+    color: white;
+    padding: 8px 8px 8px 8px;
+    border: none;
+    cursor: pointer;
+    opacity: 0.95;
+    text-align: center;
+}
+
 select.report {
     width: 200px;
     font-size: 18px;

@@ -1,0 +1,61 @@
+<html>
+
+<head>
+    <link href="css/sty.css" rel="stylesheet">
+    <style>
+        td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        tr {
+            border: 1px solid #ddd;
+            padding: 8px;
+
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        tr:hover {
+            background-color: #ddd;
+        }
+
+        th {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            padding-left: 6px;
+            padding-right: 6px;
+            text-align: center;
+            background-color: #a70d48;
+            opacity: 0.9;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <%- include('../partials/_header') %>
+    </header>
+
+    <form id="myform">
+
+        <button type="button" class="report" onclick="getAllEmployers()">see all employers</button>
+
+        <input type="hidden" id="employers">
+
+    </form>
+
+    <script>
+        getAllEmployers()
+        {
+
+        }
+    </script>
+
+</body>
+
+</html>
