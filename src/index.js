@@ -56,7 +56,7 @@ app.get("/selectEventUp", async function (req, res)
     MongoClient.connect(url, { useUnifiedTopology: true }, async function (err, db) {
     var dbo = db.db("eventSaver");
     let ev1= await dbo.collection("Event").find(query);
-    res.view("pages/selectEventUp",ev1);
+    res.view("pages/selectEventUp",{ev1: ev1});
     });
 
 });
