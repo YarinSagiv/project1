@@ -586,23 +586,35 @@ app.post('/updatePasswordE', (req, res) => {
 });
 
 
-app.get("/searchContractor", function (req, res) {
+app.post("/searchContractor", function (req, res) {
     if (Uid != "" && (typeUser == "Employers"||typeUser=="resourcesCompanyWorkers")) {
         MongoClient.connect(url, function (err, db) {
             if (err) throw err;
             var dbo = db.db("eventSaver");
             var query ={};
             
+            
+
             var firstname=req.body.firstname1;
-            if (firstname != "") 
+            var lastname=req.body.lastname1;
+            if (firstname != "")
                 query["firstName"] =firstname;
+            console.log("noa:"+req.body.firstname1);
+            if (lastname != "")
+                query["lastName"] =lastname;
+            console.log("last:"+req.body.lastname1);
+
+            let contractor = dbo.collection("ContractorWorkers").find().toArray();
+            res.view("pages/searchContractorWorker", { "contractors": contractor });
 
             dbo.collection("ContractorWorkers").find(query).toArray(function (err, result) {
                 if (err) throw err;
                 if (result.length != 0) {
-                    console.log(result[0][firstname]);
-                    res.view('pages/searchContractorWorker', result[0]);
+                    console.log(result[0]["firstName"]);
+                    
+                    //res.view('pages/searchContractorWorker', result[0]);
                 }
+                
                 db.close();
             });
         });

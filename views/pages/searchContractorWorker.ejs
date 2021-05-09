@@ -10,17 +10,17 @@
     <%- include('../partials/_header') %>
   </header>
   
-<form name="searchingInput" id="searchContractor" action="/searchContractor" method="get">
+<form name="searchingInput" id="searchContractor" action="/searchContractor" method="post">
     <label style="font-size:20px;">
         <label class="searching" for="LsearchingBy:"><b>searching by: </b></label>
         <br>
         <br>
         <label for="firstname"><b>First Name: </b></label>
-        <input type="text" name="firstname1" id="firstname" 
+        <input type="text" name="firstname1" id="firstname1" 
             oninput="this.value = this.value.replace(/[^a-zA-Z]/g, '').replace(/(\..?)\../g, '$1');" >
         <br >
         <label for="lastname"><b>Last Name: </b></label>
-        <input type="text" name="lastname" id="lastname" 
+        <input type="text" name="lastname1" id="lastname1" 
             oninput="this.value = this.value.replace(/[^a-zA-Z]/g, '').replace(/(\..?)\../g, '$1');" >
         <br>
         <label for="jobTypesL"><b>Job Types: </b></label>
@@ -50,7 +50,7 @@
         <input type="date" name="date" id="date">
         <br>
         <label for="gender"><b>Gender: </b></label>
-        <input type="radio" id="male" name="gender" value="male" checked>
+        <input type="radio" id="male" name="gender" value="male" >
         <label for="male" style="font-size:22px;">Male&emsp;</label>
         <input type="radio" id="female" name="gender" value="female">
         <label for="female" style="font-size:22px;">Female&emsp;</label>
@@ -59,9 +59,9 @@
         <br >
 
         <label for="accompaniedS"><b>accompanied services: </b></label>
-        <input type="radio" id="yes" name="gender" value="yes" checked>
+        <input type="radio" id="yes" name="accompaniedS" value="yes" >
         <label for="yes" style="font-size:22px;">yes&emsp;</label>
-        <input type="radio" id="no" name="gender" value="no">
+        <input type="radio" id="no" name="accompaniedS" value="no">
         <label for="no" style="font-size:22px;">no&emsp;</label>
         <br >
 
@@ -75,20 +75,27 @@
             <option class="searching" style="font-size:18px;" id='aServices' value="accompaniedServices">accompanied services</option>
             <option class="searching" style="font-size:18px;" id='rP' value="rangePrice">range of price</option>
         </select>-->
-        <label class="searching" id='selectGender' style="display: none;">
-            <input type="radio" id="male" name="gender" value="male" checked>
-            <label for="male" style="font-size:22px;">Male&emsp;</label>
-            <input type="radio" id="female" name="gender" value="female">
-            <label for="female" style="font-size:22px;">Female&emsp;</label>
-            <input type="radio" id="other" name="gender" value="other">
-            <label for="other" style="font-size:22px;">Other</label>
-        </label>
     <input type="submit" name="send" value="search" >
     <input type="reset" name="reset1" value="reset">
-    
-
 
 </form>
+<table></table>
+<!--<table>
+    <tr> ==$0
+      <th>first Name</th>
+      <th>last Name</th>
+      <th>Job Types</th>
+      <th>Job Rate</th>
+      <th>Gender</th>
+      <th>accompanied services</th>
+      <th>link profile</th>
+    </tr>
+    <tr>
+      <td></td>
+      <td>john.doe@example.com</td>
+      <td>123-45-678</td>
+    </tr>
+  </table>-->
 
 <p id="demo"></p>
 
@@ -123,13 +130,42 @@ function hide(id) {
     document.getElementById(id).style.display = 'none';
 }
 
-function type1(id){
-    var s1 = document.getElementById(id);
-    if(id=='fName')
-    {
-        document.write("first name:")
-    }
+
+let mountains = [
+  { name: "Monte Falco", height: 1658, place: "Parco Foreste Casentinesi" },
+  { name: "Monte Falterona", height: 1654, place: "Parco Foreste Casentinesi" },
+  { name: "Poggio Scali", height: 1520, place: "Parco Foreste Casentinesi" },
+  { name: "Pratomagno", height: 1592, place: "Parco Foreste Casentinesi" },
+  { name: "Monte Amiata", height: 1738, place: "Siena" }
+];
+
+function generateTableHead(table, data) {
+  let thead = table.createTHead();
+  let row = thead.insertRow();
+  for (let key of data) {
+    let th = document.createElement("th");
+    let text = document.createTextNode(key);
+    th.appendChild(text);
+    row.appendChild(th);
+  }
 }
+
+function generateTable(table, data) {
+  for (let element of data) {
+    let row = table.insertRow();
+    for (key in element) {
+      let cell = row.insertCell();
+      let text = document.createTextNode(element[key]);
+      cell.appendChild(text);
+    }
+  }
+}
+
+let table = document.querySelector("table");
+let data = Object.keys(mountains[0]);
+generateTableHead(table, data);
+generateTable(table, mountains);
+
 
 </script>
 </body>
