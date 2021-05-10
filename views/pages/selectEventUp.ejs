@@ -14,7 +14,7 @@
         <p>Please choose the event you want to update</p>
         <hr>
             <label>your event:</label>
-            <% if(Data!=null && typeof Data !="undefined" && choise == "e"){ %>
+            <% if(ev1!=null && typeof ev1 !="undefined" && choise == "e"){ %>
             <select id="your_event"> 
               <% ev1.forEach(function(dat) {%>
                 <% if(typeof dat.eventname != undefined && dat.eventname) { %>
