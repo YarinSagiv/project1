@@ -44,14 +44,34 @@
     <form id="myform">
 
         <br/><br/>
-        <button type="button" class="report" onclick="getAllEmployers()">see all employers</button>
+        <button type="button" class="report" onclick="getAllEmployers()">get all employers</button>
         <br/>
 
         <label class="report" style="display: block; text-align: center; text-decoration: underline;"><b>find contractors</b></label>
         <p style="display: block; text-align: center;">
             <input type="radio" id="avgRates" name="contractors" value="avg" onchange="findByRange()" checked><label class="report">with avg rates</label>&emsp;
-            <input type="radio" id="byRange" name="contractors" value="range" onchange="findByRange()" ><label class="report">by range of avg rates</label><label class="report">from </label><input class="report" type="text" id="from" disabled><label class="report"> to </label><input class="report" type="text" id="to" disabled>
-        </p>
+            <input type="radio" id="byRange" name="contractors" value="range" onchange="findByRange()" ><label class="report">by range of avg rates</label>
+                    
+            <label class="report">from </label>
+        <select class="report" id="from" name="from" onchange="limitTo()" disabled>
+            <option value="0" selected>0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+        </select>
+        <label class="report"> to </label>
+        <select class="report" id="to" name="to" disabled>
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5" selected>5</option>
+        </select>
+    </p>
+
         <button type="button" class="report" onclick="getAllContractors()">get all contractors</button>
 
         
@@ -86,7 +106,7 @@
         <% } %>
 
 
-        <!-- EMPLOYERS TABLE-->
+        <!-- CONTRACTOR TABLE-->
         <% if(Data!=null && typeof Data !="undefined" && choise == "c"){ %>
             <br/>
                 <table id="results" style="width:90%; margin: 0 auto; text-align: center; border-collapse: collapse;">
@@ -107,13 +127,19 @@
                         <% } %>
                         <% if(typeof dat.phoneNumbers != undefined && dat.phoneNumbers) { %>
                             <td><%= dat.phoneNumbers %></td>
+                        <% } else { %>
+                            <td>---</td>
                         <% } %>
                         <% if(typeof dat.email != undefined && dat.email) { %>
                             <td><%= dat.email %></td>
-                        <% }%>
+                        <% } else { %>
+                            <td>---</td>
+                        <% } %>
                         <% if(typeof dat.rate != undefined && dat.rate) { %>
                             <td><%= dat.rate %></td>
-                        <% }%>
+                        <% } else { %>
+                            <td>---</td>
+                        <% } %>
                     </tr>
                     <% }); %>
     
@@ -149,6 +175,22 @@
                 disable("from");
                 disable("to");
             }
+        }
+
+        function limitTo()
+        {
+            var from=parseInt(document.getElementById("from").value);
+            //get all <option>s in "to"
+            var op = document.getElementById("to").getElementsByTagName("option");
+            for (var i = 0; i < op.length; i++) {
+                (parseInt(op[i].value) < from) 
+                    ? op[i].disabled = true 
+                    : op[i].disabled = false ;
+            }
+
+            //change value of needed:
+            if(parseInt(document.getElementById("to").value)<parseInt(document.getElementById("from").value))
+                op[from].selected = true;
         }
 
         function getAllContractors() {

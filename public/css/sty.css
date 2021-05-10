@@ -188,9 +188,9 @@ select.report {
     font-family: Felix Titling, Helvetica, sans-serif;
 }
 
-input[type=text].report
+select.report
 {
-    width: 50px;
+    width: 65px;
     padding: 15px;
     margin: 5px 0 22px 0;
     display: inline-block;
@@ -198,9 +198,9 @@ input[type=text].report
     background: #f1f1f1;
 }
 
-input[type=text]:disabled.report
+select:disabled.report
 {
-    width: 50px;
+    width: 65px;
     padding: 15px;
     margin: 5px 0 22px 0;
     display: inline-block;

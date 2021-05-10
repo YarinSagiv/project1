@@ -53,14 +53,14 @@ app.get("/contactUs", function (req, res) {
 
 app.get("/selectEventUp", async function (req, res) {
     MongoClient.connect(url, { useUnifiedTopology: true }, async function (err, db) {
-    if (err) throw err;
-    //Uid="316461375";
-    var myquery = { idE: Uid };
-    var dbo = db.db("eventSaver");
-    let ev1= await dbo.collection("Event").find(myquery).toArray();
-    //console.log(ev1.length);
-    //console.log(JSON.stringify(ev1));
-    res.view("pages/selectEventUp",{ev1: ev1});
+        if (err) throw err;
+        //Uid="316461375";
+        var myquery = { idE: Uid };
+        var dbo = db.db("eventSaver");
+        let ev1 = await dbo.collection("Event").find(myquery).toArray();
+        //console.log(ev1.length);
+        //console.log(JSON.stringify(ev1));
+        res.view("pages/selectEventUp", { ev1: ev1 });
     });
 
 });
@@ -100,19 +100,20 @@ app.get("/updateEvent", function (req, res) {
     else {
         MongoClient.connect(url, { useUnifiedTopology: true }, function (err, db) {
 
-        var myquery = { _id: Uid };
-        var dbo = db.db("eventSaver");
-        dbo.collection("Event").find(myquery).toArray(function (err, result) {
-            if (err) throw err;
-            if (result.length != 0) {
-                result[0].suc3=true;
-                res.view('pages/updateEvent', result[0]);
-            }
-            db.close();
-        });
+            var myquery = { _id: Uid };
+            var dbo = db.db("eventSaver");
+            dbo.collection("Event").find(myquery).toArray(function (err, result) {
+                if (err) throw err;
+                if (result.length != 0) {
+                    result[0].suc3 = true;
+                    res.view('pages/updateEvent', result[0]);
+                }
+                db.close();
+            });
 
-    });
-}});
+        });
+    }
+});
 
 app.get('/newu', function (req, res) {
 
@@ -987,32 +988,80 @@ app.post('/humanResourcesReports-getContractors', async (req, res) => {
         var dbo = db.db("eventSaver");
 
         let contractor, comments;
-        if (req.body.contractors == "avg") {
-            contractor = await dbo.collection("ContractorWorkers").find().project({ firstName: 1, lastName: 1, phoneNumbers: 1, email: 1 }).toArray();
-            console.log(JSON.stringify(contractor));
-            if (contractor.length != 0) {
+        var united = [];
+
+        contractor = await dbo.collection("ContractorWorkers").find().project({ firstName: 1, lastName: 1, phoneNumbers: 1, email: 1 }).toArray();
+        console.log(JSON.stringify(contractor));
+        if (contractor.length != 0) {
+            if (req.body.contractors == "avg") {
                 for (var i = 0; i < contractor.length; ++i) {
 
                     comments = await dbo.collection("Comments").aggregate([{
-                        $match:{
-                            idC: Uid
-                        },
+                        $match: {
+                            idC: contractor[i]._id
+                        }
+                    },
+                    {
                         $group: {
                             _id: "$idC",
                             "rate": {
                                 "$avg": "$rate"
                             }
                         }
-                    }]).toArray(); // TODO - filter by the contractor's id only and then merge to one dict
+                    }]).toArray();
                     console.log("comments:  " + JSON.stringify(comments));
+
+                    if (comments.length != 0)
+                        contractor[i].rate = comments[0].rate;
+                    else
+                        contractor[i].rate = null;
+
+                    united.push(contractor[i]);
 
                 }
             }
+
+            else {
+                var from = parseInt(req.body.from);
+                var to = parseInt(req.body.to);
+                for (var i = 0; i < contractor.length; ++i) {
+                    console.log(contractor[i]._id);
+                    comments = await dbo.collection("Comments").aggregate([{
+                        $match: {
+                            idC: contractor[i]._id,
+                            "rate": { $gt: from }, // greater than
+                            "rate": { $lt: to + 1 } //lower then -- +1 to include the top value
+                        }
+                    },
+                    {
+                        $group: {
+                            _id: "$idC",
+                            "rate": {
+                                "$avg": "$rate"
+                            }
+                        }
+                    }]).toArray();
+                    console.log("comments:  " + JSON.stringify(comments));
+
+                    if (comments.length != 0){
+                        contractor[i].rate = comments[0].rate;
+                        united.push(contractor[i]);
+                    }
+                    else if(from == 0)
+                    {
+                        contractor[i].rate = null;
+                        united.push(contractor[i]);
+                    }
+                }
+
+                console.log("united  " + JSON.stringify(united));
+            }
+
+
+
+            res.view("pages/humanResourcesReports", { Data: united, choise: "c" });
+
         }
-
-        res.view("pages/humanResourcesReports", { Data: contractor, choise: "c" });
-
-
     });
     //res.view("pages/humanResourcesReports", { Data: null, choise: null });
 });
