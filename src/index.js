@@ -51,12 +51,11 @@ app.get("/contactUs", function (req, res) {
     res.view("pages/contactUs");
 });
 
-app.get("/selectEventUp", async function (req, res)
-{
+app.get("/selectEventUp", async function (req, res) {
     MongoClient.connect(url, { useUnifiedTopology: true }, async function (err, db) {
-    var dbo = db.db("eventSaver");
-    let ev1= await dbo.collection("Event").find(query);
-    res.view("pages/selectEventUp",{ev1: ev1});
+        var dbo = db.db("eventSaver");
+        let ev1 = await dbo.collection("Event").find(query);
+        res.view("pages/selectEventUp", { ev1: ev1 });
     });
 
 });
@@ -96,15 +95,15 @@ app.get("/updateEvent", function (req, res) {
     else {
         MongoClient.connect(url, { useUnifiedTopology: true }, function (err, db) {
 
-        dbo.collection("Event").find(query).toArray(function (err, result) {
-            if (err) throw err;
-            if (result.length != 0) {
-                result[0].suc3=true;
-                res.view('pages/updateEvent', result[0]);
-            }
-            db.close();
+            dbo.collection("Event").find(query).toArray(function (err, result) {
+                if (err) throw err;
+                if (result.length != 0) {
+                    result[0].suc3 = true;
+                    res.view('pages/updateEvent', result[0]);
+                }
+                db.close();
+            });
         });
-    });
 
     }
 });
@@ -414,7 +413,7 @@ app.post('/inputEvent', async (req, res) => {
         var dbo = db.db("eventSaver");
 
         var myobj = {
-    
+
             eventname: req.body.eventname,
             eventLoc: req.body.eventLoc,
             numGuest: req.body.numGuest,
@@ -553,7 +552,7 @@ app.post('/inputDataBase', (req, res) => {
             userName: req.body.username,
             email: req.body.email,
             password: req.body.psw,
-         
+
         };
 
 
@@ -958,7 +957,7 @@ app.post('/employerReports', async (req, res) => {
 
 
 app.get('/humanResourcesReports', (req, res) => {
-    res.view("pages/humanResourcesReports", { Data: null , choise: null});
+    res.view("pages/humanResourcesReports", { Data: null, choise: null });
 });
 
 
@@ -967,18 +966,51 @@ app.post('/humanResourcesReports-getEmployers', async (req, res) => {
         if (err) throw err;
         var dbo = db.db("eventSaver");
 
-        let employers = await dbo.collection("Employers").find().project({firstName: 1, lastName: 1, phoneNumbers: 1, email: 1}).toArray();
+        let employers = await dbo.collection("Employers").find().project({ firstName: 1, lastName: 1, phoneNumbers: 1, email: 1 }).toArray();
 
         res.view("pages/humanResourcesReports", { Data: employers, choise: "e" });
 
 
     });
-
-
-
-
     //res.view("pages/humanResourcesReports", { Data: null, choise: null });
 });
+
+app.post('/humanResourcesReports-getContractors', async (req, res) => {
+    MongoClient.connect(url, { useUnifiedTopology: true }, async function (err, db) {
+        if (err) throw err;
+        var dbo = db.db("eventSaver");
+
+        let contractor, comments;
+        if (req.body.contractors == "avg") {
+            contractor = await dbo.collection("ContractorWorkers").find().project({ firstName: 1, lastName: 1, phoneNumbers: 1, email: 1 }).toArray();
+            console.log(JSON.stringify(contractor));
+            if (contractor.length != 0) {
+                for (var i = 0; i < contractor.length; ++i) {
+
+                    comments = await dbo.collection("Comments").aggregate([{
+                        $match:{
+                            idC: Uid
+                        },
+                        $group: {
+                            _id: "$idC",
+                            "rate": {
+                                "$avg": "$rate"
+                            }
+                        }
+                    }]).toArray(); // TODO - filter by the contractor's id only and then merge to one dict
+                    console.log("comments:  " + JSON.stringify(comments));
+
+                }
+            }
+        }
+
+        res.view("pages/humanResourcesReports", { Data: contractor, choise: "c" });
+
+
+    });
+    //res.view("pages/humanResourcesReports", { Data: null, choise: null });
+});
+
 
 
 
