@@ -792,7 +792,7 @@ app.post('/contractorReports', async (req, res) => {
         var united = [];
         if (recruits.length != 0) {
             for (var i = 0; i < recruits.length; ++i) {
-                var employer
+                var employer;
                 try {
                     employer = await dbo.collection("Employers").find({ _id: recruits[i].idEmployer }).project(fieldsE).toArray();
                     console.log("employer  " + JSON.stringify(employer[0]));
@@ -821,7 +821,7 @@ app.post('/contractorReports', async (req, res) => {
             res.view("pages/contractorReports", send2);
         }
         else
-            res.view("pages/contractorReports", { Recruits: null, message: "no results found" })
+            res.view("pages/contractorReports", { Recruits: null, message: "no results found" });
         //if (typeof req.body.nameEmp != "undefined")
 
 
@@ -893,7 +893,7 @@ app.post('/employerReports', async (req, res) => {
         var united = [];
         if (recruits.length != 0) {
             for (var i = 0; i < recruits.length; ++i) {
-                var contractor
+                var contractor;
                 try {
                     contractor = await dbo.collection("ContractorWorkers").find({ _id: recruits[i].idC }).project(fieldsC).toArray();
                     console.log("contractor  " + JSON.stringify(contractor[0]));
@@ -922,7 +922,7 @@ app.post('/employerReports', async (req, res) => {
             res.view("pages/employerReports", send2);
         }
         else
-            res.view("pages/employerReports", { Recruits: null, message: "no results found" })
+            res.view("pages/employerReports", { Recruits: null, message: "no results found" });
     });
 });
 
