@@ -111,8 +111,8 @@ app.get("/updateEvent", function (req, res) {
             db.close();
         });
 
-    }
-});
+    });
+}});
 
 app.get('/newu', function (req, res) {
 
