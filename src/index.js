@@ -53,9 +53,14 @@ app.get("/contactUs", function (req, res) {
 
 app.get("/selectEventUp", async function (req, res) {
     MongoClient.connect(url, { useUnifiedTopology: true }, async function (err, db) {
-        var dbo = db.db("eventSaver");
-        let ev1 = await dbo.collection("Event").find(query);
-        res.view("pages/selectEventUp", { ev1: ev1 });
+    if (err) throw err;
+    //Uid="316461375";
+    var myquery = { idE: Uid };
+    var dbo = db.db("eventSaver");
+    let ev1= await dbo.collection("Event").find(myquery).toArray();
+    //console.log(ev1.length);
+    //console.log(JSON.stringify(ev1));
+    res.view("pages/selectEventUp",{ev1: ev1});
     });
 
 });
@@ -95,14 +100,15 @@ app.get("/updateEvent", function (req, res) {
     else {
         MongoClient.connect(url, { useUnifiedTopology: true }, function (err, db) {
 
-            dbo.collection("Event").find(query).toArray(function (err, result) {
-                if (err) throw err;
-                if (result.length != 0) {
-                    result[0].suc3 = true;
-                    res.view('pages/updateEvent', result[0]);
-                }
-                db.close();
-            });
+        var myquery = { _id: Uid };
+        var dbo = db.db("eventSaver");
+        dbo.collection("Event").find(myquery).toArray(function (err, result) {
+            if (err) throw err;
+            if (result.length != 0) {
+                result[0].suc3=true;
+                res.view('pages/updateEvent', result[0]);
+            }
+            db.close();
         });
 
     }

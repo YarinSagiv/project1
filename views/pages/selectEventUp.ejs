@@ -13,32 +13,32 @@
     <div class="container">
         <p>Please choose the event you want to update</p>
         <hr>
-        <table>
-            <tr>
-              <td>
-                <label>your event:</label>
-              </td>
-              <td>
-                <select id="your_event">        
-                </select>
-              </td>
-            </tr>
-          </table>
-
+            <label>your event:</label>
+            <% if(ev1!=null && typeof ev1 !="undefined"){ %>
+            <select id="your_event"> 
+              <% ev1.forEach(function(dat) {%>
+                <% if(typeof dat.eventname != undefined && dat.eventname) { %>
+                    <option><%= dat.eventname %></option>
+                <% } %>  
+                        
+            </select>
+            <% }); %> 
     </div>
 
 
 <button type="submit" class="registerbtn" href="/updateEvent">Update this event</button>
 
 </form>
-
+</body>
 
 <script>
+  /*
     var myobject ="<%= ev1 %>"
+
     var select = document.getElementById("your_event");
     for(index in myobject) {
         select.options[select.options.length] = new Option(myobject[index], index);
     }
-    
+    */
 </script>
 </html>
