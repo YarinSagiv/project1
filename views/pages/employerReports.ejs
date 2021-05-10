@@ -34,7 +34,7 @@
         <%- include('../partials/_header') %>
     </header>
 
-    <form action="/employerReports" method="POST">
+    <form id="myform" action="/employerReports" method="POST">
         <h3 class="report">report of my recruits with:</h3>
         <label class="report">name of contractor</label>
         <% if(typeof nameEmp != "undefined" && nameEmp) { %>
@@ -63,7 +63,6 @@
         <% } else { %>
             <input type="checkbox" id="date" name="date">
         <% } %>
-                <!------ TODO: FINISH FULL PRICE -->
         <label class="report">total price</label>
         <% if(typeof price != "undefined" && price) { %>
             <input type="checkbox" id="price" name="price" checked>
@@ -74,7 +73,7 @@
         <br />
 
         <label class="report">at month</label>
-        <select class="report" name="month">
+        <select class="report2" name="month">
             <option value="0">All</option>
             <option value="01">January</option>
             <option value="02">February</option>
@@ -89,10 +88,11 @@
             <option value="11">November</option>
             <option value="12">December</option>
         </select><label class="report" id="year"></label>
-        &emsp;<button type="reset" class="report-reset" onclick="clear()">clear last choise</button><!-- TODO: keep it??-->
+        &emsp;<button type="button" class="report-reset" onclick="clearAll()">clear all filters</button>
+        &emsp;<button type="button" class="report-reset" onclick="selectAll()">select all filters</button>
         <button class="report" type="submit">find</button>
         <br/>
-
+    </form>
         <% if(typeof message != "undefined" && message) { %>
             <label class="report" style="display: block; text-align: center;"><%=message%></label>
         <% } else { %>
@@ -132,7 +132,7 @@
                         <td><%= dat.jobTypes%></td>
                     <% } %>
                     <% if(typeof dat.date != undefined && dat.date) { %>
-                        <td><%= dat.date %>&emsp;<%= dat.startTime %></td> <!-- TODO: fix format-->
+                        <td><%= dat.date %>&emsp;<%= dat.startTime %></td>
                     <% } %>
                     <% if(typeof dat.price != undefined && dat.price) { %>
                         <td><%= dat.price %></td>
@@ -143,14 +143,30 @@
         </table>
         <% } %>
 
-    </form>
-
 
     <script type="text/javascript">
 
         //write today's year in the label
         var today = new Date();
         document.getElementById("year").innerHTML = "/ " + today.getFullYear();
+
+        function clearAll(){
+            var inputs = document.getElementById("myform").getElementsByTagName("input");
+            for(var i = 0; i < inputs.length; i++) {
+                if(inputs[i].type == "checkbox") {
+                    inputs[i].checked = false; 
+                }  
+            }
+        }
+
+        function selectAll(){
+            var inputs = document.getElementById("myform").getElementsByTagName("input");
+            for(var i = 0; i < inputs.length; i++) {
+                if(inputs[i].type == "checkbox") {
+                    inputs[i].checked = true; 
+                }  
+            }
+        }
 
     </script>
 

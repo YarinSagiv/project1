@@ -777,7 +777,7 @@ app.post('/contractorReports', async (req, res) => {
         var dbo = db.db("eventSaver");
 
         //projection
-        var fieldsE = { _id: 0 }; //do not bring id field
+        var fieldsE = {}; //do not bring id field
         var fieldsR = { idEmployer: 1 };
 
         if (typeof req.body.nameEmp != "undefined") {
@@ -811,7 +811,7 @@ app.post('/contractorReports', async (req, res) => {
 
 
         //-------
-        Uid = "208375709";
+        Uid = "205364788";
         //-------
         var todayYear = new Date().getFullYear();
         var query3 = { idC: Uid, date: new RegExp(todayYear + "-") };
@@ -832,7 +832,21 @@ app.post('/contractorReports', async (req, res) => {
                     employer = await dbo.collection("Employers").find({ _id: recruits[i].idEmployer }).project(fieldsE).toArray();
                     console.log("employer  " + JSON.stringify(employer[0]));
 
-                    united.push({ ...recruits[i], ...employer[0] });
+                    if (typeof req.body.price != "undefined") {
+                        //get the rate:
+                        var comments = await dbo.collection("Comments").find({ idEmp: employer[0]._id }).project({ rate: 1, _id: 0 }).toArray();
+                        console.log("comments " + JSON.stringify(comments));
+
+                        //make one document with all info
+                        delete employer[0]._id;
+                        united.push({ ...recruits[i], ...employer[0], ...comments[0] });
+                    }
+                    else {
+                        //make one document with all info
+                        delete employer[0]._id;
+                        united.push({ ...recruits[i], ...employer[0] });
+                    }
+
                     console.log("united  " + JSON.stringify(united));
                 }
                 catch (UnhandledPromiseRejectionWarning) {
@@ -850,6 +864,7 @@ app.post('/contractorReports', async (req, res) => {
                 date: req.body.date,
                 location: req.body.location,
                 price: req.body.price,
+                rate: req.body.rate,
                 Recruits: united
             };
 
@@ -1043,12 +1058,11 @@ app.post('/humanResourcesReports-getContractors', async (req, res) => {
                     }]).toArray();
                     console.log("comments:  " + JSON.stringify(comments));
 
-                    if (comments.length != 0){
+                    if (comments.length != 0) {
                         contractor[i].rate = comments[0].rate;
                         united.push(contractor[i]);
                     }
-                    else if(from == 0)
-                    {
+                    else if (from == 0) {
                         contractor[i].rate = null;
                         united.push(contractor[i]);
                     }
