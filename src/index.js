@@ -1004,12 +1004,14 @@ app.post('/humanResourcesReports-getContractors', async (req, res) => {
 
         let contractor, comments;
         var united = [];
+        var numOfCon;
+        var i;
 
         contractor = await dbo.collection("ContractorWorkers").find().project({ firstName: 1, lastName: 1, phoneNumbers: 1, email: 1 }).toArray();
         console.log(JSON.stringify(contractor));
         if (contractor.length != 0) {
             if (req.body.contractors == "avg") {
-                for (var i = 0; i < contractor.length; ++i) {
+                for (i = 0; i < contractor.length; ++i) {
 
                     comments = await dbo.collection("Comments").aggregate([{
                         $match: {
@@ -1039,7 +1041,7 @@ app.post('/humanResourcesReports-getContractors', async (req, res) => {
             else {
                 var from = parseInt(req.body.from);
                 var to = parseInt(req.body.to);
-                for (var i = 0; i < contractor.length; ++i) {
+                for (i = 0; i < contractor.length; ++i) {
                     console.log(contractor[i]._id);
                     comments = await dbo.collection("Comments").aggregate([{
                         $match: {
@@ -1071,11 +1073,52 @@ app.post('/humanResourcesReports-getContractors', async (req, res) => {
                 console.log("united  " + JSON.stringify(united));
             }
 
+            numOfCon = contractor.length;
+            var numOfRates = [0, 0, 0, 0, 0, 0];
+            var sum = 0;
+            for (i = 1; i <= 5; i++) {//5 defined rates
+                var comment = await dbo.collection("Comments").aggregate([
+                    {
+                        $group: {
+                            _id: "$idC",
+                            "rate": {
+                                "$avg": "$rate"
+                            }
+                        }
+                    },
+                    {
+                        $match: {
+                            "rate": i
+                        }
+                    },
+                    {
+                        $group: {
+                            _id: "rate",
+                            count: {
+                                $sum: 1
+                            }
+                        }
+                    }
+                ]).toArray();
 
+                if (comment.length != 0) {
+                    numOfRates[i] = comment[0].count;
+                    sum += numOfRates[i];
+                }
+                else
+                    numOfRates[i] = 0;
 
-            res.view("pages/humanResourcesReports", { Data: united, choise: "c" });
+                //rest:
+                numOfRates[0] = numOfCon - sum; //contractors that don't have rates.
+            }
+
+            console.log("num of rates: "+JSON.stringify(numOfRates));
+            res.view("pages/humanResourcesReports", { Data: united, choise: "c", numOfCon: numOfCon, numOfRates: numOfRates });
 
         }
+        else
+            res.view("pages/humanResourcesReports", { noData: "y" });
+
     });
     //res.view("pages/humanResourcesReports", { Data: null, choise: null });
 });
