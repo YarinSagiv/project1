@@ -1,0 +1,38 @@
+<html>
+<head>
+  <link href="css/sty.css" rel="stylesheet">
+
+</head>
+<body>
+
+  <header>
+    <%- include('../partials/_header') %>
+  </header>
+
+<form id="form1" action="/RecruitContractorWorker" method="POST" >
+    <div class="container">
+        <p>Please choose the event you want to recruit a contractor worker for </p>
+        <hr>
+            <label>your event:</label>
+            <% if(ev1!=null && typeof ev1 !="undefined"){ %>
+            <select id="your_event"> 
+              <% ev1.forEach(function(dat) {%>
+                <% if(typeof dat.eventname != undefined && dat.eventname) { %>
+                    <option><%= dat.eventname %></option>
+                <% } %>  
+                        
+            </select>
+            <% }); %> 
+            <% } %>
+    </div>
+
+
+<button type="submit" class="registerbtn" href="/RecruitContractorWorker">choose event</button>
+
+</form>
+</body>
+
+<script>
+
+</script>
+</html>
