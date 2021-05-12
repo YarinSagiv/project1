@@ -60,7 +60,9 @@ app.get("/selectEventUp", async function (req, res) {
         let ev1 = await dbo.collection("Event").find(myquery).toArray();
         //console.log(ev1.length);
         //console.log(JSON.stringify(ev1));
+        console.log("yaringets");
         res.view("pages/selectEventUp", { ev1: ev1 });
+
     });
 
 });
@@ -131,25 +133,8 @@ app.get("/updateRecruit", function (req, res) {
 });
 
 app.get("/updateEvent", function (req, res) {
-    if (Uid != "" && typeUser != "Employers") {
-        res.redirect("/");
-    }
-    else {
-        MongoClient.connect(url, { useUnifiedTopology: true }, function (err, db) {
+    res.redirect("/");
 
-            var myquery = { _id: Uid };
-            var dbo = db.db("eventSaver");
-            dbo.collection("Event").find(myquery).toArray(function (err, result) {
-                if (err) throw err;
-                if (result.length != 0) {
-                    result[0].suc3 = true;
-                    res.view('pages/updateEvent', result[0]);
-                }
-                db.close();
-            });
-
-        });
-    }
 });
 
 app.get('/newu', function (req, res) {
@@ -197,6 +182,35 @@ app.get('/changeE', function (req, res) {
         res.view('pages/changeE');
     else
         res.redirect("/");
+});
+
+
+
+app.post('/selectEventUp', (req, res) => {
+
+ 
+        MongoClient.connect(url, { useUnifiedTopology: true }, function (err, db) {
+           // console.log(req.body.selectE);
+            var myquery = {idE:Uid,eventname:req.body.selectE };
+            var dbo = db.db("eventSaver");
+            dbo.collection("Event").find(myquery).toArray(function (err, result) {
+                if (err) throw err;
+                //console.log(Uid);
+                if (result.length != 0) {
+                    result[0].suc3 = true;
+                    //result[0].select=req.body.selectE;
+                    console.log(result);
+                    res.view('pages/updateEvent',result[0]); //result[0] is the update event
+                }
+                db.close();
+            });
+
+        });
+    
+   
+
+
+   
 });
 
 // function that input to the data base the details that the user enter when he add contractor worker to the website
@@ -492,7 +506,7 @@ app.post('/inputEvent', async (req, res) => {
         var myobj = {
 
             eventname: req.body.eventname,
-            eventLoc: req.body.eventLoc,
+            eventLoc: req.body.eventloc,
             numGuest: req.body.numGuest,
             date: req.body.date,
             time: req.body.time,
@@ -570,6 +584,35 @@ function emailLoc(index) {
     });
 }
 
+//func that update the data base of event
+app.post('/inputupdateEvent', (req, res) => {
+    MongoClient.connect(url, { useUnifiedTopology: true }, function (err, db) {
+        if (err) throw err;
+        var dbo = db.db("eventSaver");
+        var myquery = { _id: req.idEvent };
+
+        var myobj = {
+
+            eventname: req.body.eventname,
+            eventLoc: req.body.eventloc,
+            numGuest: req.body.numGuest,
+            date: req.body.date,
+            time: req.body.time,
+            idE: Uid
+        }
+
+        dbo.collection("Event").updateOne(myquery, myobj, function (err, res1) {
+            if (err) throw err;
+
+            console.log("1 document updated");
+
+            res.view("pages/firstpage");
+
+            db.close();
+        });
+    });
+
+});
 
 app.post('/updateContractor', (req, res) => {
     MongoClient.connect(url, { useUnifiedTopology: true }, function (err, db) {
@@ -1074,12 +1117,14 @@ app.post('/humanResourcesReports-getContractors', async (req, res) => {
 
         let contractor, comments;
         var united = [];
+        var numOfCon;
+        var i;
 
         contractor = await dbo.collection("ContractorWorkers").find().project({ firstName: 1, lastName: 1, phoneNumbers: 1, email: 1 }).toArray();
         console.log(JSON.stringify(contractor));
         if (contractor.length != 0) {
             if (req.body.contractors == "avg") {
-                for (var i = 0; i < contractor.length; ++i) {
+                for (i = 0; i < contractor.length; ++i) {
 
                     comments = await dbo.collection("Comments").aggregate([{
                         $match: {
@@ -1109,7 +1154,7 @@ app.post('/humanResourcesReports-getContractors', async (req, res) => {
             else {
                 var from = parseInt(req.body.from);
                 var to = parseInt(req.body.to);
-                for (var i = 0; i < contractor.length; ++i) {
+                for (i = 0; i < contractor.length; ++i) {
                     console.log(contractor[i]._id);
                     comments = await dbo.collection("Comments").aggregate([{
                         $match: {
@@ -1141,11 +1186,52 @@ app.post('/humanResourcesReports-getContractors', async (req, res) => {
                 console.log("united  " + JSON.stringify(united));
             }
 
+            numOfCon = contractor.length;
+            var numOfRates = [0, 0, 0, 0, 0, 0];
+            var sum = 0;
+            for (i = 1; i <= 5; i++) {//5 defined rates
+                var comment = await dbo.collection("Comments").aggregate([
+                    {
+                        $group: {
+                            _id: "$idC",
+                            "rate": {
+                                "$avg": "$rate"
+                            }
+                        }
+                    },
+                    {
+                        $match: {
+                            "rate": i
+                        }
+                    },
+                    {
+                        $group: {
+                            _id: "rate",
+                            count: {
+                                $sum: 1
+                            }
+                        }
+                    }
+                ]).toArray();
 
+                if (comment.length != 0) {
+                    numOfRates[i] = comment[0].count;
+                    sum += numOfRates[i];
+                }
+                else
+                    numOfRates[i] = 0;
 
-            res.view("pages/humanResourcesReports", { Data: united, choise: "c" });
+                //rest:
+                numOfRates[0] = numOfCon - sum; //contractors that don't have rates.
+            }
+
+            console.log("num of rates: "+JSON.stringify(numOfRates));
+            res.view("pages/humanResourcesReports", { Data: united, choise: "c", numOfCon: numOfCon, numOfRates: numOfRates });
 
         }
+        else
+            res.view("pages/humanResourcesReports", { noData: "y" });
+
     });
     //res.view("pages/humanResourcesReports", { Data: null, choise: null });
 });

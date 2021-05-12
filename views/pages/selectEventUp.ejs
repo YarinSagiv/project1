@@ -20,26 +20,27 @@
                 <% if(typeof dat.eventname != undefined && dat.eventname) { %>
                     <option><%= dat.eventname %></option>
                 <% } %>  
-                        
+                <% }); %> 
+  
             </select>
-            <% }); %> 
             <% } %>
+            <input type="hidden" id="selectE" name="selectE">   
     </div>
 
 
-<button type="submit" class="registerbtn" href="/updateEvent">Update this event</button>
+<button type="button" class="registerbtn" onclick="getSelect()">Update this event</button>
 
 </form>
 </body>
 
 <script>
-  /*
-    var myobject ="<%= ev1 %>"
+      function getSelect() {
+        document.getElementById("selectE").value = document.getElementById("your_event").value;
+        document.getElementById("form1").action = "/selectEventUp";
+        document.getElementById("form1").method = "POST";
+        document.getElementById("form1").submit();
+        console.log("yarinfunget");
+        }
 
-    var select = document.getElementById("your_event");
-    for(index in myobject) {
-        select.options[select.options.length] = new Option(myobject[index], index);
-    }
-    */
 </script>
 </html>

@@ -108,7 +108,8 @@
 
         <!-- CONTRACTOR TABLE-->
         <% if(Data!=null && typeof Data !="undefined" && choise == "c"){ %>
-            <br/>
+            <br/>  
+
                 <table id="results" style="width:90%; margin: 0 auto; text-align: center; border-collapse: collapse;">
                 <tr id="head">
                         <th>first name</th>
@@ -144,6 +145,23 @@
                     <% }); %>
     
             </table>
+
+            <p style="display: block; text-align: center;">
+            <% if(typeof numOfCon != undefined && numOfCon) { %>
+                <label class="report" style="font-size: 16px;text-decoration: underline;"><b>general information</b></label><br>
+                <label class="report" style="font-size: 16px;">there are <%= numOfCon %> contractor workers registered to the site</label><br>
+                <% } %>
+    
+                <% if(typeof numOfRates != undefined && numOfRates) { %>
+                    <label class="report" style="font-size: 16px;">there are <%= numOfRates[0] %> contractor with no rates</label><br>
+                    <label class="report" style="font-size: 16px;">there are <%= numOfRates[1] %> contractor workers with rate 1</label><br>
+                    <label class="report" style="font-size: 16px;">there are <%= numOfRates[2] %> contractor workers with rate 2</label><br>
+                    <label class="report" style="font-size: 16px;">there are <%= numOfRates[3] %> contractor workers with rate 3</label><br>
+                    <label class="report" style="font-size: 16px;">there are <%= numOfRates[4] %> contractor workers with rate 4</label><br>
+                    <label class="report" style="font-size: 16px;">there are <%= numOfRates[5] %> contractor workers with rate 5</label><br>
+    
+                    <% } %>  
+                </p>
             <% } %>
 
 
