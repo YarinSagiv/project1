@@ -1,0 +1,97 @@
+<html>
+<head>
+  <link href="css/sty.css" rel="stylesheet">
+
+</head>
+<body>
+
+  <header>
+    <%- include('../partials/_header') %>
+  </header>
+
+<form id="form1" action="/updateRecruit" method="POST" >
+    <div class="container">
+      <p>Please fill in this form the details to update the recruit</p>
+      <hr>
+      <br><label id="errorinput"></label><br>
+      <br/>
+      <label for="date"><b>Start time</b></label>
+      <input type="time" name="startTime" id="startTime">
+      <br/>
+      if ("<%= hasAddress %>" == 'false')
+                <label for="WorkPlace"><b>work place</b></label>
+                <input type="text" placeholder="Enter work place" name="WorkPlace" id="WorkPlace" oninput="this.value = this.value.replace(/[^a-zA-Z]/g, '').replace(/(\..?)\../g, '$1');"required> 
+                </br>
+            else
+                <% if(ev2!=null && typeof ev2 !="undefined"){ %>
+                    <select id="your_event"> 
+                    <% ev2.forEach(function(dat) {%>
+                        <% if(typeof dat.address != undefined && dat.address) { %>
+                            <option><%= dat.address %></option>
+                        <% } %>                 
+                    </select>
+                    <% }); %> 
+                    <% } %>
+                </br>
+        
+      
+
+
+     <button type="submit" class="registerbtn" >Update Event</button>
+    </div>
+  
+   
+</form>
+</body>
+
+<script>
+  if ("<%= suc3 %>" == 'false')
+  {
+    var l = document.getElementById("errorinput");
+    l.innerHTML = "In the date of the event, the contractor not available."
+    l.style = "font-size:18px; color: red;"
+    newusucc=false;
+
+  }
+
+
+  
+  function dates()
+  {
+    //DATES:
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yyyy = today.getFullYear();
+
+    today = yyyy + '-' + mm + '-' + dd;
+    //document.write(today);
+    document.getElementById("date").min = today;
+  }
+  dates();
+
+
+  function initdit()
+  {
+        /*
+            this function gets the information already in the database for this specific event
+        */
+       //---event name 
+       document.getElementById("eventname").value = "<%= eventname %>";
+       //---event location 
+       document.getElementById("eventloc").value = "<%= eventloc %>";
+       //---num of guest
+       document.getElementById("numGuest").value = "<%= numGuest %>";
+       //---date
+       document.getElementById("date").value = "<%= date %>";
+       
+
+      
+  }
+
+  initdit();
+
+</script>
+
+</html>
+

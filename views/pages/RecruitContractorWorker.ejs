@@ -9,30 +9,71 @@
     <%- include('../partials/_header') %>
   </header>
 
-<form id="form1" action="/RecruitContractorWorker" method="POST" >
+<form id="form1" action="/inputRecruit" method="POST" >
     <div class="container">
-        <p>Please choose the event you want to recruit a contractor worker for </p>
+        <p>Please fill the form></p>
         <hr>
-            <label>your event:</label>
+            <br><label id="errorinput"></label><br>
+            </br>
+            <label>Recruit:</label>
             <% if(ev1!=null && typeof ev1 !="undefined"){ %>
             <select id="your_event"> 
               <% ev1.forEach(function(dat) {%>
                 <% if(typeof dat.eventname != undefined && dat.eventname) { %>
                     <option><%= dat.eventname %></option>
-                <% } %>  
-                        
+                <% } %>                 
             </select>
             <% }); %> 
             <% } %>
+            </br>
+            <label for="date"><b>Start time</b></label>
+            <input type="time" name="startTime" id="startTime">
+            <br/>
+            if ("<%= hasAddress %>" == 'false')
+                <label for="WorkPlace"><b>work place</b></label>
+                <input type="text" placeholder="Enter work place" name="WorkPlace" id="WorkPlace" oninput="this.value = this.value.replace(/[^a-zA-Z]/g, '').replace(/(\..?)\../g, '$1');"required> 
+                </br>
+            else
+                <% if(ev2!=null && typeof ev2 !="undefined"){ %>
+                    <select id="your_event"> 
+                    <% ev2.forEach(function(dat) {%>
+                        <% if(typeof dat.address != undefined && dat.address) { %>
+                            <option><%= dat.address %></option>
+                        <% } %>                 
+                    </select>
+                    <% }); %> 
+                    <% } %>
+                </br>
+            <label for="priceRate"><b>work place</b></label>
+            <input type="text" placeholder="Enter the price rate of the contractor worker" name="priceRate" id="priceRate" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..?)\../g, '$1');"required> 
+            </br>
+            <label for="information"><b>information:</b></label>
+            <input type="text" placeholder="Enter extre information about the recruit" name="information" id="information" maxlength="200" required>
+            </br>
+            <label for="workRate"><b>choose a work rate:</b></label>
+            <select id:"work_rate">
+                <option value="1">work_rate</option>
+                <option value="2">work_rate</option>
+                <option value="3">work_rate</option>
+                <option value="4">work_rate</option>
+                <option value="5">work_rate</option>
+            </select>
+            </br>
+
+        <hr>
     </div>
 
 
-<button type="submit" class="registerbtn" href="/RecruitContractorWorker">choose event</button>
+    <button type="submit" class="registerbtn" href="/profileContrsctorPage">ok</button>
+    <button type="submit" class="registerbtn" href="/firstpage">cancel</button>
+
 
 </form>
-</body>
+
+<span id = "message" style="color:red"> </span> <br><br>
 
 <script>
 
 </script>
+</body>
 </html>

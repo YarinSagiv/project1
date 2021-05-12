@@ -72,9 +72,11 @@ app.get("/RecruitContractorWorker", async function (req, res) {
         var myquery = { idE: Uid };
         var dbo = db.db("eventSaver");
         let ev1 = await dbo.collection("Event").find(myquery).toArray();
+        let ev2 = await dbo.collection("ContractorWorkers").find(myquery).toArray();
         //console.log(ev1.length);
         //console.log(JSON.stringify(ev1));
         res.view("pages/RecruitContractorWorker", { ev1: ev1 });
+        res.view("pages/RecruitContractorWorker", { ev2: ev2 });
     });
 });
 
@@ -104,6 +106,27 @@ app.get("/addEvent", function (req, res) {
     }
 });
 
+app.get("/updateRecruit", function (req, res) {
+    if (Uid != "" && typeUser != "Employers") {
+        res.redirect("/");
+    }
+    else {
+        MongoClient.connect(url, { useUnifiedTopology: true }, function (err, db) {
+
+            var myquery = { _id: Uid };
+            var dbo = db.db("eventSaver");
+            dbo.collection("Recuitment").find(myquery).toArray(function (err, result) {
+                if (err) throw err;
+                if (result.length != 0) {
+                    result[0].suc3 = true;
+                    res.view('pages/updateRecruit', result[0]);
+                }
+                db.close();
+            });
+
+        });
+    }
+});
 
 app.get("/updateEvent", function (req, res) {
     if (Uid != "" && typeUser != "Employers") {
@@ -249,6 +272,37 @@ app.post('/inputDBHR', (req, res) => {
     });
 });
 
+app.post('/inputRecruit', (req, res) => {
+
+    MongoClient.connect(url, { useUnifiedTopology: true }, function (err, db) {
+        if (err) throw err;
+        var dbo = db.db("eventSaver");
+        var myobj = {
+            idC: null,
+            idEmployer:Uid,
+            idEvent: null,
+            date: null,
+            startTime: req.body.startTime,
+            location:req.body.WorkPlace,
+            price:req.body.priceRate,
+            information:req.body.information,
+            workRate:req.body.workRate
+        };
+        var succ = dbo.collection("Recuitment").insertOne(myobj, function (err, resault2) {
+
+            if (err) {
+                res.view("pages/RecruitContractorWorker", { temp2: "false" });
+            }
+            else {
+                res.redirect("/"); //the response 
+            }
+            console.log("1 document inserted");
+            db.close();
+
+        });
+    });
+});
+
 app.post('/updatePasswordC', (req, res) => {
     MongoClient.connect(url, { useUnifiedTopology: true }, function (err, db) {
         if (err) throw err;
@@ -266,6 +320,7 @@ app.post('/updatePasswordC', (req, res) => {
         });
     });
 });
+
 
 app.post('/updatePasswordHR', (req, res) => {
     MongoClient.connect(url, { useUnifiedTopology: true }, function (err, db) {
