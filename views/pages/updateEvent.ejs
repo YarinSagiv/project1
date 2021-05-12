@@ -9,7 +9,7 @@
     <%- include('../partials/_header') %>
   </header>
 
-<form id="form1" action="/updateEvent" method="POST" >
+<form id="form1" action="/inputupdateEvent" method="POST" >
     <div class="container">
       <p>Please fill in this form the details to update an event</p>
       <hr>
@@ -29,18 +29,19 @@
       <br/>
       <label for="date"><b>Start time</b></label>
       <input type="time" name="time" id="time">
+      <input type="hidden" id="idEvent" name="idEvent">   
       <br/>
       
 
-
-     <button type="submit" class="registerbtn" >Update Event</button>
     </div>
-  
+    <button type="button" class="registerbtn" onclick="getSelect()">Update Event</button>
+
    
 </form>
 </body>
 
 <script>
+   
   if ("<%= suc3 %>" == 'false')
   {
     var l = document.getElementById("errorinput");
@@ -49,6 +50,13 @@
     newusucc=false;
 
   }
+
+  function getSelect() {
+        document.getElementById("idEvent").value = "<%= _id =%>";
+        document.getElementById("form1").action = "/inputupdateEvent";
+        document.getElementById("form1").method = "POST";
+        document.getElementById("form1").submit();
+    }
 
 
   
@@ -75,17 +83,20 @@
        //---event name 
        document.getElementById("eventname").value = "<%= eventname %>";
        //---event location 
-       document.getElementById("eventloc").value = "<%= eventloc %>";
+       document.getElementById("eventloc").value = "<%= eventLoc %>";
        //---num of guest
-       document.getElementById("numGuest").value = "<%= numGuest %>";
+       document.getElementById("numguest").value = "<%= numGuest %>";
        //---date
        document.getElementById("date").value = "<%= date %>";
-       
+       //--time
+       document.getElementById("time").value = "<%= time %>";
+
 
       
   }
 
   initdit();
+  
 
 </script>
 
