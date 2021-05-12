@@ -14,6 +14,9 @@
         <p>Please fill the form></p>
         <hr>
             <br><label id="errorinput"></label><br>
+            <label for="iduser"><b>ID</b></label>
+            <br><label id="id"></label><br>
+            <input type="text" placeholder="Enter the contractor ID" name="iduser" id="iduser" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..?)\../g, '$1');" required>
             </br>
             <label>Recruit:</label>
             <% if(ev1!=null && typeof ev1 !="undefined"){ %>

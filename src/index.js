@@ -70,15 +70,17 @@ app.get("/RecruitContractorWorker", async function (req, res) {
         if (err) throw err;
         //Uid="316461375";
         var myquery = { idE: Uid };
+        var quary2 = {_id:req.body.iduser};
         var dbo = db.db("eventSaver");
         let ev1 = await dbo.collection("Event").find(myquery).toArray();
-        let ev2 = await dbo.collection("ContractorWorkers").find(myquery).toArray();
+        let ev2 = await dbo.collection("ContractorWorkers").find(quary2).toArray();
         //console.log(ev1.length);
         //console.log(JSON.stringify(ev1));
-        res.view("pages/RecruitContractorWorker", { ev1: ev1 });
-        res.view("pages/RecruitContractorWorker", { ev2: ev2 });
+        ev1.ev2=ev2
+        res.view("pages/RecruitContractorWorker", ev1);
     });
 });
+
 
 app.get("/logOut", function (req, res) {
     Uid = "";
@@ -278,6 +280,7 @@ app.post('/inputRecruit', (req, res) => {
         if (err) throw err;
         var dbo = db.db("eventSaver");
         var myobj = {
+            _id:req.body.iduser,
             idC: null,
             idEmployer:Uid,
             idEvent: null,
@@ -291,7 +294,7 @@ app.post('/inputRecruit', (req, res) => {
         var succ = dbo.collection("Recuitment").insertOne(myobj, function (err, resault2) {
 
             if (err) {
-                res.view("pages/RecruitContractorWorker", { temp2: "false" });
+                res.view("pages/RecruitContractorWorker", { temp2: "false" , ev1:null });
             }
             else {
                 res.redirect("/"); //the response 
