@@ -2,30 +2,7 @@
 
 <head>
     <link href="css/sty.css" rel="stylesheet">
-    <style>
-        td{
-            border: 1px solid #ddd;
-      padding: 8px;
-        }
-        tr{
-            border: 1px solid #ddd;
-      padding: 8px;
-      
-        }
-        tr:nth-child(even){background-color: #f2f2f2;}
-        tr:hover {background-color: #ddd;}
     
-        th{
-            padding-top: 12px;
-      padding-bottom: 12px;
-      padding-left: 6px;
-        padding-right: 6px;
-      text-align: center;
-      background-color: #a70d48;
-      opacity: 0.9;
-      color: white;
-        }
-    </style>    
 </head>
 
 <body>
@@ -136,7 +113,11 @@
         <input type="hidden" id="dates" name="dates">
         <!--to POST-->
         <br />
+
+
         <p>Job Rate</p>
+        <div class="container">
+        <div class="tab tab-1">
         <table id="table">
             <tr>
               <th>Title</th>
@@ -146,18 +127,23 @@
 
             </tr>
           </table>
-          <br>
+        </div>
 
-          Title :<input type="text" placeholder="Enter Title" name="title" id="title" oninput="this.value = this.value.replace(/[^a-zA-Z]/g, '').replace(/(\..?)\../g, '$1');"required>
-          Price :<input type="text" placeholder="Enter Price" name="price" id="price" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..?)\../g, '$1');" required>
-          Description :<input type="text" placeholder="Enter Description" name="des" id="des" >
-          fee :<input type="text" placeholder="Enter Traveling fee" name="fee" id="fee" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..?)\../g, '$1');" required>
+          <br>
+          <div class="tab tab-2">
+            Title :<input type="text" placeholder="Enter Title" name="title" id="title" maxlength="20" >
+            Price :<input type="text" placeholder="Enter Price" name="price" id="price" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..?)\../g, '$1');" required>
+            Description :<input type="text" placeholder="Enter Description" name="des" id="des" maxlength="200">
+            fee :<input type="text" placeholder="Enter Traveling fee" name="fee" id="fee" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..?)\../g, '$1');" required>
+  
+            <button type="button" class="button" onclick="addJobRate()">add</button>
+            <button type="button" class="button" onclick="deleteJobRate()">delete</button>
+            <button type="button" class="button" onclick="editJobRate()">edit</button>
+        </div>
+    </div>
+
 
           
-
-          <button type="button" class="button" onclick="addJobRate()">add</button>
-          <button type="button" class="button" onclick="deleteJobRate()">delete</button>
-          <button type="button" class="button" onclick="editJobRate()">edit</button>
 
           <br>
           <a href="/changeC" class="button" style="padding: 8px 15px;" >change password</a><br/><br>
@@ -183,7 +169,7 @@
                     cell1 = newRow.insertCell(0),
                     cell2 = newRow.insertCell(1),
                     cell3 = newRow.insertCell(2),
-                    cell4 = newRow.insertCell(2),
+                    cell4 = newRow.insertCell(3),
                     title = document.getElementById("title").value,
                     price = document.getElementById("price").value,
                     des = document.getElementById("des").value,
@@ -192,7 +178,7 @@
                 cell1.innerHTML = title;
                 cell2.innerHTML = price;
                 cell3.innerHTML = des;
-                cell3.innerHTML = fee;
+                cell4.innerHTML = fee;
                 selectedRowToInput();
      
     }
