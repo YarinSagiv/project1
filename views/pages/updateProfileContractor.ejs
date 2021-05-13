@@ -113,19 +113,24 @@
         <!--to POST-->
         <br />
         <p>Job Rate</p>
-        <table id="jobRateTable">
+        <table id="table">
             <tr>
-              <td>Number</td>
               <td>Title</td>
               <td>Price</td>
-              <td>Service</td>
               <td>Description</td>
               <td>Traveling fee</td>
 
             </tr>
           </table>
           <br>
+
+          <input type="text" placeholder="Enter Title" name="title" id="title" oninput="this.value = this.value.replace(/[^a-zA-Z]/g, '').replace(/(\..?)\../g, '$1');"required>
+          <input type="text" placeholder="Enter Price" name="price" id="price" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..?)\../g, '$1');" required>
+          <input type="text" placeholder="Enter Description" name="des" id="des" >
+          <input type="text" placeholder="Enter Traveling fee" name="fee" id="fee" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..?)\../g, '$1');" required>
+
           
+
           <button type="button" class="button" onclick="addJobRate()">Click to add job rate</button>
           <br>
           <input type="text" name="deleter" id="deleter" required>
@@ -156,16 +161,43 @@
     }
 
     function addJobRate() {
-        var table = document.getElementById("jobRateTable");
-        var row = table.insertRow(document.getElementById("jobRateTable").length);
-        var cell1 = row.insertCell();
-        var cell2 = row.insertCell(1);
-        var cell1 = row.insertCell(2);
-        var cell2 = row.insertCell(3);
-        var cell1 = row.insertCell(4);
-        var cell2 = row.insertCell(5);
+        var newRow = table.insertRow(table.length),
+                    cell1 = newRow.insertCell(0),
+                    cell2 = newRow.insertCell(1),
+                    cell3 = newRow.insertCell(2),
+                    cell4 = newRow.insertCell(2),
+                    title = document.getElementById("title").value,
+                    price = document.getElementById("price").value,
+                    des = document.getElementById("des").value,
+                    fee = document.getElementById("fee").value;
+            
+                cell1.innerHTML = title;
+                cell2.innerHTML = price;
+                cell3.innerHTML = des;
+                cell3.innerHTML = fee;
+                selectedRowToInput();
      
     }
+
+      // display selected row data into input text
+    function selectedRowToInput()
+            {
+                
+                for(var i = 1; i < table.rows.length; i++)
+                {
+                    table.rows[i].onclick = function()
+                    {
+                      // get the seected row index
+                      rIndex = this.rowIndex;
+                      document.getElementById("title").value = this.cells[0].innerHTML;
+                      document.getElementById("price").value = this.cells[1].innerHTML;
+                      document.getElementById("des").value = this.cells[2].innerHTML;
+                      document.getElementById("fee").value = this.cells[3].innerHTML;
+
+                    };
+                }
+            }
+        selectedRowToInput();
 
     function show(id) {
         document.getElementById(id).style.display = 'block';
