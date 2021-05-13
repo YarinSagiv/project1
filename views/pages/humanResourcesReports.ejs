@@ -44,11 +44,37 @@
     <form id="myform">
 
         <br/><br/>
-        <button type="button" class="report" onclick="getAllEmployers()">see all employers</button>
+        <button type="button" class="report" onclick="getAllEmployers()">get all employers</button>
         <br/>
-        <button type="button" class="report" onclick="getAllContractors()">see all employers</button>
 
+        <label class="report" style="display: block; text-align: center; text-decoration: underline;"><b>find contractors</b></label>
+        <p style="display: block; text-align: center;">
+            <input type="radio" id="avgRates" name="contractors" value="avg" onchange="findByRange()" checked><label class="report">with avg rates</label>&emsp;
+            <input type="radio" id="byRange" name="contractors" value="range" onchange="findByRange()" ><label class="report">by range of avg rates</label>
+                    
+            <label class="report">from </label>
+        <select class="report" id="from" name="from" onchange="limitTo()" disabled>
+            <option value="0" selected>0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+        </select>
+        <label class="report"> to </label>
+        <select class="report" id="to" name="to" disabled>
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5" selected>5</option>
+        </select>
+    </p>
 
+        <button type="button" class="report" onclick="getAllContractors()">get all contractors</button>
+
+        
         <!-- EMPLOYERS TABLE-->
         <% if(Data!=null && typeof Data !="undefined" && choise == "e"){ %>
         <br/>
@@ -80,6 +106,64 @@
         <% } %>
 
 
+        <!-- CONTRACTOR TABLE-->
+        <% if(Data!=null && typeof Data !="undefined" && choise == "c"){ %>
+            <br/>  
+
+                <table id="results" style="width:90%; margin: 0 auto; text-align: center; border-collapse: collapse;">
+                <tr id="head">
+                        <th>first name</th>
+                        <th>last name</th>
+                        <th>phone numbers</th>
+                        <th>email</th>
+                        <th>avg rate</th>
+                </tr>
+                    <tr>
+                        <% Data.forEach(function(dat) {%>
+                        <% if(typeof dat.firstName != undefined && dat.firstName) { %>
+                            <td><%= dat.firstName %></td>
+                        <% } %>
+                        <% if(typeof dat.lastName != undefined && dat.lastName) { %>
+                            <td><%= dat.lastName %></td>
+                        <% } %>
+                        <% if(typeof dat.phoneNumbers != undefined && dat.phoneNumbers) { %>
+                            <td><%= dat.phoneNumbers %></td>
+                        <% } else { %>
+                            <td>---</td>
+                        <% } %>
+                        <% if(typeof dat.email != undefined && dat.email) { %>
+                            <td><%= dat.email %></td>
+                        <% } else { %>
+                            <td>---</td>
+                        <% } %>
+                        <% if(typeof dat.rate != undefined && dat.rate) { %>
+                            <td><%= dat.rate %></td>
+                        <% } else { %>
+                            <td>---</td>
+                        <% } %>
+                    </tr>
+                    <% }); %>
+    
+            </table>
+
+            <p style="display: block; text-align: center;">
+            <% if(typeof numOfCon != undefined && numOfCon) { %>
+                <label class="report" style="font-size: 16px;text-decoration: underline;"><b>general information</b></label><br>
+                <label class="report" style="font-size: 16px;">there are <%= numOfCon %> contractor workers registered to the site</label><br>
+                <% } %>
+    
+                <% if(typeof numOfRates != undefined && numOfRates) { %>
+                    <label class="report" style="font-size: 16px;">there are <%= numOfRates[0] %> contractor with no rates</label><br>
+                    <label class="report" style="font-size: 16px;">there are <%= numOfRates[1] %> contractor workers with rate 1</label><br>
+                    <label class="report" style="font-size: 16px;">there are <%= numOfRates[2] %> contractor workers with rate 2</label><br>
+                    <label class="report" style="font-size: 16px;">there are <%= numOfRates[3] %> contractor workers with rate 3</label><br>
+                    <label class="report" style="font-size: 16px;">there are <%= numOfRates[4] %> contractor workers with rate 4</label><br>
+                    <label class="report" style="font-size: 16px;">there are <%= numOfRates[5] %> contractor workers with rate 5</label><br>
+    
+                    <% } %>  
+                </p>
+            <% } %>
+
 
     </form>
 
@@ -89,7 +173,49 @@
             document.getElementById("myform").method = "POST";
             document.getElementById("myform").submit();
         }
-        
+
+
+        function enable(id)
+        {
+            document.getElementById(id).disabled  = false;
+        }
+        function disable(id)
+        {
+            document.getElementById(id).disabled  = true;;
+        }
+        function findByRange()
+        {
+            if(document.getElementById("byRange").checked){
+                enable("from");
+                document.getElementById("from").focus();
+                enable("to");}
+            else{
+                disable("from");
+                disable("to");
+            }
+        }
+
+        function limitTo()
+        {
+            var from=parseInt(document.getElementById("from").value);
+            //get all <option>s in "to"
+            var op = document.getElementById("to").getElementsByTagName("option");
+            for (var i = 0; i < op.length; i++) {
+                (parseInt(op[i].value) < from) 
+                    ? op[i].disabled = true 
+                    : op[i].disabled = false ;
+            }
+
+            //change value of needed:
+            if(parseInt(document.getElementById("to").value)<parseInt(document.getElementById("from").value))
+                op[from].selected = true;
+        }
+
+        function getAllContractors() {
+            document.getElementById("myform").action = "humanResourcesReports-getContractors";
+            document.getElementById("myform").method = "POST";
+            document.getElementById("myform").submit();
+        }
 
     </script>
 

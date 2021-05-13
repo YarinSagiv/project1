@@ -206,10 +206,33 @@ button.report-reset {
     text-align: center;
 }
 
-select.report {
+select.report2 {
     width: 200px;
     font-size: 18px;
     background: #f1f1f1;
     font-family: Felix Titling, Helvetica, sans-serif;
 }
+<<<<<<< HEAD
 >>>>>>> a64b1570bc2e82cd7ee0cfca03b4cfc03950414c
+=======
+
+select.report
+{
+    width: 65px;
+    padding: 15px;
+    margin: 5px 0 22px 0;
+    display: inline-block;
+    border: none;
+    background: #f1f1f1;
+}
+
+select:disabled.report
+{
+    width: 65px;
+    padding: 15px;
+    margin: 5px 0 22px 0;
+    display: inline-block;
+    border: none;
+    background: rgb(201, 200, 200);
+}
+>>>>>>> 14822a7eafca58dd7f4d85d49feb25bf5c19a3d2

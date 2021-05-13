@@ -51,12 +51,18 @@ app.get("/contactUs", function (req, res) {
     res.view("pages/contactUs");
 });
 
-app.get("/selectEventUp", async function (req, res)
-{
+app.get("/selectEventUp", async function (req, res) {
     MongoClient.connect(url, { useUnifiedTopology: true }, async function (err, db) {
-    var dbo = db.db("eventSaver");
-    let ev1= await dbo.collection("Event").find(query);
-    res.view("pages/selectEventUp",ev1);
+        if (err) throw err;
+        //Uid="316461375";
+        var myquery = { idE: Uid };
+        var dbo = db.db("eventSaver");
+        let ev1 = await dbo.collection("Event").find(myquery).toArray();
+        //console.log(ev1.length);
+        //console.log(JSON.stringify(ev1));
+        console.log("yaringets");
+        res.view("pages/selectEventUp", { ev1: ev1 });
+
     });
 
 });
@@ -90,23 +96,8 @@ app.get("/addEvent", function (req, res) {
 
 
 app.get("/updateEvent", function (req, res) {
-    if (Uid != "" && typeUser != "Employers") {
-        res.redirect("/");
-    }
-    else {
-        MongoClient.connect(url, { useUnifiedTopology: true }, function (err, db) {
+    res.redirect("/");
 
-        dbo.collection("Event").find(query).toArray(function (err, result) {
-            if (err) throw err;
-            if (result.length != 0) {
-                result[0].suc3=true;
-                res.view('pages/updateEvent', result[0]);
-            }
-            db.close();
-        });
-    });
-
-    }
 });
 
 app.get('/newu', function (req, res) {
@@ -154,6 +145,35 @@ app.get('/changeE', function (req, res) {
         res.view('pages/changeE');
     else
         res.redirect("/");
+});
+
+
+
+app.post('/selectEventUp', (req, res) => {
+
+ 
+        MongoClient.connect(url, { useUnifiedTopology: true }, function (err, db) {
+           // console.log(req.body.selectE);
+            var myquery = {idE:Uid,eventname:req.body.selectE };
+            var dbo = db.db("eventSaver");
+            dbo.collection("Event").find(myquery).toArray(function (err, result) {
+                if (err) throw err;
+                //console.log(Uid);
+                if (result.length != 0) {
+                    result[0].suc3 = true;
+                    //result[0].select=req.body.selectE;
+                    console.log(result);
+                    res.view('pages/updateEvent',result[0]); //result[0] is the update event
+                }
+                db.close();
+            });
+
+        });
+    
+   
+
+
+   
 });
 
 // function that input to the data base the details that the user enter when he add contractor worker to the website
@@ -414,9 +434,9 @@ app.post('/inputEvent', async (req, res) => {
         var dbo = db.db("eventSaver");
 
         var myobj = {
-    
+
             eventname: req.body.eventname,
-            eventLoc: req.body.eventLoc,
+            eventLoc: req.body.eventloc,
             numGuest: req.body.numGuest,
             date: req.body.date,
             time: req.body.time,
@@ -494,6 +514,35 @@ function emailLoc(index) {
     });
 }
 
+//func that update the data base of event
+app.post('/inputupdateEvent', (req, res) => {
+    MongoClient.connect(url, { useUnifiedTopology: true }, function (err, db) {
+        if (err) throw err;
+        var dbo = db.db("eventSaver");
+        var myquery = { _id: req.idEvent };
+
+        var myobj = {
+
+            eventname: req.body.eventname,
+            eventLoc: req.body.eventloc,
+            numGuest: req.body.numGuest,
+            date: req.body.date,
+            time: req.body.time,
+            idE: Uid
+        }
+
+        dbo.collection("Event").updateOne(myquery, myobj, function (err, res1) {
+            if (err) throw err;
+
+            console.log("1 document updated");
+
+            res.view("pages/firstpage");
+
+            db.close();
+        });
+    });
+
+});
 
 app.post('/updateContractor', (req, res) => {
     MongoClient.connect(url, { useUnifiedTopology: true }, function (err, db) {
@@ -553,7 +602,7 @@ app.post('/inputDataBase', (req, res) => {
             userName: req.body.username,
             email: req.body.email,
             password: req.body.psw,
-         
+
         };
 
 
@@ -796,7 +845,7 @@ app.post('/contractorReports', async (req, res) => {
         var dbo = db.db("eventSaver");
 
         //projection
-        var fieldsE = { _id: 0 }; //do not bring id field
+        var fieldsE = {}; //do not bring id field
         var fieldsR = { idEmployer: 1 };
 
         if (typeof req.body.nameEmp != "undefined") {
@@ -830,7 +879,7 @@ app.post('/contractorReports', async (req, res) => {
 
 
         //-------
-        Uid = "208375709";
+        Uid = "205364788";
         //-------
         var todayYear = new Date().getFullYear();
         var query3 = { idC: Uid, date: new RegExp(todayYear + "-") };
@@ -846,12 +895,26 @@ app.post('/contractorReports', async (req, res) => {
         var united = [];
         if (recruits.length != 0) {
             for (var i = 0; i < recruits.length; ++i) {
-                var employer
+                var employer;
                 try {
                     employer = await dbo.collection("Employers").find({ _id: recruits[i].idEmployer }).project(fieldsE).toArray();
                     console.log("employer  " + JSON.stringify(employer[0]));
 
-                    united.push({ ...recruits[i], ...employer[0] });
+                    if (typeof req.body.price != "undefined") {
+                        //get the rate:
+                        var comments = await dbo.collection("Comments").find({ idEmp: employer[0]._id }).project({ rate: 1, _id: 0 }).toArray();
+                        console.log("comments " + JSON.stringify(comments));
+
+                        //make one document with all info
+                        delete employer[0]._id;
+                        united.push({ ...recruits[i], ...employer[0], ...comments[0] });
+                    }
+                    else {
+                        //make one document with all info
+                        delete employer[0]._id;
+                        united.push({ ...recruits[i], ...employer[0] });
+                    }
+
                     console.log("united  " + JSON.stringify(united));
                 }
                 catch (UnhandledPromiseRejectionWarning) {
@@ -869,13 +932,14 @@ app.post('/contractorReports', async (req, res) => {
                 date: req.body.date,
                 location: req.body.location,
                 price: req.body.price,
+                rate: req.body.rate,
                 Recruits: united
             };
 
             res.view("pages/contractorReports", send2);
         }
         else
-            res.view("pages/contractorReports", { Recruits: null, message: "no results found" })
+            res.view("pages/contractorReports", { Recruits: null, message: "no results found" });
         //if (typeof req.body.nameEmp != "undefined")
 
 
@@ -947,7 +1011,7 @@ app.post('/employerReports', async (req, res) => {
         var united = [];
         if (recruits.length != 0) {
             for (var i = 0; i < recruits.length; ++i) {
-                var contractor
+                var contractor;
                 try {
                     contractor = await dbo.collection("ContractorWorkers").find({ _id: recruits[i].idC }).project(fieldsC).toArray();
                     console.log("contractor  " + JSON.stringify(contractor[0]));
@@ -976,14 +1040,14 @@ app.post('/employerReports', async (req, res) => {
             res.view("pages/employerReports", send2);
         }
         else
-            res.view("pages/employerReports", { Recruits: null, message: "no results found" })
+            res.view("pages/employerReports", { Recruits: null, message: "no results found" });
     });
 });
 
 
 
 app.get('/humanResourcesReports', (req, res) => {
-    res.view("pages/humanResourcesReports", { Data: null , choise: null});
+    res.view("pages/humanResourcesReports", { Data: null, choise: null });
 });
 
 
@@ -992,18 +1056,141 @@ app.post('/humanResourcesReports-getEmployers', async (req, res) => {
         if (err) throw err;
         var dbo = db.db("eventSaver");
 
-        let employers = await dbo.collection("Employers").find().project({firstName: 1, lastName: 1, phoneNumbers: 1, email: 1}).toArray();
+        let employers = await dbo.collection("Employers").find().project({ firstName: 1, lastName: 1, phoneNumbers: 1, email: 1 }).toArray();
 
         res.view("pages/humanResourcesReports", { Data: employers, choise: "e" });
 
 
     });
-
-
-
-
     //res.view("pages/humanResourcesReports", { Data: null, choise: null });
 });
+
+app.post('/humanResourcesReports-getContractors', async (req, res) => {
+    MongoClient.connect(url, { useUnifiedTopology: true }, async function (err, db) {
+        if (err) throw err;
+        var dbo = db.db("eventSaver");
+
+        let contractor, comments;
+        var united = [];
+        var numOfCon;
+        var i;
+
+        contractor = await dbo.collection("ContractorWorkers").find().project({ firstName: 1, lastName: 1, phoneNumbers: 1, email: 1 }).toArray();
+        console.log(JSON.stringify(contractor));
+        if (contractor.length != 0) {
+            if (req.body.contractors == "avg") {
+                for (i = 0; i < contractor.length; ++i) {
+
+                    comments = await dbo.collection("Comments").aggregate([{
+                        $match: {
+                            idC: contractor[i]._id
+                        }
+                    },
+                    {
+                        $group: {
+                            _id: "$idC",
+                            "rate": {
+                                "$avg": "$rate"
+                            }
+                        }
+                    }]).toArray();
+                    console.log("comments:  " + JSON.stringify(comments));
+
+                    if (comments.length != 0)
+                        contractor[i].rate = comments[0].rate;
+                    else
+                        contractor[i].rate = null;
+
+                    united.push(contractor[i]);
+
+                }
+            }
+
+            else {
+                var from = parseInt(req.body.from);
+                var to = parseInt(req.body.to);
+                for (i = 0; i < contractor.length; ++i) {
+                    console.log(contractor[i]._id);
+                    comments = await dbo.collection("Comments").aggregate([{
+                        $match: {
+                            idC: contractor[i]._id,
+                            "rate": { $gt: from }, // greater than
+                            "rate": { $lt: to + 1 } //lower then -- +1 to include the top value
+                        }
+                    },
+                    {
+                        $group: {
+                            _id: "$idC",
+                            "rate": {
+                                "$avg": "$rate"
+                            }
+                        }
+                    }]).toArray();
+                    console.log("comments:  " + JSON.stringify(comments));
+
+                    if (comments.length != 0) {
+                        contractor[i].rate = comments[0].rate;
+                        united.push(contractor[i]);
+                    }
+                    else if (from == 0) {
+                        contractor[i].rate = null;
+                        united.push(contractor[i]);
+                    }
+                }
+
+                console.log("united  " + JSON.stringify(united));
+            }
+
+            numOfCon = contractor.length;
+            var numOfRates = [0, 0, 0, 0, 0, 0];
+            var sum = 0;
+            for (i = 1; i <= 5; i++) {//5 defined rates
+                var comment = await dbo.collection("Comments").aggregate([
+                    {
+                        $group: {
+                            _id: "$idC",
+                            "rate": {
+                                "$avg": "$rate"
+                            }
+                        }
+                    },
+                    {
+                        $match: {
+                            "rate": i
+                        }
+                    },
+                    {
+                        $group: {
+                            _id: "rate",
+                            count: {
+                                $sum: 1
+                            }
+                        }
+                    }
+                ]).toArray();
+
+                if (comment.length != 0) {
+                    numOfRates[i] = comment[0].count;
+                    sum += numOfRates[i];
+                }
+                else
+                    numOfRates[i] = 0;
+
+                //rest:
+                numOfRates[0] = numOfCon - sum; //contractors that don't have rates.
+            }
+
+            console.log("num of rates: "+JSON.stringify(numOfRates));
+            res.view("pages/humanResourcesReports", { Data: united, choise: "c", numOfCon: numOfCon, numOfRates: numOfRates });
+
+        }
+        else
+            res.view("pages/humanResourcesReports", { noData: "y" });
+
+    });
+    //res.view("pages/humanResourcesReports", { Data: null, choise: null });
+});
+
 
 
 
