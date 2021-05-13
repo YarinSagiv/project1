@@ -112,8 +112,26 @@
         <input type="hidden" id="dates" name="dates">
         <!--to POST-->
         <br />
-        
-        <a href="/changeC" class="button" style="padding: 8px 15px;" >change password</a><br/><br>
+        <p>Job Rate</p>
+        <table id="jobRateTable">
+            <tr>
+              <td>Number</td>
+              <td>Title</td>
+              <td>Price</td>
+              <td>Service</td>
+              <td>Description</td>
+              <td>Traveling fee</td>
+
+            </tr>
+          </table>
+          <br>
+          
+          <button type="button" class="button" onclick="addJobRate()">Click to add job rate</button>
+          <br>
+          <input type="text" name="deleter" id="deleter" required>
+          <button type="button" class="button" onclick="deleteJobRate()">Click to delete job rate</button>
+          <br>
+          <a href="/changeC" class="button" style="padding: 8px 15px;" >change password</a><br/><br>
 
         <button type="submit" class="button">update ditails</button>
     </form>
@@ -128,6 +146,26 @@
 
     //TODO: take all information from the data base and put in the right places in the form
     //console.log("<%= firstName %>");
+
+    function deleteJobRate()
+    {
+        var index=document.getElementById("deleter"); // the selected row to delete
+        console.log(index);
+        document.getElementById("jobRateTable").deleteRow(index);
+
+    }
+
+    function addJobRate() {
+        var table = document.getElementById("jobRateTable");
+        var row = table.insertRow(document.getElementById("jobRateTable").length);
+        var cell1 = row.insertCell();
+        var cell2 = row.insertCell(1);
+        var cell1 = row.insertCell(2);
+        var cell2 = row.insertCell(3);
+        var cell1 = row.insertCell(4);
+        var cell2 = row.insertCell(5);
+     
+    }
 
     function show(id) {
         document.getElementById(id).style.display = 'block';
