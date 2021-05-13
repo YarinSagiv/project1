@@ -1,0 +1,98 @@
+<html>
+
+<head>
+    <link href="css/sty.css" rel="stylesheet">
+    <style>
+                td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        tr {
+            border: 1px solid #ddd;
+            padding: 8px;
+
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        tr:hover {
+            background-color: #ddd;
+        }
+
+        th {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            padding-left: 6px;
+            padding-right: 6px;
+            text-align: center;
+            background-color: #a70d48;
+            opacity: 0.9;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <%- include('../partials/_header') %>
+    </header>
+
+    <form id="myform">
+
+        <br/><br/>
+        <button type="button" class="report" onclick="getAllEmployers()">see all employers</button>
+        <br/>
+        <button type="button" class="report" onclick="getAllContractors()">see all employers</button>
+
+
+        <!-- EMPLOYERS TABLE-->
+        <% if(Data!=null && typeof Data !="undefined" && choise == "e"){ %>
+        <br/>
+            <table id="results" style="width:90%; margin: 0 auto; text-align: center; border-collapse: collapse;">
+            <tr id="head">
+                    <th>first name</th>
+                    <th>last name</th>
+                    <th>phone numbers</th>
+                    <th>email</th>
+            </tr>
+                <tr>
+                    <% Data.forEach(function(dat) {%>
+                    <% if(typeof dat.firstName != undefined && dat.firstName) { %>
+                        <td><%= dat.firstName %></td>
+                    <% } %>
+                    <% if(typeof dat.lastName != undefined && dat.lastName) { %>
+                        <td><%= dat.lastName %></td>
+                    <% } %>
+                    <% if(typeof dat.phoneNumbers != undefined && dat.phoneNumbers) { %>
+                        <td><%= dat.phoneNumbers %></td>
+                    <% } %>
+                    <% if(typeof dat.email != undefined && dat.email) { %>
+                        <td><%= dat.email %></td>
+                        <% }%>
+                </tr>
+                <% }); %>
+
+        </table>
+        <% } %>
+
+
+
+    </form>
+
+    <script>
+        function getAllEmployers() {
+            document.getElementById("myform").action = "humanResourcesReports-getEmployers";
+            document.getElementById("myform").method = "POST";
+            document.getElementById("myform").submit();
+        }
+        
+
+    </script>
+
+</body>
+
+</html>

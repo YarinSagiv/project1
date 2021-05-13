@@ -1,0 +1,44 @@
+<html>
+<head>
+  <link href="css/sty.css" rel="stylesheet">
+
+</head>
+<body>
+
+  <header>
+    <%- include('../partials/_header') %>
+  </header>
+
+<form id="form1" action="/selectEventUp" method="POST" >
+    <div class="container">
+        <p>Please choose the event you want to update</p>
+        <hr>
+        <table>
+            <tr>
+              <td>
+                <label>your event:</label>
+              </td>
+              <td>
+                <select id="your_event">        
+                </select>
+              </td>
+            </tr>
+          </table>
+
+    </div>
+
+
+<button type="submit" class="registerbtn" href="/updateEvent">Update this event</button>
+
+</form>
+
+
+<script>
+    var myobject ="<%= ev1 %>"
+    var select = document.getElementById("your_event");
+    for(index in myobject) {
+        select.options[select.options.length] = new Option(myobject[index], index);
+    }
+    
+</script>
+</html>

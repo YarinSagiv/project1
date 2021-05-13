@@ -1,0 +1,172 @@
+<html>
+
+<head>
+    <link href="css/sty.css" rel="stylesheet">
+<style>
+    td{
+        border: 1px solid #ddd;
+  padding: 8px;
+    }
+    tr{
+        border: 1px solid #ddd;
+  padding: 8px;
+  
+    }
+    tr:nth-child(even){background-color: #f2f2f2;}
+    tr:hover {background-color: #ddd;}
+
+    th{
+        padding-top: 12px;
+  padding-bottom: 12px;
+  padding-left: 6px;
+    padding-right: 6px;
+  text-align: center;
+  background-color: #a70d48;
+  opacity: 0.9;
+  color: white;
+    }
+</style>
+</head>
+
+<body>
+
+    <header>
+        <%- include('../partials/_header') %>
+    </header>
+
+    <form action="/contractorReports" method="POST">
+        <h3 class="report">report of my recruits with:</h3>
+        <label class="report">name of employer</label>
+        <% if(typeof nameEmp != "undefined" && nameEmp) { %>
+            <input type="checkbox" id="nameEmp" name="nameEmp" checked>
+        <% } else { %>
+            <input type="checkbox" id="nameEmp" name="nameEmp">
+        <% } %>
+        &emsp;
+        <label class="report">phone</label>
+        <% if(typeof phone != "undefined" && phone) { %>
+            <input type="checkbox" id="phone" name="phone" checked>
+        <% } else { %>
+            <input type="checkbox" id="phone" name="phone">
+        <% } %>
+        &emsp;
+        <label class="report">email</label>
+        <% if(typeof email1 != "undefined" && email1) { %>
+            <input type="checkbox" id="email" name="email" checked>
+        <% } else { %>
+            <input type="checkbox" id="email" name="email">
+        <% } %>
+        &emsp;
+        <label class="report">date</label>
+        <% if(typeof date != "undefined" && date) { %>
+            <input type="checkbox" id="date" name="date" checked>
+        <% } else { %>
+            <input type="checkbox" id="date" name="date">
+        <% } %>
+        &emsp;
+        <label class="report">location</label>
+        <% if(typeof location != "undefined" && location) { %>
+            <input type="checkbox" id="location" name="location" checked>
+        <% } else { %>
+            <input type="checkbox" id="location" name="location">
+        <% } %>
+        &emsp;
+        <label class="report">price</label>
+        <% if(typeof price != "undefined" && price) { %>
+            <input type="checkbox" id="price" name="price" checked>
+        <% } else { %>
+            <input type="checkbox" id="price" name="price">
+        <% } %>
+        <br />
+        <!------ TODO: ADD SEE RATES -->
+
+        <label class="report">at month</label>
+        <select class="report" name="month">
+            <option value="0">All</option>
+            <option value="01">January</option>
+            <option value="02">February</option>
+            <option value="03">March</option>
+            <option value="04">April</option>
+            <option value="05">May</option>
+            <option value="06">June</option>
+            <option value="07">July</option>
+            <option value="08">August</option>
+            <option value="09">September</option>
+            <option value="10">October</option>
+            <option value="11">November</option>
+            <option value="12">December</option>
+        </select><label class="report" id="year"></label>
+        &emsp;<button type="reset" class="report-reset" onclick="clear()">clear last choise</button><!-- TODO: keep it??-->
+        <button class="report" type="submit">find</button>
+        <br/>
+
+        <% if(typeof message != "undefined" && message) { %>
+            <label class="report" style="display: block; text-align: center;"><%=message%></label>
+        <% } else { %>
+
+        <table id="results" style="width:90%; margin: 0 auto; text-align: center; border-collapse: collapse;">
+            <tr id="head">
+                <% if(typeof nameEmp != "undefined" && nameEmp) { %>
+                    <th>first name</th>
+                    <th>last name</th>
+                <% } %>
+                <% if(typeof phone != "undefined" && phone) { %>
+                    <th>phone</th>
+                <% } %>
+                <% if(typeof email1 != "undefined" && email1) { %>
+                    <th>email</th>
+                <% } %>
+                <% if(typeof date != "undefined" && date) { %>
+                    <th>date</th>
+                <% } %>
+                <% if(typeof location != "undefined" && location) { %>
+                    <th>location</th>
+                <% } %>
+                <% if(typeof price != "undefined" && price) { %>
+                    <th>price</th>
+                <% } %>
+            </tr>
+
+            <% if(Recruits!=null && typeof Recruits !=undefined) Recruits.forEach(function(dat) { %>
+                <tr>
+                    <% if(typeof dat.firstName != undefined && dat.firstName) { %>
+                        <td><%= dat.firstName %></td>
+                    <% } %>
+                    <% if(typeof dat.lastName != undefined && dat.lastName) { %>
+                        <td><%= dat.lastName %></td>
+                    <% } %>
+                    <% if(typeof dat.phoneNumbers != undefined && dat.phoneNumbers) { %>
+                        <td><%= dat.phoneNumbers %></td>
+                    <% } %>
+                    <% if(typeof dat.email != undefined && dat.email) { %>
+                        <td><%= dat.email %></td>
+                    <% } %>
+                    <% if(typeof dat.date != undefined && dat.date) { %>
+                        <td><%= dat.date %>&emsp;<%= dat.startTime %></td> <!-- TODO: fix format-->
+                    <% } %>
+                    <% if(typeof dat.location != undefined && dat.location) { %>
+                        <td><%= dat.location %></td>
+                    <% } %>
+                    <% if(typeof dat.price != undefined && dat.price) { %>
+                        <td><%= dat.price %></td>
+                    <% } %>
+                </tr>
+                <% }); %>
+
+        </table>
+        <% } %>
+
+    </form>
+
+
+    <script type="text/javascript">
+
+        //write today's year in the label
+        var today = new Date();
+        document.getElementById("year").innerHTML = "/ " + today.getFullYear();
+
+    </script>
+
+</body>
+
+</html>
