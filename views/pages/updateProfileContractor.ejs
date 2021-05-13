@@ -2,6 +2,30 @@
 
 <head>
     <link href="css/sty.css" rel="stylesheet">
+    <style>
+        td{
+            border: 1px solid #ddd;
+      padding: 8px;
+        }
+        tr{
+            border: 1px solid #ddd;
+      padding: 8px;
+      
+        }
+        tr:nth-child(even){background-color: #f2f2f2;}
+        tr:hover {background-color: #ddd;}
+    
+        th{
+            padding-top: 12px;
+      padding-bottom: 12px;
+      padding-left: 6px;
+        padding-right: 6px;
+      text-align: center;
+      background-color: #a70d48;
+      opacity: 0.9;
+      color: white;
+        }
+    </style>    
 </head>
 
 <body>
@@ -115,19 +139,19 @@
         <p>Job Rate</p>
         <table id="table">
             <tr>
-              <td>Title</td>
-              <td>Price</td>
-              <td>Description</td>
-              <td>Traveling fee</td>
+              <th>Title</th>
+              <th>Price</th>
+              <th>Description</th>
+              <th>fee</th>
 
             </tr>
           </table>
           <br>
 
-          <input type="text" placeholder="Enter Title" name="title" id="title" oninput="this.value = this.value.replace(/[^a-zA-Z]/g, '').replace(/(\..?)\../g, '$1');"required>
-          <input type="text" placeholder="Enter Price" name="price" id="price" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..?)\../g, '$1');" required>
-          <input type="text" placeholder="Enter Description" name="des" id="des" >
-          <input type="text" placeholder="Enter Traveling fee" name="fee" id="fee" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..?)\../g, '$1');" required>
+          Title :<input type="text" placeholder="Enter Title" name="title" id="title" oninput="this.value = this.value.replace(/[^a-zA-Z]/g, '').replace(/(\..?)\../g, '$1');"required>
+          Price :<input type="text" placeholder="Enter Price" name="price" id="price" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..?)\../g, '$1');" required>
+          Description :<input type="text" placeholder="Enter Description" name="des" id="des" >
+          fee :<input type="text" placeholder="Enter Traveling fee" name="fee" id="fee" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..?)\../g, '$1');" required>
 
           
 
