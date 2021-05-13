@@ -28,9 +28,16 @@ table, td {
 .profile {
     display: 'block';
     line-height: 30px;
+<<<<<<< HEAD
+  }
+  
+  .searching
+  {
+=======
 }
 
 .searching {
+>>>>>>> a64b1570bc2e82cd7ee0cfca03b4cfc03950414c
     display: 'block';
     line-height: 30px;
 }
@@ -172,6 +179,24 @@ button.report {
     text-align: center;
 }
 
+<<<<<<< HEAD
+  table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+  
+  th, td {
+    text-align: left;
+    padding: 4px;
+  }
+  
+  tr:nth-child(even){background-color: #f2f2f2}
+  
+  th {
+    background-color: #a70d48;
+    color: white;
+  }
+=======
 button.report-reset {
     font-size: 18px;
     font-family: Felix Titling, Helvetica, sans-serif;
@@ -190,6 +215,9 @@ select.report2 {
     background: #f1f1f1;
     font-family: Felix Titling, Helvetica, sans-serif;
 }
+<<<<<<< HEAD
+>>>>>>> a64b1570bc2e82cd7ee0cfca03b4cfc03950414c
+=======
 
 select.report
 {
@@ -210,3 +238,4 @@ select:disabled.report
     border: none;
     background: rgb(201, 200, 200);
 }
+>>>>>>> 14822a7eafca58dd7f4d85d49feb25bf5c19a3d2

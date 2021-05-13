@@ -777,7 +777,6 @@ app.post('/updatePasswordE', (req, res) => {
     });
 });
 
-
 app.get("/searchContractor", function (req, res) {
     if (Uid != "" && (typeUser == "Employers" || typeUser == "resourcesCompanyWorkers")) {
         MongoClient.connect(url, { useUnifiedTopology: true }, function (err, db) {
