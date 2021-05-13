@@ -169,11 +169,7 @@ app.post('/selectEventUp', (req, res) => {
             });
 
         });
-    
-   
-
-
-   
+ 
 });
 
 // function that input to the data base the details that the user enter when he add contractor worker to the website
@@ -517,19 +513,20 @@ function emailLoc(index) {
 //func that update the data base of event
 app.post('/inputupdateEvent', (req, res) => {
     MongoClient.connect(url, { useUnifiedTopology: true }, function (err, db) {
+
         if (err) throw err;
         var dbo = db.db("eventSaver");
-        var myquery = { _id: req.idEvent };
+        console.log(req.body.oldname);
+        var myquery = { idE:Uid,eventname:req.body.oldname };
 
-        var myobj = {
+        var myobj = { $set: {
 
             eventname: req.body.eventname,
-            eventLoc: req.body.eventloc,
             numGuest: req.body.numGuest,
             date: req.body.date,
             time: req.body.time,
             idE: Uid
-        }
+        } };
 
         dbo.collection("Event").updateOne(myquery, myobj, function (err, res1) {
             if (err) throw err;
@@ -537,6 +534,7 @@ app.post('/inputupdateEvent', (req, res) => {
             console.log("1 document updated");
 
             res.view("pages/firstpage");
+            
 
             db.close();
         });
