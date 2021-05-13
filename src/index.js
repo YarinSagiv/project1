@@ -66,20 +66,26 @@ app.get("/selectEventUp", async function (req, res) {
     });
 
 });
+app.get("/RecruitContractorWorker", function (req, res) {
+    res.view("pages/RecruitContractorWorker");
+});
 
-app.get("/RecruitContractorWorker", async function (req, res) {
+app.post("/RecruitContractorWorker", async function (req, res) {
     MongoClient.connect(url, { useUnifiedTopology: true }, async function (err, db) {
         if (err) throw err;
         //Uid="316461375";
         var myquery = { idE: Uid };
         var quary2 = {_id:req.body.iduser};
+        console.log(req.body.iduser);
         var dbo = db.db("eventSaver");
         let ev1 = await dbo.collection("Event").find(myquery).toArray();
+        console.log(ev1);
         let ev2 = await dbo.collection("ContractorWorkers").find(quary2).toArray();
+        console.log(ev2);
         //console.log(ev1.length);
         //console.log(JSON.stringify(ev1));
-        ev1.ev2=ev2
-        res.view("pages/RecruitContractorWorker", ev1);
+        ev2[0].ev1=ev1;
+        res.view("pages/RecruitContractorWorker", ev2[0]);
     });
 });
 
@@ -288,7 +294,7 @@ app.post('/inputDBHR', (req, res) => {
     });
 });
 
-app.post('/inputRecruit', (req, res) => {
+/*app.post('/inputRecruit', (req, res) => {
 
     MongoClient.connect(url, { useUnifiedTopology: true }, function (err, db) {
         if (err) throw err;
@@ -319,6 +325,7 @@ app.post('/inputRecruit', (req, res) => {
         });
     });
 });
+*/
 
 app.post('/updatePasswordC', (req, res) => {
     MongoClient.connect(url, { useUnifiedTopology: true }, function (err, db) {
