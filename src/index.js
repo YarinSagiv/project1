@@ -777,33 +777,56 @@ app.post('/updatePasswordE', (req, res) => {
     });
 });
 
-app.get("/searchContractor", function (req, res) {
-    if (Uid != "" && (typeUser == "Employers" || typeUser == "resourcesCompanyWorkers")) {
-        MongoClient.connect(url, { useUnifiedTopology: true }, function (err, db) {
-            if (err) throw err;
-            var dbo = db.db("eventSaver");
-            var query = {};
+app.post("/searchContractorWorker",async (req, res) =>{
+    MongoClient.connect(url, { useUnifiedTopology: true }, async function (err, db) {
+        if (err) throw err;
+        var dbo = db.db("eventSaver");
+        var fieldsC = { idCont: 1 };
+        var dict_query ={};
+        var firstnameI=req.body.INfirstname;
+        var lastnameI=req.body.INlastname;
+        if (firstnameI != ""){
+            dict_query.firstName=firstnameI;
+            console.log("check first name1:"+req.body.INfirstname);
+        }
+       //console.log("check first name2:"+firstnameI);
+        if (lastnameI != "")
+            dict_query.lastName=lastnameI;
+            //dict_query.lastnameI="lastName";
+        //console.log("check last:"+req.body.INlastname);
+        console.log("check dic:"+JSON.stringify(dict_query));
 
-            var firstname = req.body.firstname1;
-            if (firstname != "")
-                query["firstName"] = firstname;
+        let contractorFound = await dbo.collection("ContractorWorkers").find(dict_query).toArray();
+        console.log("result of searching: "+JSON.stringify(contractorFound[0]));
 
-            dbo.collection("ContractorWorkers").find(query).toArray(function (err, result) {
-                if (err) throw err;
-                if (result.length != 0) {
-                    console.log(result[0][firstname]);
-                    res.view('pages/searchContractorWorker', result[0]);
+        //if (contractorFound.length != 0) 
+        if (typeof contractorFound.length != 0) 
+        {
+            for (var i = 0; i < contractorFound.length; ++i) {
+                var contractorF;
+                try {
+                    contractorF = await dbo.collection("ContractorWorkers").find(contractorF[i]).toArray();
+                    console.log("contractorF " + JSON.stringify(contractorF[i]));
+
                 }
-                db.close();
-            });
-        });
-    }
-    else {
-        res.redirect('/');
-    }
+                catch (UnhandledPromiseRejectionWarning) 
+                {
+                    console.log(UnhandledPromiseRejectionWarning);
+                }
+            }
+        }
+        else
+            res.view("pages/searchContractorWorker", { contractorFound: null, message_no_res: "no results found" });
+
+       
+
+    });
+    
 });
+
+
 app.get("/searchContractorWorker", function (req, res) {
-    res.view('pages/searchContractorWorker');
+    res.view('pages/searchContractorWorker',{contractorFound: null});
 });
 
 

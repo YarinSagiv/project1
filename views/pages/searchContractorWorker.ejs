@@ -2,6 +2,31 @@
 
 <head>
   <link href="css/sty.css" rel="stylesheet">
+  <style>
+    td
+    {
+      border: 1px solid #ddd;
+      padding: 8px;
+    }
+    tr
+    {
+      border: 1px solid #ddd;
+      padding: 8px;
+    }
+    tr:nth-child(even){background-color: #f2f2f2;}
+    tr:hover {background-color: #ddd;}
+    th
+    {
+      padding-top: 12px;
+      padding-bottom: 12px;
+      padding-left: 6px;
+      padding-right: 6px;
+      text-align: center;
+      background-color: #a70d48;
+      opacity: 0.9;
+      color: white;
+    }
+  </style>
 </head>
 
 <body>
@@ -10,19 +35,27 @@
     <%- include('../partials/_header') %>
   </header>
   
-<form name="searchingInput" id="searchContractor" action="/searchContractor" method="post">
+<form name="searchingInput" id="searchingInput" action="/searchContractorWorker" method="POST">
     <label style="font-size:20px;">
-        <label class="searching" for="LsearchingBy:"><b>searching by: </b></label>
-        <br>
-        <br>
-        <label for="firstname"><b>First Name: </b></label>
-        <input type="text" name="firstname1" id="firstname1" 
+        <h3 class="searching" for="LsearchingBy:"><b>searching by: </b></h3>
+        <label class="searching" for="firstname"><b>First Name: </b></label>
+        <!--<% if(typeof INfirstname != "undefined" && INfirstname) { %>
+          <input type="text" name="INfirstname" id="INfirstname" 
+            oninput="this.value = this.value.replace(/[^a-zA-Z]/g, '').replace(/(\..?)\../g, '$1');" checked>
+        <% } else { %>
+          <input type="text" name="INfirstname" id="INfirstname" 
             oninput="this.value = this.value.replace(/[^a-zA-Z]/g, '').replace(/(\..?)\../g, '$1');" >
+        <% } %>
+        &emsp;-->
+
+        <input type="text" name="INfirstname" id="INfirstname" 
+            oninput="this.value = this.value.replace(/[^a-zA-Z]/g, '').replace(/(\..?)\../g, '$1');" >
+      
         <br >
         <label for="lastname"><b>Last Name: </b></label>
-        <input type="text" name="lastname1" id="lastname1" 
+        <input type="text" name="INlastname" id="INlastname" 
             oninput="this.value = this.value.replace(/[^a-zA-Z]/g, '').replace(/(\..?)\../g, '$1');" >
-        <br>
+        <!--<br>
         <label for="jobTypesL"><b>Job Types: </b></label>
         <select name="jobTypes" id="jobTypes" >
             <option style="font-size:18px;" value="Hair Styling">Hair Styling</option>
@@ -64,6 +97,7 @@
         <input type="radio" id="no" name="accompaniedS" value="no">
         <label for="no" style="font-size:22px;">no&emsp;</label>
         <br >
+        -->
 
         <!-- <select name="searchingBy" id="searchingBy" onChange="myFunction()" >
             <option class="searching" style="font-size:18px;" id='fName'  value="firstname">first name</option>
@@ -79,7 +113,31 @@
     <input type="reset" name="reset1" value="reset">
 
 </form>
-<table></table>
+<% if(typeof message_no_res != "undefined" && message_no_res) { %>
+  <label class="searching" style="display: block; text-align: center;"><%=message_no_res%></label>
+<% } else { %>
+  <table id="result_searching" style="width:90%; margin: 0 auto; text-align: center; border-collapse: collapse;">
+    <tr id="head">
+      <th>first Name</th>
+      <th>last Name</th>
+      <!-- <th>Job Types</th>
+      <th>Job Rate</th>
+      <th>Gender</th>
+      <th>accompanied services</th>
+      <th>link profile</th>-->
+
+    </tr>
+
+    <% if(contractorFound!=null && typeof contractorFound !=undefined) contractorFound.forEach(function(dataT) { %>
+        <tr>
+            <% if(typeof dataT.firstName != "" && dataT.firstName) { %>
+                <td><%= dataT.firstName %></td>
+            <% } %>
+        </tr>
+    <% }); %>
+
+  </table>
+<% } %>
 <!--<table>
     <tr> ==$0
       <th>first Name</th>
@@ -97,7 +155,7 @@
     </tr>
   </table>-->
 
-<p id="demo"></p>
+
 
 <script >
 function initdit()
@@ -114,12 +172,12 @@ function initdit()
   }
   initdit();
     
-function myFunction() {
+/*function myFunction() {
   var x = document.getElementById("searchingBy").value;
   document.getElementById("demo").innerHTML = "You selected: " + x;  
   if (x == 'gender')
     document.getElementById("selectGender").style.display = 'block';
-} 
+} */
 
 
 function show(id) {
@@ -129,42 +187,6 @@ function show(id) {
 function hide(id) {
     document.getElementById(id).style.display = 'none';
 }
-
-
-let mountains = [
-  { name: "Monte Falco", height: 1658, place: "Parco Foreste Casentinesi" },
-  { name: "Monte Falterona", height: 1654, place: "Parco Foreste Casentinesi" },
-  { name: "Poggio Scali", height: 1520, place: "Parco Foreste Casentinesi" },
-  { name: "Pratomagno", height: 1592, place: "Parco Foreste Casentinesi" },
-  { name: "Monte Amiata", height: 1738, place: "Siena" }
-];
-
-function generateTableHead(table, data) {
-  let thead = table.createTHead();
-  let row = thead.insertRow();
-  for (let key of data) {
-    let th = document.createElement("th");
-    let text = document.createTextNode(key);
-    th.appendChild(text);
-    row.appendChild(th);
-  }
-}
-
-function generateTable(table, data) {
-  for (let element of data) {
-    let row = table.insertRow();
-    for (key in element) {
-      let cell = row.insertCell();
-      let text = document.createTextNode(element[key]);
-      cell.appendChild(text);
-    }
-  }
-}
-
-let table = document.querySelector("table");
-let data = Object.keys(mountains[0]);
-generateTableHead(table, data);
-generateTable(table, mountains);
 
 
 </script>
