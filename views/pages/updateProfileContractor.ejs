@@ -129,8 +129,7 @@
           </table>
         </div>
 
-          <br>
-          <div class="tab tab-2">
+            <div class="tab tab-2">
             Title :<input type="text" placeholder="Enter Title" name="title" id="title" maxlength="20" >
             Price :<input type="text" placeholder="Enter Price" name="price" id="price" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..?)\../g, '$1');" required>
             Description :<input type="text" placeholder="Enter Description" name="des" id="des" maxlength="200">
@@ -139,9 +138,16 @@
             <button type="button" class="button" onclick="addJobRate()">add</button>
             <button type="button" class="button" onclick="deleteJobRate()">delete</button>
             <button type="button" class="button" onclick="editJobRate()">edit</button>
-        </div>
-    </div>
 
+        </div>
+    
+
+        <input type="hidden" id="jobrate" name="jobrate">
+
+    </div>
+    <br />
+    <input type="checkbox" id="accompanied" name="accompanied" value="True">
+    <label for="vehicle1"> With accompanied</label><br>
 
           
 
@@ -158,7 +164,7 @@
     var phoneNumbers = [];
     var dates = [] //TODO: get initial from db
     //var countryAreas = []; 
-
+    var jobrate= []; //array that each cell is dict of one job rate
     //TODO: take all information from the data base and put in the right places in the form
     //console.log("<%= firstName %>");
 
@@ -180,6 +186,19 @@
                 cell3.innerHTML = des;
                 cell4.innerHTML = fee;
                 selectedRowToInput();
+
+                hide("noField");
+
+
+        var newT=document.getElementById("title").value;
+        var newP=document.getElementById("price").value;
+        var newD=document.getElementById("des").value;
+        var newF=document.getElementById("fee").value;
+
+        var newJobRate = {title:newT,price:newP,des:newD,fee:newF};
+        
+        jobrate.push(newJobRate); 
+        console.log(jobrate);
      
     }
 
@@ -193,6 +212,7 @@
                     {
                       // get the seected row index
                       rIndex = this.rowIndex;
+                      console.log(rIndex);
                       document.getElementById("title").value = this.cells[0].innerHTML;
                       document.getElementById("price").value = this.cells[1].innerHTML;
                       document.getElementById("des").value = this.cells[2].innerHTML;
@@ -202,18 +222,22 @@
                 }
             }
         selectedRowToInput();
+
+
     function editJobRate()
             {
-                var title = document.getElementById("title").value,
-                    price = document.getElementById("price").value,
-                    des = document.getElementById("des").value,
-                    fee = document.getElementById("fee").value;
-                    table.rows[rIndex].cells[0].innerHTML = title;
-                    table.rows[rIndex].cells[1].innerHTML = price;
-                    table.rows[rIndex].cells[2].innerHTML = des;
-                    table.rows[rIndex].cells[3].innerHTML = fee;
+                var newT = document.getElementById("title").value,
+                newP = document.getElementById("price").value,
+                newD = document.getElementById("des").value,
+                newF = document.getElementById("fee").value;
+                    table.rows[rIndex].cells[0].innerHTML = newT;
+                    table.rows[rIndex].cells[1].innerHTML = newP;
+                    table.rows[rIndex].cells[2].innerHTML = newD;
+                    table.rows[rIndex].cells[3].innerHTML = newF;
 
-              
+                    jobrate[rIndex-1]={title:newT,price:newP,des:newD,fee:newF}
+                    console.log(jobrate);
+
             }
 
         function deleteJobRate()
@@ -224,6 +248,9 @@
                 document.getElementById("price").value = "";
                 document.getElementById("des").value = "";
                 document.getElementById("fee").value = "";
+
+                jobrate.splice(rIndex-1,1); //remove from the array
+                console.log(jobrate);
 
             }
     function show(id) {
@@ -588,6 +615,9 @@
         document.getElementById("phoneNumbers").value = phoneNumbers.toString();
         document.getElementById("types").value = jobTypes.toString();
         document.getElementById("dates").value = dates.toString();
+        document.getElementById("jobrate").value = jobrate.toString();
+
+        
         //document.getElementById("areas").value = countryAreas.toString();
     }
 

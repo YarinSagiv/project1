@@ -533,6 +533,11 @@ app.post('/inputupdateEvent', (req, res) => {
 
             console.log("1 document updated");
 
+   
+
+
+
+
             res.view("pages/firstpage");
             
 
@@ -543,6 +548,8 @@ app.post('/inputupdateEvent', (req, res) => {
 });
 
 app.post('/updateContractor', (req, res) => {
+
+
     MongoClient.connect(url, { useUnifiedTopology: true }, function (err, db) {
         if (err) throw err;
         var dbo = db.db("eventSaver");
@@ -566,8 +573,7 @@ app.post('/updateContractor', (req, res) => {
             date = req.body.dates;
 
         var newvalues = { $set: { firstName: req.body.firstname, lastName: req.body.lastname, email: req.body.email, hasAddress: hasA, address: theA, phoneNumbers: req.body.phone, dates: date, jobTypes: req.body.types, gender: req.body.gender } };
-
-        dbo.collection("ContractorWorkers").updateOne(myquery, newvalues, function (err, res1) {
+        dbo.collection("ContractorWorkers").updateOne(myquery, newvalues,  async function (err, res1) {
             if (err) throw err;
             //alert("account updated successfully!");
 
@@ -575,10 +581,46 @@ app.post('/updateContractor', (req, res) => {
 
             fullName = req.body.firstname + " " + req.body.lastname;
 
-            res.view("pages/firstpage");
 
             db.close();
         });
+
+        //delete all the documents of the job rate of this contractur
+        var myquery = { idC: Uid };
+        dbo.collection("jobRate").deleteOne(myquery,async function (err, obj) {
+            if (err) throw err;
+            console.log("1 document deleted");
+            db.close();
+        });
+
+        //insert all the new documents of the job rate of this contractur
+        var arrJobRate=req.body.jobrate;
+        console.log(arrJobRate);
+        
+        for (var i=0;i<arrJobRate.length;++i)
+        {
+            var jobR={
+                title:arrJobRate[i][title],
+                price:arrJobRate[i][price],
+                idC:Uid,
+                description:arrJobRate[i][des],
+                travelingFee:arrJobRate[i][fee],
+                accompanied:req.body.accompanied
+
+            }
+            var succ = dbo.collection("jobRate").insertOne(jobR, function (err, res1) {
+                console.log("document inserted");
+
+            });
+
+        }
+        
+
+        res.view("pages/firstpage");
+
+
+
+
     });
 
     //res.send({redirect: '/blog'});
