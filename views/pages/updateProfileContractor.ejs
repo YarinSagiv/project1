@@ -2,6 +2,7 @@
 
 <head>
     <link href="css/sty.css" rel="stylesheet">
+    
 </head>
 
 <body>
@@ -112,29 +113,38 @@
         <input type="hidden" id="dates" name="dates">
         <!--to POST-->
         <br />
+
+
         <p>Job Rate</p>
+        <div class="container">
+        <div class="tab tab-1">
         <table id="table">
             <tr>
-              <td>Title</td>
-              <td>Price</td>
-              <td>Description</td>
-              <td>Traveling fee</td>
+              <th>Title</th>
+              <th>Price</th>
+              <th>Description</th>
+              <th>fee</th>
 
             </tr>
           </table>
-          <br>
+        </div>
 
-          <input type="text" placeholder="Enter Title" name="title" id="title" oninput="this.value = this.value.replace(/[^a-zA-Z]/g, '').replace(/(\..?)\../g, '$1');"required>
-          <input type="text" placeholder="Enter Price" name="price" id="price" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..?)\../g, '$1');" required>
-          <input type="text" placeholder="Enter Description" name="des" id="des" >
-          <input type="text" placeholder="Enter Traveling fee" name="fee" id="fee" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..?)\../g, '$1');" required>
+          <br>
+          <div class="tab tab-2">
+            Title :<input type="text" placeholder="Enter Title" name="title" id="title" maxlength="20" >
+            Price :<input type="text" placeholder="Enter Price" name="price" id="price" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..?)\../g, '$1');" required>
+            Description :<input type="text" placeholder="Enter Description" name="des" id="des" maxlength="200">
+            fee :<input type="text" placeholder="Enter Traveling fee" name="fee" id="fee" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..?)\../g, '$1');" required>
+  
+            <button type="button" class="button" onclick="addJobRate()">add</button>
+            <button type="button" class="button" onclick="deleteJobRate()">delete</button>
+            <button type="button" class="button" onclick="editJobRate()">edit</button>
+        </div>
+    </div>
+
 
           
 
-          <button type="button" class="button" onclick="addJobRate()">Click to add job rate</button>
-          <br>
-          <input type="text" name="deleter" id="deleter" required>
-          <button type="button" class="button" onclick="deleteJobRate()">Click to delete job rate</button>
           <br>
           <a href="/changeC" class="button" style="padding: 8px 15px;" >change password</a><br/><br>
 
@@ -152,20 +162,14 @@
     //TODO: take all information from the data base and put in the right places in the form
     //console.log("<%= firstName %>");
 
-    function deleteJobRate()
-    {
-        var index=document.getElementById("deleter"); // the selected row to delete
-        console.log(index);
-        document.getElementById("jobRateTable").deleteRow(index);
-
-    }
+ 
 
     function addJobRate() {
         var newRow = table.insertRow(table.length),
                     cell1 = newRow.insertCell(0),
                     cell2 = newRow.insertCell(1),
                     cell3 = newRow.insertCell(2),
-                    cell4 = newRow.insertCell(2),
+                    cell4 = newRow.insertCell(3),
                     title = document.getElementById("title").value,
                     price = document.getElementById("price").value,
                     des = document.getElementById("des").value,
@@ -174,7 +178,7 @@
                 cell1.innerHTML = title;
                 cell2.innerHTML = price;
                 cell3.innerHTML = des;
-                cell3.innerHTML = fee;
+                cell4.innerHTML = fee;
                 selectedRowToInput();
      
     }
@@ -198,7 +202,30 @@
                 }
             }
         selectedRowToInput();
+    function editJobRate()
+            {
+                var title = document.getElementById("title").value,
+                    price = document.getElementById("price").value,
+                    des = document.getElementById("des").value,
+                    fee = document.getElementById("fee").value;
+                    table.rows[rIndex].cells[0].innerHTML = title;
+                    table.rows[rIndex].cells[1].innerHTML = price;
+                    table.rows[rIndex].cells[2].innerHTML = des;
+                    table.rows[rIndex].cells[3].innerHTML = fee;
 
+              
+            }
+
+        function deleteJobRate()
+            {
+                table.deleteRow(rIndex);
+                // clear input text
+                document.getElementById("title").value = "";
+                document.getElementById("price").value = "";
+                document.getElementById("des").value = "";
+                document.getElementById("fee").value = "";
+
+            }
     function show(id) {
         document.getElementById(id).style.display = 'block';
     }
