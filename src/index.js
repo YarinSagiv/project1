@@ -1259,48 +1259,7 @@ app.post('/humanResourcesReports-getContractors', async (req, res) => {
 
                 console.log("united  " + JSON.stringify(united));
             }
-
-            numOfCon = contractor.length;
-            var numOfRates = [0, 0, 0, 0, 0, 0];
-            var sum = 0;
-            for (i = 1; i <= 5; i++) {//5 defined rates
-                var comment = await dbo.collection("Comments").aggregate([
-                    {
-                        $group: {
-                            _id: "$idC",
-                            "rate": {
-                                "$avg": "$rate"
-                            }
-                        }
-                    },
-                    {
-                        $match: {
-                            "rate": i
-                        }
-                    },
-                    {
-                        $group: {
-                            _id: "rate",
-                            count: {
-                                $sum: 1
-                            }
-                        }
-                    }
-                ]).toArray();
-
-                if (comment.length != 0) {
-                    numOfRates[i] = comment[0].count;
-                    sum += numOfRates[i];
-                }
-                else
-                    numOfRates[i] = 0;
-            }
-            //rest:
-            numOfRates[0] = numOfCon - sum; //contractors that don't have rates.
-
-
-            console.log("num of rates: " + JSON.stringify(numOfRates));
-            res.view("pages/humanResourcesReports", { Data: united, choise: "c", ...statistics });
+      res.view("pages/humanResourcesReports", { Data: united, choise: "c", ...statistics });
 
         }
         else
