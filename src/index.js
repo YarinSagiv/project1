@@ -85,7 +85,7 @@ app.get("/logIn", function (req, res) {
 });
 
 app.get("/addEvent", function (req, res) {
-    if (Uid != "" && typeUser != "Employers") {
+    if (Uid == "" || typeUser != "Employers") {
         res.redirect("/");
     }
     else {
@@ -871,11 +871,19 @@ app.get("/searchContractorWorker", function (req, res) {
 });
 
 
+//Reports
+//--Contractor's
 app.get("/contractorReports", function (req, res) {
+    if (Uid == "" || typeUser != "ContractorWorkers") {
+        res.redirect("/");
+    }
     res.view("pages/contractorReports", { Recruits: null });
 });
 
 app.post('/contractorReports', async (req, res) => {
+    if (Uid == "" || typeUser != "ContractorWorkers") {
+        res.redirect("/");
+    }
     MongoClient.connect(url, { useUnifiedTopology: true }, async function (err, db) {
         if (err) throw err;
         var dbo = db.db("eventSaver");
@@ -912,11 +920,6 @@ app.post('/contractorReports', async (req, res) => {
         if (typeof req.body.price != "undefined") {
             fieldsR.price = 1;
         }
-
-
-        //-------
-        Uid = "205364788";
-        //-------
         var todayYear = new Date().getFullYear();
         var query3 = { idC: Uid, date: new RegExp(todayYear + "-") };
         console.log("req.body.month " + req.body.month);
@@ -961,6 +964,39 @@ app.post('/contractorReports', async (req, res) => {
             }
 
 
+            //get sun price per month:
+            var todayYear = new Date().getFullYear();
+            var date = new RegExp(todayYear + "-");
+            if (req.body.month != "0") {
+                date = new RegExp(todayYear + "-" + req.body.month);
+            }
+            var ag3 = [
+                {
+                    '$match': {
+                        'date': date
+                    }
+                }, {
+                    '$group': {
+                        '_id': '$idC',
+                        'price': {
+                            '$sum': {
+                                '$toInt': '$price'
+                            }
+                        }
+                    }
+                }, {
+                    '$match': {
+                        '_id': Uid
+                    }
+                }
+            ]
+            let recruits2 = await dbo.collection("Recuitment").aggregate(ag3).toArray();
+            var salary;
+            if (recruits2.length != 0)
+                salary = recruits2[0].price;
+            else
+                salary = 0;
+
             var send2 = {
                 nameEmp: req.body.nameEmp,
                 phone: req.body.phone,
@@ -969,6 +1005,8 @@ app.post('/contractorReports', async (req, res) => {
                 location: req.body.location,
                 price: req.body.price,
                 rate: req.body.rate,
+                month: req.body.month,
+                salary: salary,
                 Recruits: united
             };
 
@@ -976,22 +1014,25 @@ app.post('/contractorReports', async (req, res) => {
         }
         else
             res.view("pages/contractorReports", { Recruits: null, message: "no results found" });
-        //if (typeof req.body.nameEmp != "undefined")
 
 
 
     });
 });
 
-
+//--Employer's
 
 app.get('/employerReports', (req, res) => {
+    if (Uid == "" || typeUser != "Employers") {
+        res.redirect("/");
+    }
     res.view("pages/employerReports", { Recruits: null });
 });
 
-
-
 app.post('/employerReports', async (req, res) => {
+    if (Uid == "" || typeUser != "Employers") {
+        res.redirect("/");
+    }
     MongoClient.connect(url, { useUnifiedTopology: true }, async function (err, db) {
         if (err) throw err;
         var dbo = db.db("eventSaver");
@@ -1029,10 +1070,6 @@ app.post('/employerReports', async (req, res) => {
             fieldsR.price = 1;
         }
 
-
-        //-------
-        Uid = "316461375";
-        //-------
         var todayYear = new Date().getFullYear();
         var query3 = { idEmployer: Uid, date: new RegExp(todayYear + "-") };
         console.log("req.body.month " + req.body.month);
@@ -1080,10 +1117,14 @@ app.post('/employerReports', async (req, res) => {
     });
 });
 
+//--HR Worker's
+
 var statistics = {};
 
 app.get('/humanResourcesReports', async (req, res) => {
-
+    if (Uid == "" || typeUser != "resourcesCompanyWorkers") {
+        res.redirect("/");
+    }
     MongoClient.connect(url, { useUnifiedTopology: true }, async function (err, db) {
         if (err) throw err;
         var dbo = db.db("eventSaver");
@@ -1157,34 +1198,47 @@ app.get('/humanResourcesReports', async (req, res) => {
             }
         }
         var send = { Data: null, choise: null, numOfCon: numOfCon, numOfRates: numOfRates, numOfEmployers: employers.length };
-        statistics = {numOfCon: numOfCon, numOfRates: numOfRates, ...services, numOfEmployers: employers.length};
+        statistics = { numOfCon: numOfCon, numOfRates: numOfRates, ...services, numOfEmployers: employers.length };
         res.view("pages/humanResourcesReports", { ...send, ...services });
 
     });
 });
 
+app.get("/humanResourcesReports-getContractors", (req, res) => {
+    if (Uid == "" || typeUser != "resourcesCompanyWorkers") {
+        res.redirect("/");
+    }
+    res.redirect("/humanResourcesReports");
+});
 
 app.post('/humanResourcesReports-getEmployers', async (req, res) => {
+    if (Uid == "" || typeUser != "resourcesCompanyWorkers") {
+        res.redirect("/");
+    }
     MongoClient.connect(url, { useUnifiedTopology: true }, async function (err, db) {
         if (err) throw err;
         var dbo = db.db("eventSaver");
 
         let employers = await dbo.collection("Employers").find().project({ firstName: 1, lastName: 1, phoneNumbers: 1, email: 1 }).toArray();
 
-        res.view("pages/humanResourcesReports", { Data: employers, choise: "e" , ...statistics});
+        res.view("pages/humanResourcesReports", { Data: employers, choise: "e", ...statistics });
 
 
     });
     //res.view("pages/humanResourcesReports", { Data: null, choise: null });
 });
-app.get("/humanResourcesReports-getContractors", (req, res) => {
-    res.redirect("/humanResourcesReports");
-});
+
 app.get("/humanResourcesReports-getEmployers", (req, res) => {
+    if (Uid == "" || typeUser != "resourcesCompanyWorkers") {
+        res.redirect("/");
+    }
     res.redirect("/humanResourcesReports");
 });
 
 app.post('/humanResourcesReports-getContractors', async (req, res) => {
+    if (Uid == "" || typeUser != "resourcesCompanyWorkers") {
+        res.redirect("/");
+    }
     MongoClient.connect(url, { useUnifiedTopology: true }, async function (err, db) {
         if (err) throw err;
         var dbo = db.db("eventSaver");
@@ -1259,7 +1313,7 @@ app.post('/humanResourcesReports-getContractors', async (req, res) => {
 
                 console.log("united  " + JSON.stringify(united));
             }
-      res.view("pages/humanResourcesReports", { Data: united, choise: "c", ...statistics });
+            res.view("pages/humanResourcesReports", { Data: united, choise: "c", ...statistics });
 
         }
         else

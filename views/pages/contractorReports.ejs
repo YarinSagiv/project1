@@ -6,14 +6,17 @@
     td{
         border: 1px solid #ddd;
   padding: 8px;
+  cursor:context-menu;
     }
     tr{
         border: 1px solid #ddd;
   padding: 8px;
+  cursor:context-menu;
+
   
     }
-    tr:nth-child(even){background-color: #f2f2f2;}
-    tr:hover {background-color: #ddd;}
+    tr:nth-child(even){background-color: #f2f2f2;  cursor:context-menu;}
+    tr:hover {background-color: #ddd;  cursor:context-menu;}
 
     th{
         padding-top: 12px;
@@ -24,6 +27,7 @@
   background-color: #a70d48;
   opacity: 0.9;
   color: white;
+  cursor:context-menu;
     }
 </style>
 </head>
@@ -105,8 +109,13 @@
         &emsp;<button type="button" class="report-reset" onclick="clearAll()">clear all filters</button>
         &emsp;<button type="button" class="report-reset" onclick="selectAll()">select all filters</button>
         <button class="report" type="submit">find</button>
-        <br/>
     </form>
+        <% if(typeof salary != "undefined" && salary) { %>
+            <% if(typeof month != "undefined" && month!="0") { %>
+            <label class="report" style="display: block; text-align: center;">total salary for month <%=month%> is: <%=salary%></label><br/>
+        <% } else { %>
+            <label class="report" style="display: block; text-align: center;">total salary for all year is: <%=salary%></label><br/>
+        <% }}%>
 
         <% if(typeof message != "undefined" && message) { %>
             <label class="report" style="display: block; text-align: center;"><%=message%></label>
@@ -150,7 +159,7 @@
                         <td><%= dat.phoneNumbers %></td>
                     <% } %>
                     <% if(typeof dat.email != undefined && dat.email) { %>
-                        <td><%= dat.email %></td>
+                        <td> <a  style="color:#44081f;"  href="mailto:<%= dat.email %>"><%= dat.email %></a></td>
                     <% } %>
                     <% if(typeof dat.date != undefined && dat.date) { %>
                         <td><%= dat.date %>&emsp;<%= dat.startTime %></td>
@@ -167,7 +176,7 @@
                 </tr>
                 <% }); %>
 
-        </table>
+        </table><br/><br/>
         <% } %>
 
 
