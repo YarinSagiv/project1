@@ -552,7 +552,7 @@ app.post('/inputupdateEvent', (req, res) => {
 app.post('/updateContractor', (req, res) => {
 
 
-    MongoClient.connect(url, { useUnifiedTopology: true }, function (err, db) {
+    MongoClient.connect(url, { useUnifiedTopology: true },async  function (err, db) {
         if (err) throw err;
         var dbo = db.db("eventSaver");
         var myquery = { _id: Uid };
@@ -573,8 +573,15 @@ app.post('/updateContractor', (req, res) => {
             date = null;
         else
             date = req.body.dates;
-
+            
         var newvalues = { $set: { firstName: req.body.firstname, lastName: req.body.lastname, email: req.body.email, hasAddress: hasA, address: theA, phoneNumbers: req.body.phone, dates: date, jobTypes: req.body.types, gender: req.body.gender } };
+        let update = await dbo.collection("ContractorWorkers").updateOne(myquery, newvalues);
+
+        //delete all the documents of the job rate of this contractur
+        var myqueryC = { idC: Uid };
+        let delete1 = await dbo.collection("jobRate").deleteOne(myqueryC);
+
+        /*
         dbo.collection("ContractorWorkers").updateOne(myquery, newvalues, async function (err, res1) {
             if (err) throw err;
             //alert("account updated successfully!");
@@ -586,41 +593,34 @@ app.post('/updateContractor', (req, res) => {
 
             db.close();
         });
-
+        */
+        /*
         //delete all the documents of the job rate of this contractur
-        var myquery = { idC: Uid };
         dbo.collection("jobRate").deleteOne(myquery, async function (err, obj) {
             if (err) throw err;
             console.log("1 document deleted");
             db.close();
         });
-
+        */
         //insert all the new documents of the job rate of this contractur
         var arrJobRate = req.body.jobrate;
         console.log(arrJobRate);
-
+        /*
         for (var i = 0; i < arrJobRate.length; ++i) {
             var jobR = {
-                title: arrJobRate[i][title],
-                price: arrJobRate[i][price],
+                title: arrJobRate[i].title,
+                price: arrJobRate[i].price,
                 idC: Uid,
-                description: arrJobRate[i][des],
-                travelingFee: arrJobRate[i][fee],
+                description: arrJobRate[i].des,
+                travelingFee: arrJobRate[i].fee,
                 accompanied: req.body.accompanied
 
             }
-            var succ = dbo.collection("jobRate").insertOne(jobR, function (err, res1) {
-                console.log("document inserted");
-
-            });
-
+            var succ =await dbo.collection("jobRate").insertOne(jobR);
         }
-
+*/
 
         res.view("pages/firstpage");
-
-
-
 
     });
 
