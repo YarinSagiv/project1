@@ -113,13 +113,17 @@
     <input type="reset" name="reset1" value="reset">
 
 </form>
-<% if(typeof message_no_res != "undefined" && message_no_res) { %>
-  <label class="searching" style="display: block; text-align: center;"><%=message_no_res%></label>
+<% if(typeof messageNR != "undefined" && messageNR) { %>
+  <label class="searching" style="display: block; text-align: center;"><%=messageNR%></label>
 <% } else { %>
-  <table id="result_searching" style="width:90%; margin: 0 auto; text-align: center; border-collapse: collapse;">
+  <table id="resultSearching" style="width:90%; margin: 0 auto; text-align: center; border-collapse: collapse;">
     <tr id="head">
-      <th>first Name</th>
-      <th>last Name</th>
+      <% if(typeof INfirstname != "undefined" && INfirstname) { %>
+        <th>first Name</th>
+      <% } %>
+      <% if(typeof INlastname != "undefined" && INlastname) { %>
+        <th>last Name</th>
+      <% } %>
       <!-- <th>Job Types</th>
       <th>Job Rate</th>
       <th>Gender</th>
