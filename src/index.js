@@ -437,7 +437,7 @@ app.post('/inputEvent', async (req, res) => {
             date: req.body.date,
             time: req.body.time,
             idE: Uid
-        }
+        };
 
         var succ = dbo.collection("Event").insertOne(myobj, function (err, res1) {
 
@@ -452,7 +452,7 @@ app.post('/inputEvent', async (req, res) => {
 });
 //send email with the new date to  the contructor worker
 
-function emaildate(index) {
+/*function emaildate(index) {
     var nodemailer = require('nodemailer');
 
     var transporter = nodemailer.createTransport({
@@ -478,10 +478,10 @@ function emaildate(index) {
         }
     });
 }
+*/
 
 
-
-
+/*
 //send email with the new location to  the contructor worker
 function emailLoc(index) {
     var nodemailer = require('nodemailer');
@@ -509,6 +509,7 @@ function emailLoc(index) {
         }
     });
 }
+*/
 
 //func that update the data base of event
 app.post('/inputupdateEvent', (req, res) => {
@@ -588,7 +589,7 @@ app.post('/updateContractor', (req, res) => {
         });
 
         //delete all the documents of the job rate of this contractur
-        var myquery = { idC: Uid };
+        myquery = { idC: Uid };
         dbo.collection("jobRate").deleteOne(myquery, async function (err, obj) {
             if (err) throw err;
             console.log("1 document deleted");
@@ -965,7 +966,7 @@ app.post('/contractorReports', async (req, res) => {
 
 
             //get sun price per month:
-            var todayYear = new Date().getFullYear();
+            todayYear = new Date().getFullYear();
             var date = new RegExp(todayYear + "-");
             if (req.body.month != "0") {
                 date = new RegExp(todayYear + "-" + req.body.month);
@@ -989,7 +990,7 @@ app.post('/contractorReports', async (req, res) => {
                         '_id': Uid
                     }
                 }
-            ]
+            ];
             let recruits2 = await dbo.collection("Recuitment").aggregate(ag3).toArray();
             var salary;
             if (recruits2.length != 0)
