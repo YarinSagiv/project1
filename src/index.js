@@ -605,7 +605,7 @@ app.post('/updateContractor', (req, res) => {
         */
         //insert all the new documents of the job rate of this contractur
         var arrJobRate = req.body.jobrate;
-        console.log(arrJobRate);
+        console.log(JSON.stringify(arrJobRate));
         /*
         for (var i = 0; i < arrJobRate.length; ++i) {
             var jobR = {
@@ -763,12 +763,27 @@ app.post('/updateProfileEmployer', function (req, res) {
 });
 
 
-app.get("/profileEmployerPage", function (req, res) {
+app.get("/profileEmployerPage",async function (req, res) {
     if (Uid != "" && typeUser == "Employers") {
-        MongoClient.connect(url, { useUnifiedTopology: true }, function (err, db) {
+        MongoClient.connect(url, { useUnifiedTopology: true },async function (err, db) {
             if (err) throw err;
             var dbo = db.db("eventSaver");
             var query = { _id: Uid };
+            var query2 = { idE: Uid };
+
+            /*
+
+            let emp=await dbo.collection("Employers").find(query).toArray();
+            let eve=await  dbo.collection("Event").find(query2).toArray(); //the events
+
+            if (emp.length != 0 && eve.length!=0 ) {
+                //eve[eve.length-1]=emp[0]; //merge array
+                res.view('pages/profileEmployerPage', {eve:eve,emp:emp});
+            }
+
+            db.close();
+            */
+            
             dbo.collection("Employers").find(query).toArray(function (err, result) {
                 if (err) throw err;
                 if (result.length != 0) {
@@ -776,6 +791,7 @@ app.get("/profileEmployerPage", function (req, res) {
                 }
                 db.close();
             });
+            
         });
     }
     else {
