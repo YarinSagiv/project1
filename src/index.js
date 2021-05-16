@@ -437,7 +437,7 @@ app.post('/inputEvent', async (req, res) => {
             date: req.body.date,
             time: req.body.time,
             idE: Uid
-        }
+        };
 
         var succ = dbo.collection("Event").insertOne(myobj, function (err, res1) {
 
@@ -452,7 +452,7 @@ app.post('/inputEvent', async (req, res) => {
 });
 //send email with the new date to  the contructor worker
 
-function emaildate(index) {
+/*function emaildate(index) {
     var nodemailer = require('nodemailer');
 
     var transporter = nodemailer.createTransport({
@@ -478,10 +478,10 @@ function emaildate(index) {
         }
     });
 }
+*/
 
 
-
-
+/*
 //send email with the new location to  the contructor worker
 function emailLoc(index) {
     var nodemailer = require('nodemailer');
@@ -509,6 +509,7 @@ function emailLoc(index) {
         }
     });
 }
+*/
 
 //func that update the data base of event
 app.post('/inputupdateEvent', (req, res) => {
@@ -825,30 +826,30 @@ app.post("/searchContractorWorker", async (req, res) => {
         if (err) throw err;
         var dbo = db.db("eventSaver");
         var fieldsC = { idCont: 1 };
-        var dict_query = {};
+        var dictQuery = {};
         var firstnameI = req.body.INfirstname;
         var lastnameI = req.body.INlastname;
         if (firstnameI != "") {
-            dict_query.firstName = firstnameI;
+            dictQuery.firstName = firstnameI;
             console.log("check first name1:" + req.body.INfirstname);
         }
         //console.log("check first name2:"+firstnameI);
         if (lastnameI != "")
-            dict_query.lastName = lastnameI;
+            dictQuery.lastName = lastnameI;
         //dict_query.lastnameI="lastName";
         //console.log("check last:"+req.body.INlastname);
-        console.log("check dic:" + JSON.stringify(dict_query));
+        console.log("check dic:" + JSON.stringify(dictQuery));
 
-        let contractorFound = await dbo.collection("ContractorWorkers").find(dict_query).toArray();
+        let contractorFound = await dbo.collection("ContractorWorkers").find(dictQuery).toArray();
         console.log("result of searching: " + JSON.stringify(contractorFound[0]));
 
         //if (contractorFound.length != 0) 
-        if (typeof contractorFound.length != 0) {
+        if (contractorFound.length != 0) {
             for (var i = 0; i < contractorFound.length; ++i) {
                 var contractorF;
                 try {
-                    contractorF = await dbo.collection("ContractorWorkers").find(contractorF[i]).toArray();
-                    console.log("contractorF " + JSON.stringify(contractorF[i]));
+                    contractorF = await dbo.collection("ContractorWorkers").find(contractorFound[i]).toArray();
+                    console.log("contractorF " + JSON.stringify(contractorFound[i]));
 
                 }
                 catch (UnhandledPromiseRejectionWarning) {
@@ -857,7 +858,7 @@ app.post("/searchContractorWorker", async (req, res) => {
             }
         }
         else
-            res.view("pages/searchContractorWorker", { contractorFound: null, message_no_res: "no results found" });
+            res.view("pages/searchContractorWorker", { contractorFound: null, messageNR: "no results found" });
 
 
 
@@ -965,7 +966,7 @@ app.post('/contractorReports', async (req, res) => {
 
 
             //get sun price per month:
-            var todayYear = new Date().getFullYear();
+            todayYear = new Date().getFullYear();
             var date = new RegExp(todayYear + "-");
             if (req.body.month != "0") {
                 date = new RegExp(todayYear + "-" + req.body.month);
@@ -989,7 +990,7 @@ app.post('/contractorReports', async (req, res) => {
                         '_id': Uid
                     }
                 }
-            ]
+            ];
             let recruits2 = await dbo.collection("Recuitment").aggregate(ag3).toArray();
             var salary;
             if (recruits2.length != 0)
