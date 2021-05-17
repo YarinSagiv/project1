@@ -848,17 +848,13 @@ app.post("/searchContractorWorker", async (req, res) => {
             dictQuery.firstName = firstnameI;
             console.log("check first name1:" + req.body.INfirstname);
         }
-        //console.log("check first name2:"+firstnameI);
         if (lastnameI != "")
             dictQuery.lastName = lastnameI;
-        //dict_query.lastnameI="lastName";
-        //console.log("check last:"+req.body.INlastname);
         console.log("check dic:" + JSON.stringify(dictQuery));
 
         let contractorFound = await dbo.collection("ContractorWorkers").find(dictQuery).toArray();
         console.log("result of searching: " + JSON.stringify(contractorFound[0]));
 
-        //if (contractorFound.length != 0) 
         if (contractorFound.length != 0) {
            res.view("pages/searchContractorWorker", { contractorFound: contractorFound});
         }
@@ -869,8 +865,39 @@ app.post("/searchContractorWorker", async (req, res) => {
 });
 
 
+
 app.get("/searchContractorWorker", function (req, res) {
     res.view('pages/searchContractorWorker', { contractorFound: null });
+});
+
+
+app.post("/searchEmployer", async (req, res) => {
+    MongoClient.connect(url, { useUnifiedTopology: true }, async function (err, db) {
+        if (err) throw err;
+        var dbo = db.db("eventSaver");
+        var dictQueryE = {};
+        var idEmployer = req.body.idE;
+        if (idEmployer != "") {
+            dictQueryE.firstName = idEmployer;
+            console.log("check first name1:" + req.body.idE);
+        }
+ 
+        let employerFound = await dbo.collection("Employers").find(dictQueryE).toArray();
+        console.log("result of employer searching: " + JSON.stringify(employerFound));
+
+        if (employerFound.length != 0) {
+           res.view("pages/searchEmployer", { employerFound: employerFound});
+        }
+        else
+            res.view("pages/searchEmployer", { employerFound: null, messageNRE: "no results found" });
+    });
+
+});
+
+
+
+app.get("/searchEmployer", function (req, res) {
+    res.view('pages/searchEmployer', { employerFound: null });
 });
 
 
