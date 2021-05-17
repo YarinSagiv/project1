@@ -878,8 +878,8 @@ app.post("/searchEmployer", async (req, res) => {
         var dictQueryE = {};
         var idEmployer = req.body.idE;
         if (idEmployer != "") {
-            dictQueryE.firstName = idEmployer;
-            console.log("check first name1:" + req.body.idE);
+            dictQueryE._id = idEmployer;
+            console.log("check id :" + req.body.idE);
         }
  
         let employerFound = await dbo.collection("Employers").find(dictQueryE).toArray();
