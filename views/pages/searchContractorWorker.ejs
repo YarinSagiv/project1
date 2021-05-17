@@ -115,35 +115,9 @@
 </form>
 <% if(typeof messageNR != "undefined" && messageNR) { %>
   <label class="searching" style="display: block; text-align: center;"><%=messageNR%></label>
-<% } else { %>
+<% } else if(contractorFound && typeof contractorFound !="undefined"){ %>
   <table id="resultSearching" style="width:90%; margin: 0 auto; text-align: center; border-collapse: collapse;">
     <tr id="head">
-      <% if(typeof INfirstname != "undefined" && INfirstname) { %>
-        <th>first Name</th>
-      <% } %>
-      <% if(typeof INlastname != "undefined" && INlastname) { %>
-        <th>last Name</th>
-      <% } %>
-      <!-- <th>Job Types</th>
-      <th>Job Rate</th>
-      <th>Gender</th>
-      <th>accompanied services</th>
-      <th>link profile</th>-->
-
-    </tr>
-
-    <% if(contractorFound!=null && typeof contractorFound !=undefined) contractorFound.forEach(function(dataT) { %>
-        <tr>
-            <% if(typeof dataT.firstName != "" && dataT.firstName) { %>
-                <td><%= dataT.firstName %></td>
-            <% } %>
-        </tr>
-    <% }); %>
-
-  </table>
-<% } %>
-<!--<table>
-    <tr> ==$0
       <th>first Name</th>
       <th>last Name</th>
       <th>Job Types</th>
@@ -151,14 +125,23 @@
       <th>Gender</th>
       <th>accompanied services</th>
       <th>link profile</th>
-    </tr>
-    <tr>
-      <td></td>
-      <td>john.doe@example.com</td>
-      <td>123-45-678</td>
-    </tr>
-  </table>-->
 
+    </tr>
+
+    <% contractorFound.forEach(function(dataT) { %>
+        <tr>
+            <% if(typeof dataT.firstName != "undefined" && dataT.firstName) { %>
+                <td><%= dataT.firstName %></td>
+            <% } %>
+            <% if(typeof dataT.lastName != "undefined" && dataT.lastName) { %>
+              <td><%= dataT.lastName %></td>
+          <% } %>
+            
+        </tr>
+    <% }); %>
+
+  </table>
+<% } %>
 
 
 <script >

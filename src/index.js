@@ -825,7 +825,6 @@ app.post("/searchContractorWorker", async (req, res) => {
     MongoClient.connect(url, { useUnifiedTopology: true }, async function (err, db) {
         if (err) throw err;
         var dbo = db.db("eventSaver");
-        var fieldsC = { idCont: 1 };
         var dictQuery = {};
         var firstnameI = req.body.INfirstname;
         var lastnameI = req.body.INlastname;
@@ -845,23 +844,10 @@ app.post("/searchContractorWorker", async (req, res) => {
 
         //if (contractorFound.length != 0) 
         if (contractorFound.length != 0) {
-            for (var i = 0; i < contractorFound.length; ++i) {
-                var contractorF;
-                try {
-                    contractorF = await dbo.collection("ContractorWorkers").find(contractorFound[i]).toArray();
-                    console.log("contractorF " + JSON.stringify(contractorFound[i]));
-
-                }
-                catch (UnhandledPromiseRejectionWarning) {
-                    console.log(UnhandledPromiseRejectionWarning);
-                }
-            }
+           res.view("pages/searchContractorWorker", { contractorFound: contractorFound});
         }
         else
             res.view("pages/searchContractorWorker", { contractorFound: null, messageNR: "no results found" });
-
-
-
     });
 
 });
