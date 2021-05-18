@@ -3,7 +3,7 @@
 <head>
     <link href="css/sty.css" rel="stylesheet">
     <style>
-                td {
+        td {
             border: 1px solid #ddd;
             padding: 8px;
         }
@@ -32,6 +32,33 @@
             opacity: 0.9;
             color: white;
         }
+        
+
+
+
+        td.statisticsTable  {
+            border: 0px solid #ddd;
+            padding: 6px;
+            vertical-align: top;
+            cursor:context-menu;
+        }
+
+        tr.statisticsTable  {
+            border: 0px solid #ddd;
+            padding: 6px;
+            cursor:context-menu;
+        }
+
+        tr:nth-child(even).statisticsTable  {
+            background-color: white;
+            cursor:context-menu;
+        }
+
+        tr:hover.statisticsTable  {
+            background-color: white;
+            cursor:context-menu;
+        }
+
     </style>
 </head>
 
@@ -41,9 +68,66 @@
         <%- include('../partials/_header') %>
     </header>
 
+    <p style="display: block; text-align: center;">
+        <table style="width:70%; margin: 0 auto; text-align: center; border-collapse: collapse; cursor:context-menu;">
+    <% if(typeof numOfCon != "undefined" && numOfCon) { %>
+        <tr class="statisticsTable"><td class="statisticsTable" style="text-align: center; padding-bottom: 15px;" colspan="2"><label class="report" style="text-decoration: underline;"><b>statistics</b></label><br></td></tr>
+        <tr class="statisticsTable"><td class="statisticsTable">there are <%= numOfCon %> contractor workers registered to the site<br></td>
+        <% if(typeof Hair_Styling != "undefined" && Hair_Styling != null) { %>
+            <td class="statisticsTable">there are <%= Hair_Styling %> contractor workers that do Hair styling</td>
+            <% }%>
+        </tr>
+        <% } %>
+
+        <% if(typeof numOfRates != "undefined" && numOfRates) { %>
+            <tr class="statisticsTable"><td class="statisticsTable">there are <%= numOfRates[0] %> contractor with no rates<br></td>
+                <% if(typeof Makeup != "undefined" && Makeup != null) { %>
+                    <td class="statisticsTable">there are <%= Makeup %> contractor workers that do Makeup</td>
+                    <% }%></tr>
+            <tr class="statisticsTable"><td class="statisticsTable">there are <%= numOfRates[1] %> contractor workers with rate 1<br></td>
+                <% if(typeof Event_Stylist != "undefined" && Event_Stylist != null) { %>
+                    <td class="statisticsTable">there are <%= Event_Stylist %> contractor workers that do Event Stylist</td>
+                    <% }%></tr>
+            <tr class="statisticsTable"><td class="statisticsTable">there are <%= numOfRates[2] %> contractor workers with rate 2<br></td>
+                <% if(typeof Sitting_Organizer != "undefined" && Sitting_Organizer != null) { %>
+                    <td class="statisticsTable">there are <%= Sitting_Organizer %> contractor workers that are Sitting Organizers</td>
+                    <% }%></tr>
+            <tr class="statisticsTable"><td class="statisticsTable">there are <%= numOfRates[3] %> contractor workers with rate 3<br></td>
+                <% if(typeof Photography != "undefined" && Photography != null) { %>
+                    <td class="statisticsTable">there are <%= Photography %> contractor workers that do Photography</td>
+                    <% }%></tr>
+            <tr class="statisticsTable"><td class="statisticsTable">there are <%= numOfRates[4] %> contractor workers with rate 4<br></td>
+                <% if(typeof DJ != "undefined" && DJ != null) { %>
+                    <td class="statisticsTable">there are <%= DJ %> contractor workers that are DJs</td>
+                    <% }%></tr>
+            <tr class="statisticsTable"><td class="statisticsTable">there are <%= numOfRates[5] %> contractor workers with rate 5<br></td>
+                <% if(typeof Musician != "undefined" && Musician != null) { %>
+                    <td class="statisticsTable">there are <%= Musician %> contractor workers that are Musicians</td>
+                    <% }%></tr>
+            <tr class="statisticsTable">
+                <% if(typeof Atraction_Provider != "undefined" && Atraction_Provider != null) { %>
+                        <td class="statisticsTable">there are <%= Atraction_Provider %> contractor workers that are Atraction Providers</td>
+                        <% }%>
+                <% if(typeof Invitation_Printer != "undefined" && Invitation_Printer != null) { %>
+                        <td class="statisticsTable">there are <%= Invitation_Printer %> contractor workers that are Invitation Printers</td>
+                        <% }%>
+                    </tr>
+             <tr class="statisticsTable">
+                <% if(typeof noJob != "undefined" && noJob != null) { %>
+                    <td class="statisticsTable">there are <%= noJob %> contractor workers that haven't set up a service yet</td>
+                    <% }%>
+                <% if(typeof numOfEmployers != "undefined" && numOfEmployers != null) { %>
+                    <td class="statisticsTable">there are <%= numOfEmployers %> employers registered to the site</td>
+                    <% }%>
+                </tr>
+            <% } %>  
+        </table>
+    </p>
+        <label class="report" style="display: block; padding-bottom: 5px; text-align: center; text-decoration: underline;"><b>Reports</b></label><br>
+
     <form id="myform">
 
-        <br/><br/>
+        
         <button type="button" class="report" onclick="getAllEmployers()">get all employers</button>
         <br/>
 
@@ -73,6 +157,7 @@
     </p>
 
         <button type="button" class="report" onclick="getAllContractors()">get all contractors</button>
+    </form>
 
         
         <!-- EMPLOYERS TABLE-->
@@ -102,7 +187,7 @@
                 </tr>
                 <% }); %>
 
-        </table>
+        </table><br/><br/>
         <% } %>
 
 
@@ -144,30 +229,12 @@
                     </tr>
                     <% }); %>
     
-            </table>
-
-            <p style="display: block; text-align: center;">
-            <% if(typeof numOfCon != undefined && numOfCon) { %>
-                <label class="report" style="font-size: 16px;text-decoration: underline;"><b>general information</b></label><br>
-                <label class="report" style="font-size: 16px;">there are <%= numOfCon %> contractor workers registered to the site</label><br>
-                <% } %>
-    
-                <% if(typeof numOfRates != undefined && numOfRates) { %>
-                    <label class="report" style="font-size: 16px;">there are <%= numOfRates[0] %> contractor with no rates</label><br>
-                    <label class="report" style="font-size: 16px;">there are <%= numOfRates[1] %> contractor workers with rate 1</label><br>
-                    <label class="report" style="font-size: 16px;">there are <%= numOfRates[2] %> contractor workers with rate 2</label><br>
-                    <label class="report" style="font-size: 16px;">there are <%= numOfRates[3] %> contractor workers with rate 3</label><br>
-                    <label class="report" style="font-size: 16px;">there are <%= numOfRates[4] %> contractor workers with rate 4</label><br>
-                    <label class="report" style="font-size: 16px;">there are <%= numOfRates[5] %> contractor workers with rate 5</label><br>
-    
-                    <% } %>  
-                </p>
-            <% } %>
+            </table><br/><br/><% } %>
+            
 
 
-    </form>
 
-    <script>
+    <script>        
         function getAllEmployers() {
             document.getElementById("myform").action = "humanResourcesReports-getEmployers";
             document.getElementById("myform").method = "POST";

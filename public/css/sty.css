@@ -8,6 +8,7 @@ body {
     box-sizing: border-box;
 }
 
+
 .button {
     background-color: #a70d48;
     border: none;
@@ -25,9 +26,10 @@ body {
 .profile {
     display: 'block';
     line-height: 30px;
-}
-
-.searching {
+  }
+  
+.searching
+{
     display: 'block';
     line-height: 30px;
 }
@@ -169,6 +171,32 @@ button.report {
     text-align: center;
 }
 
+.container{overflow: hidden}
+.tab{float: left;}
+.tab-2{margin-left: 50px}
+.tab-2 input{display: block;margin-bottom: 10px}
+tr{transition:all .25s ease-in-out}
+tr:hover{background-color:#EEE;cursor: pointer}
+
+
+table 
+{
+    border-collapse: collapse;
+    width: 100%;
+}
+th, td 
+{
+    text-align: left;
+    padding: 4px;
+}
+  
+tr:nth-child(even){background-color: #f2f2f2}  
+th 
+{
+    background-color: #a70d48;
+    color: white;
+}
+
 button.report-reset {
     font-size: 18px;
     font-family: Felix Titling, Helvetica, sans-serif;
@@ -187,6 +215,7 @@ select.report2 {
     background: #f1f1f1;
     font-family: Felix Titling, Helvetica, sans-serif;
 }
+
 
 select.report
 {

@@ -1,0 +1,29 @@
+<html>
+
+
+<head>
+  <link href="css/sty.css" rel="stylesheet">
+</head>
+
+<body>
+
+  <header>
+    <%- include('../partials/_header') %>
+  </header>
+
+  <form name="searchingInputE" id="searchingInputE"action="/searchEmployer" method="POST">
+      <!--<label style="font-size:20px;">-->
+        <h3 class="searching" for="LsearchingE:"><b>searching employer </b></h3>
+          <!--<label class="searching" for="empID"><b>employer id: </b></label>-->
+          <input type="text" placeholder="Enter employer ID" name="idE" id="idE" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..?)\../g, '$1');" required>
+      <input type="submit" name="send" value="search" >
+      <input type="reset" name="reset1" value="reset">
+  </form>  
+
+  <% if(typeof messageNRE != "undefined" && messageNRE) { %>
+    <label class="searching" style="display: block; text-align: center;"><%=messageNRE%></label>
+    <!-- <% } else if(employerFound && typeof employerFound !="undefined"){ %>--> 
+  <% } %>
+</body>
+
+</html>

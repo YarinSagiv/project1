@@ -2,6 +2,7 @@
 
 <head>
     <link href="css/sty.css" rel="stylesheet">
+    
 </head>
 
 <body>
@@ -112,8 +113,46 @@
         <input type="hidden" id="dates" name="dates">
         <!--to POST-->
         <br />
-        
-        <a href="/changeC" class="button" style="padding: 8px 15px;" >change password</a><br/><br>
+
+
+        <p>Price Rate</p>
+        <div class="container">
+        <div class="tab tab-1">
+        <table id="table">
+            <tr>
+              <th>Title</th>
+              <th>Price</th>
+              <th>Description</th>
+              <th>fee</th>
+
+            </tr>
+          </table>
+        </div>
+
+            <div class="tab tab-2">
+            Title :<input type="text" placeholder="Enter Title" name="title" id="title" maxlength="20" >
+            Price :<input type="text" placeholder="Enter Price" name="price" id="price" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..?)\../g, '$1');" required>
+            Description :<input type="text" placeholder="Enter Description" name="des" id="des" maxlength="200">
+            fee :<input type="text" placeholder="Enter Traveling fee" name="fee" id="fee" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..?)\../g, '$1');" required>
+  
+            <button type="button" class="button" onclick="addJobRate()">add</button>
+            <button type="button" class="button" onclick="deleteJobRate()">delete</button>
+            <button type="button" class="button" onclick="editJobRate()">edit</button>
+
+        </div>
+    
+
+        <input type="hidden" id="jobrate" name="jobrate">
+
+    </div>
+    <br />
+    <input type="checkbox" id="accompanied" name="accompanied" value="True">
+    <label for="vehicle1"> With accompanied</label><br>
+
+          
+
+          <br>
+          <a href="/changeC" class="button" style="padding: 8px 15px;" >change password</a><br/><br>
 
         <button type="submit" class="button">update ditails</button>
     </form>
@@ -125,10 +164,95 @@
     var phoneNumbers = [];
     var dates = [] //TODO: get initial from db
     //var countryAreas = []; 
-
+    var jobrate= []; //array that each cell is dict of one job rate
     //TODO: take all information from the data base and put in the right places in the form
     //console.log("<%= firstName %>");
 
+ 
+
+    function addJobRate() {
+        var newRow = table.insertRow(table.length),
+                    cell1 = newRow.insertCell(0),
+                    cell2 = newRow.insertCell(1),
+                    cell3 = newRow.insertCell(2),
+                    cell4 = newRow.insertCell(3),
+                    title = document.getElementById("title").value,
+                    price = document.getElementById("price").value,
+                    des = document.getElementById("des").value,
+                    fee = document.getElementById("fee").value;
+            
+                cell1.innerHTML = title;
+                cell2.innerHTML = price;
+                cell3.innerHTML = des;
+                cell4.innerHTML = fee;
+                selectedRowToInput();
+
+                hide("noField");
+
+
+        var newT=document.getElementById("title").value;
+        var newP=document.getElementById("price").value;
+        var newD=document.getElementById("des").value;
+        var newF=document.getElementById("fee").value;
+
+        var newJobRate = {title:newT,price:newP,des:newD,fee:newF};
+        
+        jobrate.push(newJobRate); 
+        console.log(jobrate);
+     
+    }
+
+      // display selected row data into input text
+    function selectedRowToInput()
+            {
+                
+                for(var i = 1; i < table.rows.length; i++)
+                {
+                    table.rows[i].onclick = function()
+                    {
+                      // get the seected row index
+                      rIndex = this.rowIndex;
+                      console.log(rIndex);
+                      document.getElementById("title").value = this.cells[0].innerHTML;
+                      document.getElementById("price").value = this.cells[1].innerHTML;
+                      document.getElementById("des").value = this.cells[2].innerHTML;
+                      document.getElementById("fee").value = this.cells[3].innerHTML;
+
+                    };
+                }
+            }
+        selectedRowToInput();
+
+
+    function editJobRate()
+            {
+                var newT = document.getElementById("title").value,
+                newP = document.getElementById("price").value,
+                newD = document.getElementById("des").value,
+                newF = document.getElementById("fee").value;
+                    table.rows[rIndex].cells[0].innerHTML = newT;
+                    table.rows[rIndex].cells[1].innerHTML = newP;
+                    table.rows[rIndex].cells[2].innerHTML = newD;
+                    table.rows[rIndex].cells[3].innerHTML = newF;
+
+                    jobrate[rIndex-1]={title:newT,price:newP,des:newD,fee:newF}
+                    console.log(jobrate);
+
+            }
+
+        function deleteJobRate()
+            {
+                table.deleteRow(rIndex);
+                // clear input text
+                document.getElementById("title").value = "";
+                document.getElementById("price").value = "";
+                document.getElementById("des").value = "";
+                document.getElementById("fee").value = "";
+
+                jobrate.splice(rIndex-1,1); //remove from the array
+                console.log(jobrate);
+
+            }
     function show(id) {
         document.getElementById(id).style.display = 'block';
     }
@@ -491,6 +615,9 @@
         document.getElementById("phoneNumbers").value = phoneNumbers.toString();
         document.getElementById("types").value = jobTypes.toString();
         document.getElementById("dates").value = dates.toString();
+        document.getElementById("jobrate").value = jobrate.toString();
+
+        console.log(JSON.stringify(document.getElementById("jobrate").value));
         //document.getElementById("areas").value = countryAreas.toString();
     }
 

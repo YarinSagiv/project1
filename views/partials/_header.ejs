@@ -16,6 +16,9 @@
         <a id="profile" style="display: none;">my profile</a>
         <a id="contact" href="/contactUs">contact us</a>
         <a id="password" href="/changeHR" style="display: none;">change password</a>
+        <a id="reportHR" href="/humanResourcesReports" style="display: none;">stats & reports</a>
+        <a id="reportCon" href="/contractorReports" style="display: none;">stats & reports</a>
+        <a id="reportEmp" href="/employerReports" style="display: none;">reports</a>
         <a id="logOut" href="/logOut" style="display: none; float: right;">log out</a>
         <label id="HR" style="display: none;"><br><br><a id="addC" href="/newC">add new Contractor worker</a>
             <a id="addHR" href="/newHR">add new HR worker</a><a id="deleteHR" style="float: right;"
@@ -56,6 +59,9 @@
         deactivate("profile");
         deactivate("addC");
         deactivate("addHR");
+        deactivate("reportHR");
+        deactivate("reportCon");
+        deactivate("reportEmp");
     }
     else if (currentPage == "/newu") {
         deactivate("log");
@@ -66,6 +72,9 @@
         deactivate("profile");
         deactivate("addC");
         deactivate("addHR");
+        deactivate("reportHR");
+        deactivate("reportCon");
+        deactivate("reportEmp");
     }
     else if (currentPage == "/changeHR") {
         deactivate("log");
@@ -76,6 +85,9 @@
         activate("password");
         deactivate("addC");
         deactivate("addHR");
+        deactivate("reportHR");
+        deactivate("reportCon");
+        deactivate("reportEmp");
     }
     else if (currentPage == "/updateProfileContractor" || currentPage == "/updateProfileEmployer" || currentPage == "/profileEmployerPage" || currentPage == "/profileContractorPage" || currentPage == "/changeC" || currentPage == "/changeHR") {
         deactivate("log");
@@ -86,6 +98,48 @@
         deactivate("password");
         deactivate("addC");
         deactivate("addHR");
+        deactivate("reportHR");
+        deactivate("reportCon");
+        deactivate("reportEmp");
+    }
+    else if (currentPage == "/contractorReports") {
+        deactivate("log");
+        deactivate("home");
+        deactivate("reg");
+        deactivate("contact");
+        deactivate("profile");
+        deactivate("password");
+        deactivate("addC");
+        deactivate("addHR");
+        deactivate("reportHR");
+        activate("reportCon");
+        deactivate("reportEmp");
+    }
+    else if (currentPage == "/employerReports") {
+        deactivate("log");
+        deactivate("home");
+        deactivate("reg");
+        deactivate("contact");
+        deactivate("profile");
+        deactivate("password");
+        deactivate("addC");
+        deactivate("addHR");
+        deactivate("reportHR");
+        deactivate("reportCon");
+        activate("reportEmp");
+    }
+    else if (currentPage == "/humanResourcesReports") {
+        deactivate("log");
+        deactivate("home");
+        deactivate("reg");
+        deactivate("contact");
+        deactivate("profile");
+        deactivate("password");
+        deactivate("addC");
+        deactivate("addHR");
+        activate("reportHR");
+        deactivate("reportCon");
+        deactivate("reportEmp");
     }
 
     if ("<%= Uname %>" != "")
@@ -98,6 +152,9 @@
         show("logOut");
         hide("password");
         hide("HR");
+        hide("reportHR");
+        show("reportCon");
+        hide("reportEmp");
     }
     else if ("<%= typeUser %>" == "Employers") {
         show("profile");
@@ -107,6 +164,9 @@
         show("logOut");
         hide("password");
         hide("HR");
+        hide("reportHR");
+        hide("reportCon");
+        show("reportEmp");
     }
     else if ("<%= typeUser %>" == "resourcesCompanyWorkers") {
         hide("log");
@@ -114,6 +174,9 @@
         show("logOut");
         show("password");
         show("HR");
+        show("reportHR");
+        hide("reportCon");
+        hide("reportEmp");
     }
 
     function toDelete() {

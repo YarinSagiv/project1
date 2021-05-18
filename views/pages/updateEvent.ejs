@@ -29,12 +29,14 @@
       <br/>
       <label for="date"><b>Start time</b></label>
       <input type="time" name="time" id="time">
-      <input type="hidden" id="idEvent" name="idEvent">   
+      
+      <input type="hidden" id="oldname" name="oldname">   
+
       <br/>
       
 
     </div>
-    <button type="button" class="registerbtn" onclick="getSelect()">Update Event</button>
+    <button type="button" class="registerbtn" onclick="getSelect()">Update  event</button>
 
    
 </form>
@@ -51,12 +53,6 @@
 
   }
 
-  function getSelect() {
-        document.getElementById("idEvent").value = "<%= _id =%>";
-        document.getElementById("form1").action = "/inputupdateEvent";
-        document.getElementById("form1").method = "POST";
-        document.getElementById("form1").submit();
-    }
 
 
   
@@ -81,6 +77,7 @@
             this function gets the information already in the database for this specific event
         */
        //---event name 
+       oldevent= "<%= eventname %>";
        document.getElementById("eventname").value = "<%= eventname %>";
        //---event location 
        document.getElementById("eventloc").value = "<%= eventLoc %>";
@@ -94,6 +91,15 @@
 
       
   }
+  function getSelect() {
+        document.getElementById("oldname").value = oldevent;
+        console.log(oldevent);
+        document.getElementById("form1").action = "/inputupdateEvent";
+        document.getElementById("form1").method = "POST";
+        document.getElementById("form1").submit();
+        }
+
+  
 
   initdit();
   
