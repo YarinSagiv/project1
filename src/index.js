@@ -66,26 +66,132 @@ app.get("/selectEventUp", async function (req, res) {
     });
 
 });
+
 app.get("/RecruitContractorWorker", function (req, res) {
-    res.view("pages/RecruitContractorWorker");
+   
+
 });
 
-app.post("/RecruitContractorWorker", async function (req, res) {
-    MongoClient.connect(url, { useUnifiedTopology: true }, async function (err, db) {
+app.get("/chooseContractorRecruit", function (req, res) {
+    res.view("pages/chooseContractorRecruit" , {suc1:true});
+});
+
+app.get("/updateRecruit", function (req, res) {
+    res.redirect("/");
+
+});
+
+app.post("/updateRecruit", (req, res) => {
+    MongoClient.connect(url, { useUnifiedTopology: true }, function (err, db) {
         if (err) throw err;
-        //Uid="316461375";
-        var myquery = { idE: Uid };
-        var quary2 = {_id:req.body.iduser};
-        console.log(req.body.iduser);
         var dbo = db.db("eventSaver");
+        var myquery = { _id: req.iduser };
+
+        var myobj = {
+
+            startTime: req.body.startTime,
+            
+        }
+
+        dbo.collection("Event").updateOne(myquery, myobj, function (err, res1) {
+            if (err) throw err;
+
+            console.log("1 document updated");
+
+            res.view("pages/firstpage");
+
+            db.close();
+        });
+        });
+
+});
+
+app.post("/RecruitContractorWorker", (req, res) => {
+    MongoClient.connect(url, { useUnifiedTopology: true }, function (err, db) {
+        if (err) throw err;
+        var dbo = db.db("eventSaver");
+        var myquery = { _id: Uid };
+
+        var theA; //address
+        if (typeof req.body.locationC != "undefined") {
+            theA = req.body.address;
+        }
+        else
+            theA = req.body.location;
+      
+        var values={
+            location:theA,
+            startTime:req.body.startTime,
+            information:req.body.information,
+        }
+
+        var inputsucc = dbo.collection("Recuitment").insertOne(values, function (err, resault1) {
+
+            if (err) {
+                res.view("pages/RecruitContractorWorker", { temp1: "false" });
+            }
+            else {
+
+                res.redirect("/"); //the response 
+            }
+            console.log("1 document inserted");
+            db.close();
+        });
+
+        });
+
+});
+
+app.post('/chooseContractorRecruit',  async (req, res) => {
+    MongoClient.connect(url, { useUnifiedTopology: true },  async function (err, db) {
+       // console.log(req.body.selectE);
+       console.log(req.body.iduser);
+        var myquery = {_id:req.body.iduser };
+        var dbo = db.db("eventSaver");
+        /*var obj1={
+            idC:req.body.iduser
+        }*/
+        var send={};
+        let contractor = await dbo.collection("ContractorWorkers").find(myquery).toArray() ;
+            if (contractor.length==0) {
+                send={suc1:false};
+            }  
+            else
+            send={suc1:true};
+
+        var myquery = { idE: Uid };
         let ev1 = await dbo.collection("Event").find(myquery).toArray();
-        console.log(ev1);
-        let ev2 = await dbo.collection("ContractorWorkers").find(quary2).toArray();
-        console.log(ev2);
-        //console.log(ev1.length);
-        //console.log(JSON.stringify(ev1));
-        ev2[0].ev1=ev1;
-        res.view("pages/RecruitContractorWorker", ev2[0]);
+        if(ev1.length==0){
+            send.suc2=false;
+        }
+        else
+        send.suc2=true;
+        if (send.suc1==false || send.suc2==false){
+            console.log(105);
+            res.view("pages/chooseContractorRecruit" , send);
+        }
+        else
+        {
+            console.log(109);    
+            contractor[0].ev1=ev1;
+            res.view("pages/RecruitContractorWorker", contractor[0]);
+        }
+        /*
+        var suc = dbo.collection("Recuitment").insertOne(obj1, function (err, resault2) {
+
+            if (err) {
+                res.view("pages/chooseContractorRecruit", { temp2: "false" });
+            }
+            else {
+                res.redirect("/"); //the response 
+            }
+            console.log("1 document inserted");
+            db.close();
+
+        });
+        */
+        
+
     });
 });
 
@@ -116,28 +222,6 @@ app.get("/addEvent", function (req, res) {
     }
 });
 
-app.get("/updateRecruit", function (req, res) {
-    if (Uid != "" && typeUser != "Employers") {
-        res.redirect("/");
-    }
-    else {
-        MongoClient.connect(url, { useUnifiedTopology: true }, function (err, db) {
-
-            var myquery = { _id: Uid };
-            var dbo = db.db("eventSaver");
-            dbo.collection("Recuitment").find(myquery).toArray(function (err, result) {
-                if (err) throw err;
-                if (result.length != 0) {
-                    result[0].suc3 = true;
-                    res.view('pages/updateRecruit', result[0]);
-                }
-                db.close();
-            });
-
-        });
-    }
-});
-
 app.get("/updateEvent", function (req, res) {
     res.redirect("/");
 
@@ -152,7 +236,6 @@ app.get('/newu', function (req, res) {
         res.view('pages/newu', { suc1: true });
     }
 });
-
 
 app.get('/newC', function (req, res) {
     if (Uid != "" && typeUser == "resourcesCompanyWorkers")
@@ -294,6 +377,8 @@ app.post('/inputDBHR', (req, res) => {
     });
 });
 
+
+
 /*app.post('/inputRecruit', (req, res) => {
 
     MongoClient.connect(url, { useUnifiedTopology: true }, function (err, db) {
@@ -326,6 +411,7 @@ app.post('/inputDBHR', (req, res) => {
     });
 });
 */
+
 
 app.post('/updatePasswordC', (req, res) => {
     MongoClient.connect(url, { useUnifiedTopology: true }, function (err, db) {

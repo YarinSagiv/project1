@@ -18,21 +18,18 @@
       <label for="date"><b>Start time</b></label>
       <input type="time" name="startTime" id="startTime">
       <br/>
-      if ("<%= hasAddress %>" == 'false')
-                <label for="WorkPlace"><b>work place</b></label>
-                <input type="text" placeholder="Enter work place" name="WorkPlace" id="WorkPlace" oninput="this.value = this.value.replace(/[^a-zA-Z]/g, '').replace(/(\..?)\../g, '$1');"required> 
-                </br>
-            else
-                <% if(ev2!=null && typeof ev2 !="undefined"){ %>
-                    <select id="your_event"> 
-                    <% ev2.forEach(function(dat) {%>
-                        <% if(typeof dat.address != undefined && dat.address) { %>
-                            <option><%= dat.address %></option>
-                        <% } %>                 
-                    </select>
-                    <% }); %> 
-                    <% } %>
-                </br>
+      <% if ( hasAddress == 'true'){%>
+        <label for="Location" style="font-size:18px;">do you want to use the contractor address?</label>
+        <input type="checkbox" style="width: 18px; height: 18px;" name="Location" id="Location" value="true"
+         onchange="chooseLocation()" checked>
+        </br>
+      <% }else{%>
+        <label for="Location"><b>location</b></label>
+        <input type="text" placeholder="Enter the location that you want" name="location" id="location" oninput="this.value = this.value.replace(/[^a-zA-Z]/g, '').replace(/(\..?)\../g, '$1');"required> 
+        </br>            
+            <% } %>
+      </br>
+      
         
       
 

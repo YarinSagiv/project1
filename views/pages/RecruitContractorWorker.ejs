@@ -14,37 +14,31 @@
         <p>Please fill the form></p>
         <hr>
             <br><label id="errorinput"></label><br>
-            <label for="iduser"><b>ID</b></label>
-            <br><label id="id"></label><br>
-            <input type="text" placeholder="Enter the contractor ID" name="iduser" id="iduser" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..?)\../g, '$1');" required>
             </br>
             <label>Recruit:</label>
             <% if(ev1!=null && typeof ev1 !="undefined"){ %>
-            <select id="your_event"> 
+            <select id="recruit1"> 
               <% ev1.forEach(function(dat) {%>
                 <% if(typeof dat.eventname != undefined && dat.eventname) { %>
-                    <option><%= dat.eventname %></option>
-                <% } %>                 
-            </select>
-            <% }); %> 
+                    <option value="<%=dat._id %>"><%= dat.eventname %></option>
+                <% } %> 
+                <% }); %>                 
+            </select> 
             <% } %>
             </br>
             <label for="date"><b>Start time</b></label>
             <input type="time" name="startTime" id="startTime">
-            <br/>
-            if ("<%= hasAddress %>" == 'false')
-                <label for="WorkPlace"><b>work place</b></label>
-                <input type="text" placeholder="Enter work place" name="WorkPlace" id="WorkPlace" oninput="this.value = this.value.replace(/[^a-zA-Z]/g, '').replace(/(\..?)\../g, '$1');"required> 
-                </br>
-            else
-                <% if(ev2!=null && typeof ev2 !="undefined"){ %>
-                    <select id="your_event"> 
-                    <% ev2.forEach(function(dat) {%>
-                        <% if(typeof dat.address != undefined && dat.address) { %>
-                            <option><%= dat.address %></option>
-                        <% } %>                 
-                    </select>
-                    <% }); %> 
+            </br>
+            <% if ( hasAddress == 'true'){%>
+                <br>
+                <label for="location" style="font-size:18px;">do you want to use the contractor worker address?</label>
+                <input type="checkbox" style="width: 18px; height: 18px;" name="locationC" id="locatiionC" value="true"
+                    onchange="addBusiness()" checked>
+            </br>
+            <% }else{%>
+                <label for="location" id="locationE"><b>enter your location: </b></label>
+                <input type="text" name="location" id="location" required>  
+            </br>        
                     <% } %>
                 </br>
             <label for="priceRate"><b>work place</b></label>
@@ -55,27 +49,49 @@
             </br>
             <label for="workRate"><b>choose a work rate:</b></label>
             <select id:"work_rate">
-                <option value="1">work_rate</option>
-                <option value="2">work_rate</option>
-                <option value="3">work_rate</option>
-                <option value="4">work_rate</option>
-                <option value="5">work_rate</option>
+                <option value="work_rate">1</option>
+                <option value="work_rate">2</option>
+                <option value="work_rate">3</option>
+                <option value="work_rate">4</option>
+                <option value="work_rate">5</option>
             </select>
             </br>
+            <input type="hidden" id="selectE" name="selectE">  
 
         <hr>
     </div>
 
-
-    <button type="submit" class="registerbtn" href="/profileContrsctorPage">ok</button>
-    <button type="submit" class="registerbtn" href="/firstpage">cancel</button>
-
-
+    <button type="button" class="registerbtn" onclick="getSelect()">Recruit</button>
+    <button type="submit" class="registerbtn" href="/profileEmployerPage">cancel</button>
+    
+    
 </form>
 
 <span id = "message" style="color:red"> </span> <br><br>
 
 <script>
+
+function getSelect() {
+        document.getElementById("selectE").value = document.getElementById("recruit1").value;
+        document.getElementById("form1").action = "/RecruitContractorWorker";
+        document.getElementById("form1").method = "POST";
+        document.getElementById("form1").submit();
+}
+function addBusiness() {/* this function shows and hides the business address label so that if the contractor worker
+    doesn't have one then he can't enter one, and changes rather it is required.*/
+        if (document.getElementById("location").style.display == 'none') {
+            //show elemnets
+            hide("location");
+            hide("locationE");
+            document.getElementById("location").required = true; //TODO: check if works
+        }
+        else {
+            show("location");
+            show("locationE");
+            document.getElementById("location").required = false; //TODO: check if works
+        }
+
+    }
 
 </script>
 </body>
