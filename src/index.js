@@ -647,7 +647,6 @@ app.post('/updateContractor', (req, res) => {
                 //console.log(jobrates[i]);
                 jobrates2=jobrates[i].split(",");
                 var jobR = {
-                    _id:ObjectID(),
                     title: jobrates2[1],
                     price: jobrates2[3],
                     idC: Uid,
