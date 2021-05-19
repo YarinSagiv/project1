@@ -8,7 +8,7 @@ const appPort = process.env.PORT || 4000;
 
 const MongoClient = require('mongodb').MongoClient;
 const { request, query } = require("express");
-const { ReplSet } = require("mongodb");
+const { ReplSet, ObjectID } = require("mongodb");
 const url = "mongodb+srv://ymon:ymonashdod@cluster.0qqlp.mongodb.net/eventSaver?retryWrites=true&w=majority";
 var Uid = "";
 var typeUser = "";
@@ -389,15 +389,25 @@ app.get('/deleteE', (req, res) => {
 
 
 
-app.get('/updateProfileContractor', function (req, res) {
+app.get('/updateProfileContractor',async function (req, res) {
     /* 
         get ditails from db
     */
 
-    MongoClient.connect(url, { useUnifiedTopology: true }, function (err, db) {
+    MongoClient.connect(url, { useUnifiedTopology: true },async function (err, db) {
         if (err) throw err;
         var dbo = db.db("eventSaver");
         var query = { _id: Uid };
+        var query2={idC:Uid};
+        let c1 = await dbo.collection("ContractorWorkers").find(query).toArray();
+        let j1 = await dbo.collection("jobRate").find(query2).toArray(); //all the job rate
+
+        console.log(j1);
+        c1[0].j1=j1;
+        res.view('pages/updateProfileContractor',c1[0]);
+
+        /*
+
         dbo.collection("ContractorWorkers").find(query).toArray(function (err, result) {
             if (err) throw err;
             if (result.length != 0) {
@@ -405,6 +415,7 @@ app.get('/updateProfileContractor', function (req, res) {
             }
             db.close();
         });
+        */
     });
 
 });
@@ -618,7 +629,47 @@ app.post('/updateContractor', (req, res) => {
 
         //delete all the documents of the job rate of this contractur
         var myqueryC = { idC: Uid };
-        let delete1 = await dbo.collection("jobRate").deleteOne(myqueryC);
+        let delete1 = await dbo.collection("jobRate").deleteMany(myqueryC);
+
+
+
+        var arrJobRate = req.body.jobrate;
+        var jobrates=arrJobRate.split("-");
+        //console.log(jobrates[0]);
+
+        console.log(jobrates.length);
+        var count=0;
+        for (var i in jobrates)
+        {
+            ++count;
+            if(count<jobrates.length)
+            {
+                //console.log(jobrates[i]);
+                jobrates2=jobrates[i].split(",");
+                var jobR = {
+                    _id:ObjectID(),
+                    title: jobrates2[1],
+                    price: jobrates2[3],
+                    idC: Uid,
+                    description: jobrates2[5],
+                    travelingFee:jobrates2[7],
+                    accompanied: jobrates2[9] }
+
+                    console.log(jobR);
+            }
+            var succ =await dbo.collection("jobRate").insertOne(jobR);
+
+        
+         
+           //console.log(jobrates2);
+        }
+
+
+        res.view("pages/firstpage");
+    
+
+    });
+})
 
         /*
         dbo.collection("ContractorWorkers").updateOne(myquery, newvalues, async function (err, res1) {
@@ -642,8 +693,7 @@ app.post('/updateContractor', (req, res) => {
         });
         */
         //insert all the new documents of the job rate of this contractur
-        var arrJobRate = req.body.jobrate;
-        console.log(arrJobRate);
+      
         /*
         for (var i = 0; i < arrJobRate.length; ++i) {
             var jobR = {
@@ -659,13 +709,10 @@ app.post('/updateContractor', (req, res) => {
         }
 */
 
-        res.view("pages/firstpage");
-
-    });
+     
 
     //res.send({redirect: '/blog'});
     //res.redirect('/');
-});
 
 // function that input to the data base the details that the user enter when he register to the website
 app.post('/inputDataBase', (req, res) => {
