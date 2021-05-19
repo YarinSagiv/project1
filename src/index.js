@@ -68,24 +68,6 @@ app.get("/selectEventUp", async function (req, res) {
 });
 
 
-
-app.get("/selectEventUp2", async function (req, res) {
-    MongoClient.connect(url, { useUnifiedTopology: true }, async function (err, db) {
-        if (err) throw err;
-        //Uid="316461375";
-        var myquery = { idE: Uid };
-        var dbo = db.db("eventSaver");
-        let ev1 = await dbo.collection("Event").find(myquery).toArray();
-        //console.log(ev1.length);
-        //console.log(JSON.stringify(ev1));
-        //console.log("yaringets");
-        res.view("pages/selectEventUp2", { ev1: ev1 });
-
-    });
-
-});
-
-
 app.get("/logOut", function (req, res) {
     Uid = "";
     typeUser = "";
@@ -183,26 +165,6 @@ app.post('/selectEventUp', (req, res) => {
                 console.log(result);
                 res.view('pages/updateEvent', result[0]); //result[0] is the update event
             }
-            db.close();
-        });
-
-    });
-
-});
-
-
-
-app.post('/selectEventUp2', (req, res) => {
-
-
-    MongoClient.connect(url, { useUnifiedTopology: true }, function (err, db) {
-        // console.log(req.body.selectE);
-        var myquery = { idE: Uid, eventname: req.body.selectE };
-        var dbo = db.db("eventSaver");
-        dbo.collection("Event").deleteOne(myquery, function (err, obj) {
-            if (err) throw err;
-            //console.log(Uid);
-            res.redirect("/"); 
             db.close();
         });
 
@@ -643,7 +605,7 @@ app.post('/updateContractor', (req, res) => {
         */
         //insert all the new documents of the job rate of this contractur
         var arrJobRate = req.body.jobrate;
-        console.log(arrJobRate);
+        console.log(JSON.stringify(arrJobRate));
         /*
         for (var i = 0; i < arrJobRate.length; ++i) {
             var jobR = {
@@ -809,19 +771,19 @@ app.get("/profileEmployerPage",async function (req, res) {
             var query = { _id: Uid };
             var query2 = { idE: Uid };
 
-            
+            /*
 
             let emp=await dbo.collection("Employers").find(query).toArray();
             let eve=await  dbo.collection("Event").find(query2).toArray(); //the events
 
             if (emp.length != 0 && eve.length!=0 ) {
-               emp[0].eve=eve;
-                res.view('pages/profileEmployerPage', emp[0]);
+                //eve[eve.length-1]=emp[0]; //merge array
+                res.view('pages/profileEmployerPage', {eve:eve,emp:emp});
             }
 
             db.close();
-        
-            /*
+            */
+            
             dbo.collection("Employers").find(query).toArray(function (err, result) {
                 if (err) throw err;
                 if (result.length != 0) {
@@ -829,7 +791,6 @@ app.get("/profileEmployerPage",async function (req, res) {
                 }
                 db.close();
             });
-            */
             
         });
     }
@@ -883,22 +844,32 @@ app.post("/searchContractorWorker", async (req, res) => {
         var dictQuery = {};
         var firstnameI = req.body.INfirstname;
         var lastnameI = req.body.INlastname;
+        var genderI = req.body.INgender;
         if (firstnameI != "") {
             dictQuery.firstName = firstnameI;
             console.log("check first name1:" + req.body.INfirstname);
         }
-        if (lastnameI != "")
+        if (lastnameI != ""){
             dictQuery.lastName = lastnameI;
+            console.log("check last name1:" + req.body.INlastname);
+        }
+        if (genderI != ""){
+            dictQuery.gender = genderI;
+            console.log("check gender:" + req.body.INgender);
+        }
         console.log("check dic:" + JSON.stringify(dictQuery));
 
         let contractorFound = await dbo.collection("ContractorWorkers").find(dictQuery).toArray();
         console.log("result of searching: " + JSON.stringify(contractorFound[0]));
 
-        if (contractorFound.length != 0) {
+        if (contractorFound.length != 0) 
+        {
            res.view("pages/searchContractorWorker", { contractorFound: contractorFound});
         }
         else
+        {
             res.view("pages/searchContractorWorker", { contractorFound: null, messageNR: "no results found" });
+        }
     });
 
 });

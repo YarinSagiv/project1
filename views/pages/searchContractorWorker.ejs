@@ -35,10 +35,9 @@
     <%- include('../partials/_header') %>
   </header>
   
-<form name="searchingInput" id="searchingInput" action="/searchContractorWorker" method="POST">
-    <label style="font-size:20px;">
-        <h3 class="searching" for="LsearchingBy:"><b>searching by: </b></h3>
-        <label class="searching" for="firstname"><b>First Name: </b></label>
+<form name="searchingInput" id="searchingInput" action="/searchContractorWorker" method="POST" >
+        <h3 class="searching" for="LsearchingBy:" style="font-size:22px;"><b>searching Contractor Worker </b></h3>
+        <label class="searching" for="firstname"><b>First Name</label>
         <!--<% if(typeof INfirstname != "undefined" && INfirstname) { %>
           <input type="text" name="INfirstname" id="INfirstname" 
             oninput="this.value = this.value.replace(/[^a-zA-Z]/g, '').replace(/(\..?)\../g, '$1');" checked>
@@ -48,17 +47,64 @@
         <% } %>
         &emsp;-->
 
-        <input type="text" name="INfirstname" id="INfirstname" 
+        <input class="searching" type="text" placeholder="Enter first name" name="INfirstname" id="INfirstname" 
             oninput="this.value = this.value.replace(/[^a-zA-Z]/g, '').replace(/(\..?)\../g, '$1');" >
-      
+        <br>
+        <label class="searching" for="lastname"><b>Last Name</label>
+        <input class="searching" type="text" placeholder="Enter last name" name="INlastname" id="INlastname" 
+            oninput="this.value = this.value.replace(/[^a-zA-Z]/g, '').replace(/(\..?)\../g, '$1');" >
+        <br>
+        <label class="searching" for="lastname"><b>range of price rates</label>
+        <input class="searching" type="text" placeholder="From" name="fromPriceRates" id="fromPriceRates" 
+            oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..?)\../g, '$1');">
+        <input class="searching" type="text" placeholder="To" name="toPriceRates" id="toPriceRates" 
+            oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..?)\../g, '$1');">
+        <br>  
+            
+        <label class="searching" for="jobRateL"><b>Job Rate</b></label>
+        <!--<label for="minjobRateL"><b>minimum Job Rate: </b></label>-->
+        <select class="searchingRate" name="jobRate" id="jobRate" >
+            <option value="" default selected>from</option>
+            <option style="font-size:18px;" value="0">0</option>
+            <option style="font-size:18px;" value="1">1</option>
+            <option style="font-size:18px;" value="2">2</option>
+            <option style="font-size:18px;" value="3">3</option>
+            <option style="font-size:18px;" value="4">4</option>
+            <option style="font-size:18px;" value="5">5</option>
+        </select>
+        <!--<label for="maxjobRateL"><b>maximum Job Rate: </b></label>-->
+        <select class="searchingRate" name="jobRate" id="jobRate" >
+            <option value="" default selected> <b>to</b></option>
+            <option style="font-size:18px;" value="0">0</option>
+            <option style="font-size:18px;" value="1">1</option>
+            <option style="font-size:18px;" value="2">2</option>
+            <option style="font-size:18px;" value="3">3</option>
+            <option style="font-size:18px;" value="4">4</option>
+            <option style="font-size:18px;" value="5">5</option>
+        </select>
+        <br>
+        <label class="searching" for="DateA"><b>Date available</b></label>
+        <input type="date" name="INdate" id="INdate">
+        <br>
+        <label class="searching" for="gender"><b>Gender</b></label>
+        <input type="radio" id="male" name="INgender" value="male" >
+        <label class="searching" for="male" >Male&emsp;</label>
+        <input type="radio" id="female" name="INgender" value="female">
+        <label class="searching" for="female">Female&emsp;</label>
+        <input type="radio" id="other" name="INgender" value="other">
+        <label class="searching" for="other">Other</label>
         <br >
-        <label for="lastname"><b>Last Name: </b></label>
-        <input type="text" name="INlastname" id="INlastname" 
-            oninput="this.value = this.value.replace(/[^a-zA-Z]/g, '').replace(/(\..?)\../g, '$1');" >
-        <!--<br>
-        <label for="jobTypesL"><b>Job Types: </b></label>
-        <select name="jobTypes" id="jobTypes" >
-            <option style="font-size:18px;" value="Hair Styling">Hair Styling</option>
+
+        <label class="searching" for="accompaniedS"><b>accompanied</b></label>
+        <input type="radio" id="true" name="INaccompanied" value="true" >
+        <label class="searching" for="yes">yes&emsp;</label>
+        <input type="radio" id="false" name="INaccompanied" value="false">
+        <label class="searching" for="no" >no&emsp;</label>
+        <br >
+        <label class="searching" for="jobTypesL"><b>Job Types</b></label>
+        <br >
+        <select class="searchingJType" name="jobTypes" id="jobTypes" multiple>
+            <option class="searching" style="font-size:18px;" value="Hair Styling">Hair Styling</option>
             <option style="font-size:18px;" value="Makeup">Makeup</option>
             <option style="font-size:18px;" value="Event Stylist">Event Stylist</option>
             <option style="font-size:18px;" value="Sitting Organizer">Sitting Organizer</option>
@@ -69,35 +115,7 @@
             <option style="font-size:18px;" value="Invitation Printer">Invitation Printer</option>
         </select>
         <br>
-        <label for="jobRateL"><b>Job Rate: </b></label>
-        <select name="jobRate" id="jobRate" multiple>
-            <option style="font-size:18px;" value="0">0</option>
-            <option style="font-size:18px;" value="1">1</option>
-            <option style="font-size:18px;" value="2">2</option>
-            <option style="font-size:18px;" value="3">3</option>
-            <option style="font-size:18px;" value="4">4</option>
-            <option style="font-size:18px;" value="5">5</option>
-        </select>
-        <br>
-        <label for="DateA"><b>Date available: </b></label>
-        <input type="date" name="date" id="date">
-        <br>
-        <label for="gender"><b>Gender: </b></label>
-        <input type="radio" id="male" name="gender" value="male" >
-        <label for="male" style="font-size:22px;">Male&emsp;</label>
-        <input type="radio" id="female" name="gender" value="female">
-        <label for="female" style="font-size:22px;">Female&emsp;</label>
-        <input type="radio" id="other" name="gender" value="other">
-        <label for="other" style="font-size:22px;">Other</label>
-        <br >
-
-        <label for="accompaniedS"><b>accompanied services: </b></label>
-        <input type="radio" id="yes" name="accompaniedS" value="yes" >
-        <label for="yes" style="font-size:22px;">yes&emsp;</label>
-        <input type="radio" id="no" name="accompaniedS" value="no">
-        <label for="no" style="font-size:22px;">no&emsp;</label>
-        <br >
-        -->
+       
 
         <!-- <select name="searchingBy" id="searchingBy" onChange="myFunction()" >
             <option class="searching" style="font-size:18px;" id='fName'  value="firstname">first name</option>
@@ -116,13 +134,14 @@
 <% if(typeof messageNR != "undefined" && messageNR) { %>
   <label class="searching" style="display: block; text-align: center;"><%=messageNR%></label>
 <% } else if(contractorFound && typeof contractorFound !="undefined"){ %>
+  
   <table id="resultSearching" style="width:90%; margin: 0 auto; text-align: center; border-collapse: collapse;">
     <tr id="head">
       <th>first Name</th>
       <th>last Name</th>
+      <th>Gender</th>
       <th>Job Types</th>
       <th>Job Rate</th>
-      <th>Gender</th>
       <th>accompanied services</th>
       <th>link profile</th>
 
@@ -135,7 +154,10 @@
             <% } %>
             <% if(typeof dataT.lastName != "undefined" && dataT.lastName) { %>
               <td><%= dataT.lastName %></td>
-          <% } %>
+            <% } %>
+            <% if(typeof dataT.gender != "undefined" && dataT.gender) { %>
+              <td><%= dataT.gender %></td>
+            <% } %>
             
         </tr>
     <% }); %>
@@ -158,6 +180,8 @@ function initdit()
     document.getElementById("date").min = today;
   }
   initdit();
+
+
     
 /*function myFunction() {
   var x = document.getElementById("searchingBy").value;
@@ -165,6 +189,7 @@ function initdit()
   if (x == 'gender')
     document.getElementById("selectGender").style.display = 'block';
 } */
+
 
 
 function show(id) {

@@ -31,9 +31,40 @@ body {
 .searching
 {
     display: 'block';
-    line-height: 30px;
+    line-height: 20px;
+    text-align: left;
+    text-decoration: none;
+    font-size: 18px;
+    padding-left: 8px;
+    
 }
-
+input[type=text].searching {
+    width: 20%;
+    padding: 8px;
+    margin: 5px 0 10px ;
+    display: inline-block;
+    border: none;
+    background: #f1f1f1;
+    font-size: 15px;
+}
+select.searchingRate
+{
+    width: 110px;
+    padding: 10px;
+    margin: 15px 0 22px 0;
+    display: inline-block;
+    border: none;
+    background: #f1f1f1;
+}
+select.searchingJType
+{
+    width: 180px;
+    padding: 10px;
+    margin: 15px 0 22px 0;
+    display: inline-block;
+    border: none;
+    background: #f1f1f1;
+}
 select {
     width: 100%;
     padding: 15px;
