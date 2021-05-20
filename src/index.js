@@ -382,28 +382,61 @@ app.get('/updateProfileContractor',async function (req, res) {
 
 });
 
-
 /*
-app.post('/updateEvent', async (req, res) => {
+
+app.post('/updateEvent',async function (req, res) {
+
+    MongoClient.connect(url, { useUnifiedTopology: true },async function (err, db) {
+        if (err) throw err;
+        var dbo = db.db("eventSaver");
 
 
-    var query = { _id: Uid }; //id employer
+    console.log("update event");
+    var query = { idEmployer: Uid }; //id employer
 
     res.redirect("/updateEvent",ev1); //the response 
-
-
-
-
-
-
-
     var newvalues = { $set: {} };
 
     var date = req.body.date;
 
-    let rec1 = await dbo.collection("Recuitment").find(query).toArray();
+    let rec1 = await dbo.collection("Recuitment").find(query).toArray(); //all the rectuit of this employer
+    for (i=0;i<rec1.length; i++)
+    {
+        let con1 = await dbo.collection("ContractorWorkers").find(rec1[i].idC).toArray();
+        dates=con1[0].dates.split(',');
+        console.log("dates"+detes);
+
+
+        
+        if (unDates.includes(req.body.date))
+        {
+             res.view('pages/addEvent', { suc3: false });
+        }
+
+        else
+        {
+            // if the location of the event change - email will send to all the contructors
+            lastLoc==con1[i][event][location];
+            if(lastLoc!=req.body.eventloc)
+            {
+                emaildate(i);
+            }
+
+             // if the date of the event change - email will send to the contructor
+            lastDate=con1[i][event][date];            
+            if(lastDate!=req.body.date)
+            {
+                emailLoc(i);
+            }
+        }
+        
+
+    }
+
+    
     let con1 = await dbo.collection("ContractorWorkers").find(rec1[0].idC).toArray();
     var i;
+    
     for (i=0;i<con1.length; i++)
     {
         var unDates=con1[i][dates].split(",");
@@ -429,10 +462,137 @@ app.post('/updateEvent', async (req, res) => {
             }
         }
     
-    }
+    })
 
 });
+
 */
+//send email with the new date to  the contructor worker
+
+function emaildate(index) {
+    var nodemailer = require('nodemailer');
+
+    var transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: 'eventsaver2@gmail.com',
+            pass: 'eventsaver2323!'
+        }
+    });
+
+    var mailOptions = {
+        from: 'eventsaver2@gmail.com',
+        to: con1[index][email],
+        subject: 'Sending Email using Node.js',
+        text: 'The location of the event change to' + String(req.body.eventloc)
+    };
+
+    transporter.sendMail(mailOptions, function (error, info) {
+        if (error) {
+            console.log(error);
+        } else {
+            console.log('Email sent: ' + info.response);
+        }
+    });
+}
+
+
+
+//send email with the new location to  the contructor worker
+function emailLoc(index) {
+    var nodemailer = require('nodemailer');
+
+    var transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: 'eventsaver2@gmail.com',
+            pass: 'eventsaver2323!'
+        }
+    });
+
+    var mailOptions = {
+        from: 'eventsaver2@gmail.com',
+        to: con1[index][email],
+        subject: 'Sending Email using Node.js',
+        text: 'The date of the event change to' + String(req.body.date)
+    };
+
+    transporter.sendMail(mailOptions, function (error, info) {
+        if (error) {
+            console.log(error);
+        } else {
+            console.log('Email sent: ' + info.response);
+        }
+    });
+}
+
+
+app.post('/updateEvent', async (req, res) => {
+    MongoClient.connect(url, async function (err, db) {
+        if (err) throw err;
+        var dbo = db.db("eventSaver");
+        console.log("update post");
+        var canU="true";
+
+        var query = { idEmployer: Uid }; //id employer
+        let rec1 = await dbo.collection("Recuitment").find(query).toArray(); //all the recruit of this employer
+
+        for (i=0;i<rec1.length; i++)//all the recruit of this employer
+    {
+        let con1 = await dbo.collection("ContractorWorkers").find(rec1[i].idC).toArray(); //the details of the contractor that recruit
+        dates=con1[0].dates.split(',');
+        console.log("dates"+detes);
+        if(dates.includes(req.body.date)) //if the new date of the event is date that the contractor cant work
+        {
+            res.view('pages/updateEvent', { suc3: false });
+            canU="false";
+
+        }
+        else
+        {
+            let event=await dbo.collection("Event").find(rec1[i].idEvent).toArray(); //the event 
+            // if the location of the event change - email will send to all the contructors
+            lastLoc=event[0].eventLoc;
+            if(lastLoc!=req.body.eventloc)
+            {
+                emaildate(i);
+            }
+
+             // if the date of the event change - email will send to the contructor
+            lastDate=event[0].date;            
+            if(lastDate!=req.body.date)
+            {
+                emailLoc(i);
+            }
+        }
+        
+
+    }
+    if(canU)
+    {
+        var myquery = { idE: Uid, eventname: req.body.oldname };
+
+        var myobj = {
+            $set: {
+
+                eventname: req.body.eventname,
+                numGuest: req.body.numGuest,
+                date: req.body.date,
+                time: req.body.time,
+                idE: Uid
+            }
+        };
+        let event=await dbo.collection("Event").updateOne(myquery, newvalues);
+        res.view("pages/firstpage");
+
+    }
+
+   
+
+    });
+});
+
+
 
 
 app.post('/inputEvent', async (req, res) => {
@@ -461,67 +621,9 @@ app.post('/inputEvent', async (req, res) => {
 
     });
 });
-//send email with the new date to  the contructor worker
-
-/*function emaildate(index) {
-    var nodemailer = require('nodemailer');
-
-    var transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-            user: 'eventsaver2@gmail.com',
-            pass: 'eventsaver2323!'
-        }
-    });
-
-    var mailOptions = {
-        from: 'eventsaver2@gmail.com',
-        to: con1[index][email],
-        subject: 'Sending Email using Node.js',
-        text: 'The location of the event change to' + String(req.body.eventloc)
-    };
-
-    transporter.sendMail(mailOptions, function (error, info) {
-        if (error) {
-            console.log(error);
-        } else {
-            console.log('Email sent: ' + info.response);
-        }
-    });
-}
-*/
 
 
 /*
-//send email with the new location to  the contructor worker
-function emailLoc(index) {
-    var nodemailer = require('nodemailer');
-
-    var transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-            user: 'eventsaver2@gmail.com',
-            pass: 'eventsaver2323!'
-        }
-    });
-
-    var mailOptions = {
-        from: 'eventsaver2@gmail.com',
-        to: con1[index][email],
-        subject: 'Sending Email using Node.js',
-        text: 'The date of the event change to' + String(req.body.date)
-    };
-
-    transporter.sendMail(mailOptions, function (error, info) {
-        if (error) {
-            console.log(error);
-        } else {
-            console.log('Email sent: ' + info.response);
-        }
-    });
-}
-*/
-
 //func that update the data base of event
 app.post('/inputupdateEvent', (req, res) => {
     MongoClient.connect(url, { useUnifiedTopology: true }, function (err, db) {
@@ -560,7 +662,7 @@ app.post('/inputupdateEvent', (req, res) => {
     });
 
 });
-
+*/
 app.post('/updateContractor', (req, res) => {
 
 
@@ -617,8 +719,9 @@ app.post('/updateContractor', (req, res) => {
                     accompanied: jobrates2[9] }
 
                     console.log(jobR);
+                    var succ =await dbo.collection("jobRate").insertOne(jobR);
+
             }
-            var succ =await dbo.collection("jobRate").insertOne(jobR);
 
         
          
@@ -654,12 +757,6 @@ app.post('/updateContractor', (req, res) => {
         });
         */
         //insert all the new documents of the job rate of this contractur
-<<<<<<< HEAD
-        var arrJobRate = req.body.jobrate;
-        console.log(JSON.stringify(arrJobRate));
-=======
-      
->>>>>>> 6972a39bfef163e78b866f67e87de0e9c33d557b
         /*
         for (var i = 0; i < arrJobRate.length; ++i) {
             var jobR = {
@@ -822,26 +919,24 @@ app.get("/profileEmployerPage",async function (req, res) {
             var query = { _id: Uid };
             var query2 = { idE: Uid };
 
-            /*
-
             let emp=await dbo.collection("Employers").find(query).toArray();
             let eve=await  dbo.collection("Event").find(query2).toArray(); //the events
 
             if (emp.length != 0 && eve.length!=0 ) {
-                //eve[eve.length-1]=emp[0]; //merge array
-                res.view('pages/profileEmployerPage', {eve:eve,emp:emp});
+                emp[0].eve=eve;
+                res.view('pages/profileEmployerPage', emp[0]);
             }
 
             db.close();
-            */
-            
+        
+            /*
             dbo.collection("Employers").find(query).toArray(function (err, result) {
                 if (err) throw err;
                 if (result.length != 0) {
                     res.view('pages/profileEmployerPage', result[0]);
                 }
                 db.close();
-            });
+            })*/
             
         });
     }
@@ -850,21 +945,25 @@ app.get("/profileEmployerPage",async function (req, res) {
     }
 });
 
-app.get("/profileContractorPage", function (req, res) {
+app.get("/profileContractorPage",async function (req, res) {
     var info = "";
 
-    MongoClient.connect(url, { useUnifiedTopology: true }, function (err, db) {
+    MongoClient.connect(url, { useUnifiedTopology: true },async function (err, db) {
         if (err) throw err;
         var dbo = db.db("eventSaver");
         //var query = { _id: Uid };
+
+        var dbo = db.db("eventSaver");
         var query = { _id: Uid };
-        dbo.collection("ContractorWorkers").find(query).toArray(function (err, result) {
-            if (err) throw err;
-            if (result.length != 0) {
-                res.view('pages/profileContractorPage', result[0]);
-            }
-            db.close();
-        });
+        var query2={idC:Uid};
+        let c1 = await dbo.collection("ContractorWorkers").find(query).toArray();
+        let j1 = await dbo.collection("jobRate").find(query2).toArray(); //all the job rate
+
+        //console.log(j1);
+        c1[0].j1=j1;
+        res.view('pages/profileContractorPage',c1[0]);
+        db.close();
+      
     });
 });
 

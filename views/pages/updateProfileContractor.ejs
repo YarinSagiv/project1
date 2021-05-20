@@ -115,7 +115,7 @@
         <br />
 
 
-        <p>Price Rate</p>
+        <p>Price Rate:</p>
         <div class="container">
         <div class="tab tab-1">
         <table id="table">
@@ -124,6 +124,7 @@
               <th>Price</th>
               <th>Description</th>
               <th>fee</th>
+              <th>accompanied</th>
 
             </tr>
 
@@ -133,6 +134,8 @@
                     <td><%= dat.price %></td>
                     <td><%= dat.description %></td>
                     <td><%= dat.travelingFee %></td>
+                    <td><%= dat.accompanied %></td>
+
           
             </tr>
             <% }); %>
@@ -180,6 +183,27 @@
     //TODO: take all information from the data base and put in the right places in the form
     //console.log("<%= firstName %>");
 
+    
+    function oldJ()
+    {   
+        var arr=[];
+        var t = document.getElementById("table");
+        for (var r = 1; r < table.rows.length; r++) {
+             for (var c = 0; c < table.rows[r].cells.length; c++) {
+
+                arr.push(table.rows[r].cells[c].innerHTML); //push all the value of the key
+                }
+                var newJobRate = {title:arr[0],price:arr[1],des:arr[2],fee:arr[3],acc:arr[4]};
+                console.log("new:"+newJobRate);
+                jobrate.push(newJobRate); 
+                arr=[];
+        }
+
+        console.log("old in the arr:"+jobrate);
+    }
+    oldJ();
+    
+
 
 
     function addJobRate() {
@@ -188,15 +212,18 @@
                     cell2 = newRow.insertCell(1),
                     cell3 = newRow.insertCell(2),
                     cell4 = newRow.insertCell(3),
+                    cell5=newRow.insertCell(4),
                     title = document.getElementById("title").value,
                     price = document.getElementById("price").value,
                     des = document.getElementById("des").value,
                     fee = document.getElementById("fee").value;
+                    acc=document.getElementById("accompanied").checked;
             
                 cell1.innerHTML = title;
                 cell2.innerHTML = price;
                 cell3.innerHTML = des;
                 cell4.innerHTML = fee;
+                cell5.innerHTML=acc;
                 selectedRowToInput();
 
                 hide("noField");
@@ -206,6 +233,7 @@
         var newP=document.getElementById("price").value;
         var newD=document.getElementById("des").value;
         var newF=document.getElementById("fee").value;
+
         var newJobRate = {title:newT,price:newP,des:newD,fee:newF,acc:document.getElementById("accompanied").checked};
         
         jobrate.push(newJobRate); 
