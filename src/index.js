@@ -654,12 +654,7 @@ app.post('/updateContractor', (req, res) => {
         });
         */
         //insert all the new documents of the job rate of this contractur
-<<<<<<< HEAD
-        var arrJobRate = req.body.jobrate;
-        console.log(JSON.stringify(arrJobRate));
-=======
       
->>>>>>> 6972a39bfef163e78b866f67e87de0e9c33d557b
         /*
         for (var i = 0; i < arrJobRate.length; ++i) {
             var jobR = {
