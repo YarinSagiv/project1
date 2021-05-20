@@ -88,6 +88,12 @@
         <% } else { %>
             <input type="checkbox" id="rate" name="rate">
         <% } %>
+        <label class="report">status</label>
+        <% if(typeof status != "undefined" && status) { %>
+            <input type="checkbox" id="status" name="status" checked>
+        <% } else { %>
+            <input type="checkbox" id="status" name="status">
+        <% } %>
         <br />
 
         <label class="report">at month</label>
@@ -145,6 +151,9 @@
                 <% if(typeof rate != "undefined" && rate) { %>
                     <th>rate</th>
                 <% } %>
+                <% if(typeof status != "undefined" && status) { %>
+                    <th>status</th>
+                <% } %>
             </tr>
 
             <% if(Recruits!=null && typeof Recruits !=undefined) Recruits.forEach(function(dat) { %>
@@ -172,6 +181,9 @@
                     <% } %>
                     <% if(typeof dat.rate != undefined && dat.rate) { %>
                         <td><%= dat.rate %></td>
+                    <% } %>
+                    <% if(typeof dat.status != undefined && dat.status) { %>
+                        <td><%= dat.status %></td>
                     <% } %>
                 </tr>
                 <% }); %>

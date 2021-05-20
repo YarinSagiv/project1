@@ -9,7 +9,7 @@
     <%- include('../partials/_header') %>
   </header>
 
-<form id="form1" action="/selectEventUp" method="POST" >
+<form id="form1" action="/chooseEventUpdate" method="POST" >
     <div class="container">
         <p>Please choose the event you want to update</p>
         <hr>
@@ -21,14 +21,13 @@
                     <option><%= dat.eventname %></option>
                 <% } %>  
                 <% }); %> 
-                
             </select>
             <% } %>
             <input type="hidden" id="selectE" name="selectE">   
     </div>
 
 
-<button type="button" class="registerbtn" onclick="getSelect()">Update this event</button>
+<button type="button" class="registerbtn" onclick="getSelect()" href="/updateRecruit">continue</button>
 
 </form>
 </body>
@@ -36,7 +35,7 @@
 <script>
       function getSelect() {
         document.getElementById("selectE").value = document.getElementById("your_event").value;
-        document.getElementById("form1").action = "/selectEventUp";
+        document.getElementById("form1").action = "/chooseEventUpdate";
         document.getElementById("form1").method = "POST";
         document.getElementById("form1").submit();
         }

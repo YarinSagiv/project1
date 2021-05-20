@@ -1,0 +1,64 @@
+<html>
+<head>
+  <link href="css/sty.css" rel="stylesheet">
+
+</head>
+<body>
+
+  <header>
+    <%- include('../partials/_header') %>
+  </header>
+
+<form id="form1" action="/updateRecruit" method="POST" >
+    <div class="container">
+      <p>Please fill in this form the details to update the recruit</p>
+      <hr>
+      <br><label id="errorinput"></label><br>
+      <br/>
+      <label for="date"><b>Start time</b></label>
+      <input type="time" name="startTime" id="startTime">
+      <br/>
+      <% if ( hasAddress == true){%>
+          <br>
+          <label for="location" style="font-size:18px;">do you want to use the contractor worker address?</label>
+          <input type="checkbox"  onclick ="choose()" style="width: 18px; height: 18px;" name="locationC" id="locationC" value="true" checked>
+      </br>
+      <% } %>
+          <label for="location" style="display: none;" id="location"><b>enter your location: </b></label>
+          <input type="text" style="display: none;" name="locationE" id="locationE" required>  
+      </br>  
+      
+  
+
+     <button type="submit" class="registerbtn" >Update Event</button>
+    </div>
+  
+   
+</form>
+</body>
+
+<script>
+  if ("<%= suc3 %>" == 'false')
+  {
+    var l = document.getElementById("errorinput");
+    l.innerHTML = "In the date of the event, the contractor not available."
+    l.style = "font-size:18px; color: red;"
+    newusucc=false;
+
+  }
+
+  function choose(){
+    if((document.getElementById("locationC").checked)==false){
+        document.getElementById("locationE").style.display="block";
+        document.getElementById("location").style.display="block";
+    }
+    else{
+        document.getElementById("locationE").style.display="none";
+        document.getElementById("location").style.display="none";
+    }
+  }
+
+</script>
+
+</html>
+
