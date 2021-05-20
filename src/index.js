@@ -844,21 +844,38 @@ app.get("/profileEmployerPage", async function (req, res) {
     }
 });
 
-app.get("/profileContractorPage", function (req, res) {
+app.get("/profileContractorPage", async function (req, res) {
     var info = "";
 
-    MongoClient.connect(url, { useUnifiedTopology: true }, function (err, db) {
+    MongoClient.connect(url, { useUnifiedTopology: true }, async function (err, db) {
         if (err) throw err;
         var dbo = db.db("eventSaver");
-        //var query = { _id: Uid };
         var query = { _id: Uid };
-        dbo.collection("ContractorWorkers").find(query).toArray(function (err, result) {
-            if (err) throw err;
-            if (result.length != 0) {
-                res.view('pages/profileContractorPage', result[0]);
-            }
-            db.close();
-        });
+
+        var result = await dbo.collection("ContractorWorkers").find(query).toArray();
+        if (result.length != 0) {
+            query = [
+                {
+                    '$match': {
+                        'idC': result[0]._id
+                    }
+                }, {
+                    '$group': {
+                        '_id': '$idC',
+                        'rate': {
+                            '$avg': '$rate'
+                        }
+                    }
+                }
+            ];
+            var myRate = await dbo.collection("Comments").aggregate(query).toArray();
+            result[0].rate = myRate[0].rate;
+
+            console.log(result[0]);
+
+            res.view('pages/profileContractorPage', result[0]);
+        }
+        db.close();
     });
 });
 
@@ -997,6 +1014,9 @@ app.post('/contractorReports', async (req, res) => {
             fieldsR.date = 1;
             fieldsR.startTime = 1;
         }
+        if (typeof req.body.status != "undefined") {
+            fieldsR.status = 1;
+        }
         if (typeof req.body.location != "undefined") {
             fieldsR.location = 1;
         }
@@ -1090,6 +1110,7 @@ app.post('/contractorReports', async (req, res) => {
                 rate: req.body.rate,
                 month: req.body.month,
                 salary: salary,
+                status: req.body.status,
                 Recruits: united
             };
 
@@ -1104,7 +1125,6 @@ app.post('/contractorReports', async (req, res) => {
 });
 
 //--Employer's
-
 app.get('/employerReports', (req, res) => {
     if (Uid == "" || typeUser != "Employers") {
         res.redirect("/");
@@ -1407,19 +1427,52 @@ app.post('/humanResourcesReports-getContractors', async (req, res) => {
 
         }
         else
-            res.view("pages/humanResourcesReports", { noData: "y" });
+            res.view("pages/humanResourcesReports", { noData: "y", ...statistics });
 
     });
     //res.view("pages/humanResourcesReports", { Data: null, choise: null });
 });
 
+app.get("/humanResourcesReports-getRecruits", (req, res) => {
+    if (Uid == "" || typeUser != "resourcesCompanyWorkers") {
+        res.redirect("/");
+    }
+    res.redirect("/humanResourcesReports");
+});
+
+app.post('/humanResourcesReports-getRecruits', async (req, res) => {
+    if (Uid == "" || typeUser != "resourcesCompanyWorkers") {
+        res.redirect("/");
+    }
+    MongoClient.connect(url, { useUnifiedTopology: true }, async function (err, db) {
+        if (err) throw err;
+        var query = { idE: req.body.idE };
+        var dbo = db.db("eventSaver");
+        var recruits = await dbo.collection("Recuitment").find(query).toArray();
+        if (recruits.length != 0) {
+            for (var i = 0; i < recruits.length; ++i) {
+                query = { _id: ObjectID(recruits[i].idEvent) };
+                var event = await dbo.collection("Event").find(query).toArray();
+                console.log("event: "+JSON.stringify(event));
+                if (event.length != 0)
+                    recruits[i].eventName = event[0].eventname;
+            }
+            console.log("recruits:: "+JSON.stringify(recruits));
+            res.view("pages/humanResourcesReports", { Data: recruits, choise: "r", ...statistics });
+        }
+        else
+            res.view("pages/humanResourcesReports", { noData: "y", ...statistics });
+    });
+
+});
 
 
-
-
-
-
-
+app.get('/pendingRecruits', (req, res) => {
+    if (Uid == "" || typeUser != "ContractorWorkers") {
+        res.redirect("/");
+    }
+    res.view("pages/pendingRecruits", { Recruits: null });
+});
 
 
 

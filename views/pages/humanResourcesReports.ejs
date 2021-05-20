@@ -157,6 +157,10 @@
     </p>
 
         <button type="button" class="report" onclick="getAllContractors()">get all contractors</button>
+    <br/>
+        <label class="report" style="display: block; text-align: center; text-decoration: underline;"><b>find recruits</b></label><br>
+        <input type="text" id="idE" class="report" placeholder="enter an employer's id">
+        <button type="button" class="report" onclick="getRecruits()">get recruits</button>
     </form>
 
         
@@ -231,7 +235,31 @@
     
             </table><br/><br/><% } %>
             
-
+            <!-- RECRUITS TABLE-->
+        <% if(Data!=null && typeof Data !="undefined" && choise == "r"){ %>
+            <br/>
+                <table id="results" style="width:90%; margin: 0 auto; text-align: center; border-collapse: collapse;">
+                <tr id="head">
+                        <th>Event Name</th>
+                        <th>Date</th>
+                        <th>contractor's id</th>
+                </tr>
+                    <tr>
+                        <% Data.forEach(function(dat) {%>
+                        <% if(typeof dat.eventName != undefined && dat.eventName) { %>
+                            <td><%= dat.eventName %></td>
+                        <% } %>
+                        <% if(typeof dat.date != undefined && dat.date) { %>
+                            <td><%= dat.date %></td>
+                        <% } %>
+                        <% if(typeof dat.idC != undefined && dat.idC) { %>
+                            <td><%= dat.idC %></td>
+                        <% } %>
+                    </tr>
+                    <% }); %>
+    
+            </table><br/><br/>
+            <% } %>
 
 
     <script>        
@@ -280,6 +308,13 @@
 
         function getAllContractors() {
             document.getElementById("myform").action = "humanResourcesReports-getContractors";
+            document.getElementById("myform").method = "POST";
+            document.getElementById("myform").submit();
+        }
+
+        function getRecruits()
+        {
+            document.getElementById("myform").action = "humanResourcesReports-getRecruits";
             document.getElementById("myform").method = "POST";
             document.getElementById("myform").submit();
         }

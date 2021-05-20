@@ -8,7 +8,6 @@ body {
     box-sizing: border-box;
 }
 
-
 .button {
     background-color: #a70d48;
     border: none;
@@ -26,29 +25,28 @@ body {
 .profile {
     display: 'block';
     line-height: 30px;
-  }
-  
-.searching
-{
+}
+
+.searching {
     display: 'block';
     line-height: 20px;
     text-align: left;
     text-decoration: none;
     font-size: 18px;
     padding-left: 8px;
-    
 }
+
 input[type=text].searching {
     width: 20%;
     padding: 8px;
-    margin: 5px 0 10px ;
+    margin: 5px 0 10px;
     display: inline-block;
     border: none;
     background: #f1f1f1;
     font-size: 15px;
 }
-select.searchingRate
-{
+
+select.searchingRate {
     width: 110px;
     padding: 10px;
     margin: 15px 0 22px 0;
@@ -56,8 +54,8 @@ select.searchingRate
     border: none;
     background: #f1f1f1;
 }
-select.searchingJType
-{
+
+select.searchingJType {
     width: 180px;
     padding: 10px;
     margin: 15px 0 22px 0;
@@ -65,6 +63,7 @@ select.searchingJType
     border: none;
     background: #f1f1f1;
 }
+
 select {
     width: 100%;
     padding: 15px;
@@ -202,28 +201,63 @@ button.report {
     text-align: center;
 }
 
-.container{overflow: hidden}
-.tab{float: left;}
-.tab-2{margin-left: 50px}
-.tab-2 input{display: block;margin-bottom: 10px}
-tr{transition:all .25s ease-in-out}
-tr:hover{background-color:#EEE;cursor: pointer}
+input[type=text].report {
+    width: 30%;
+    padding: 15px;
+    display: block;
+    margin-right: auto;
+    margin-left: auto;
+    text-align: center;
+    border: none;
+    background: #f1f1f1;
+}
 
+input[type=text]:focus.report {
+    background-color: #ddd;
+    outline: none;
+}
 
-table 
-{
+.container {
+    overflow: hidden
+}
+
+.tab {
+    float: left;
+}
+
+.tab-2 {
+    margin-left: 50px
+}
+
+.tab-2 input {
+    display: block;
+    margin-bottom: 10px
+}
+
+tr {
+    transition: all .25s ease-in-out
+}
+
+tr:hover {
+    background-color: #EEE;
+    cursor: pointer
+}
+
+table {
     border-collapse: collapse;
     width: 100%;
 }
-th, td 
-{
+
+th, td {
     text-align: left;
     padding: 4px;
 }
-  
-tr:nth-child(even){background-color: #f2f2f2}  
-th 
-{
+
+tr:nth-child(even) {
+    background-color: #f2f2f2
+}
+
+th {
     background-color: #a70d48;
     color: white;
 }
@@ -247,9 +281,7 @@ select.report2 {
     font-family: Felix Titling, Helvetica, sans-serif;
 }
 
-
-select.report
-{
+select.report {
     width: 65px;
     padding: 15px;
     margin: 5px 0 22px 0;
@@ -258,8 +290,7 @@ select.report
     background: #f1f1f1;
 }
 
-select:disabled.report
-{
+select:disabled.report {
     width: 65px;
     padding: 15px;
     margin: 5px 0 22px 0;
