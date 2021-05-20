@@ -469,8 +469,9 @@ app.post('/updateEvent',async function (req, res) {
 */
 //send email with the new date to  the contructor worker
 
-function emaildate(index) {
+function emaildate(con1) {
     var nodemailer = require('nodemailer');
+    var con1=con1;
 
     var transporter = nodemailer.createTransport({
         service: 'gmail',
@@ -499,8 +500,9 @@ function emaildate(index) {
 
 
 //send email with the new location to  the contructor worker
-function emailLoc(index) {
+function emailLoc(con1) {
     var nodemailer = require('nodemailer');
+    var con1=con1;
 
     var transporter = nodemailer.createTransport({
         service: 'gmail',
@@ -537,33 +539,72 @@ app.post('/updateEvent', async (req, res) => {
         var query = { idEmployer: Uid }; //id employer
         let rec1 = await dbo.collection("Recuitment").find(query).toArray(); //all the recruit of this employer
 
-        for (i=0;i<rec1.length; i++)//all the recruit of this employer
+        //console.log(Uid);
+        //console.log(rec1);
+        //console.log(rec1.length);
+
+    for (i=0;i<rec1.length; i++)//all the recruit of this employer
     {
-        let con1 = await dbo.collection("ContractorWorkers").find(rec1[i].idC).toArray(); //the details of the contractor that recruit
-        dates=con1[0].dates.split(',');
-        console.log("dates"+detes);
-        if(dates.includes(req.body.date)) //if the new date of the event is date that the contractor cant work
+        //console.log("idc"+rec1[i].idC);
+        var query22={_id:rec1[i].idC};
+        let con1 = await dbo.collection("ContractorWorkers").find(query22).toArray(); //the details of the contractor that recruit
+       //console.log("check con1:"+con1[0].dates);
+        
+         if(con1[0].dates!='')
+          {
+           dates=con1[0].dates.split(',');
+           console.log(dates);
+           console.log(String(req.body.date));
+          }
+
+        console.log(dates.length);
+        /*
+        for(var i=0;i<dates.length;++i)
+        {
+            console.log("dates[i]"+dates[i]);
+            console.log("req.body.date"+req.body.date);
+
+            if(dates[i]==req.body.date)
+            {
+                res.view('pages/updateEvent', { suc3: false });
+                canU="false";
+                console.log("iclude");
+            }
+        }
+        */
+        //console.log("dates"+detes);
+        
+        if(dates.includes(String(req.body.date))) //if the new date of the event is date that the contractor cant work
         {
             res.view('pages/updateEvent', { suc3: false });
             canU="false";
+            console.log("iclude");
 
         }
+        
         else
         {
+            console.log(" not iclude");
+
+            
             let event=await dbo.collection("Event").find(rec1[i].idEvent).toArray(); //the event 
             // if the location of the event change - email will send to all the contructors
             lastLoc=event[0].eventLoc;
+            /*
             if(lastLoc!=req.body.eventloc)
             {
-                emaildate(i);
+                emailLoc(con1);
             }
 
              // if the date of the event change - email will send to the contructor
             lastDate=event[0].date;            
             if(lastDate!=req.body.date)
             {
-                emailLoc(i);
+                emaildate(con1);
+
             }
+            
+            */
         }
         
 
@@ -572,7 +613,7 @@ app.post('/updateEvent', async (req, res) => {
     {
         var myquery = { idE: Uid, eventname: req.body.oldname };
 
-        var myobj = {
+        var newvalues = {
             $set: {
 
                 eventname: req.body.eventname,
@@ -584,12 +625,15 @@ app.post('/updateEvent', async (req, res) => {
         };
         let event=await dbo.collection("Event").updateOne(myquery, newvalues);
         res.view("pages/firstpage");
+        
 
     }
+    
 
    
 
     });
+    
 });
 
 
