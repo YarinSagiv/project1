@@ -1561,12 +1561,12 @@ app.post('/pendingRecruits', async (req, res) => {
         } else if (req.body.accepted != "") {
             var acc = req.body.accepted.split(",");
             console.log("acc: " + acc.lenght);
-            var values = { $set: { status: "accepted" } };
+            values = { $set: { status: "accepted" } };
             if (typeof acc.lenght == "undefined") {
                 await dbo.collection("Recuitment").updateOne({ _id: ObjectId(acc.toString()) }, values);
             }
             else {
-                for (var i; i < acc.lenght; i++) {
+                for (i; i < acc.lenght; i++) {
                     await dbo.collection("Recuitment").updateOne({ _id: ObjectId(acc[i].toString()) }, values);
                 }
             }
