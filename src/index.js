@@ -923,6 +923,7 @@ app.get("/profileEmployerPage", async function (req, res) {
 
             db.close();
             
+            /*
 
             dbo.collection("Employers").find(query).toArray(function (err, result) {
                 if (err) throw err;
@@ -931,6 +932,7 @@ app.get("/profileEmployerPage", async function (req, res) {
                 }
                 db.close();
             });
+            */
 
         });
     }
