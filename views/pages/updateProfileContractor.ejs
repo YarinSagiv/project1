@@ -115,7 +115,7 @@
         <br />
 
 
-        <p>Price Rate</p>
+        <p>Price Rate:</p>
         <div class="container">
         <div class="tab tab-1">
         <table id="table">
@@ -124,8 +124,22 @@
               <th>Price</th>
               <th>Description</th>
               <th>fee</th>
+              <th>accompanied</th>
 
             </tr>
+
+            <tr>
+                <% j1.forEach(function(dat) {%>
+                    <td><%= dat.title %></td>
+                    <td><%= dat.price %></td>
+                    <td><%= dat.description %></td>
+                    <td><%= dat.travelingFee %></td>
+                    <td><%= dat.accompanied %></td>
+
+          
+            </tr>
+            <% }); %>
+
           </table>
         </div>
 
@@ -146,8 +160,8 @@
 
     </div>
     <br />
-    <input type="checkbox" id="accompanied" name="accompanied" value="True">
-    <label for="vehicle1"> With accompanied</label><br>
+    <input type="checkbox" id="accompanied" name="accompanied">
+    <label for="acc"> With accompanied</label><br>
 
           
 
@@ -159,6 +173,7 @@
 </body>
 
 <script type="text/javascript">
+
     var loggedId;
     var jobTypes = [];
     var phoneNumbers = [];
@@ -168,7 +183,28 @@
     //TODO: take all information from the data base and put in the right places in the form
     //console.log("<%= firstName %>");
 
- 
+    
+    function oldJ()
+    {   
+        var arr=[];
+        var t = document.getElementById("table");
+        for (var r = 1; r < table.rows.length; r++) {
+             for (var c = 0; c < table.rows[r].cells.length; c++) {
+
+                arr.push(table.rows[r].cells[c].innerHTML); //push all the value of the key
+                }
+                var newJobRate = {title:arr[0],price:arr[1],des:arr[2],fee:arr[3],acc:arr[4]};
+                console.log("new:"+newJobRate);
+                jobrate.push(newJobRate); 
+                arr=[];
+        }
+
+        console.log("old in the arr:"+jobrate);
+    }
+    oldJ();
+    
+
+
 
     function addJobRate() {
         var newRow = table.insertRow(table.length),
@@ -176,15 +212,18 @@
                     cell2 = newRow.insertCell(1),
                     cell3 = newRow.insertCell(2),
                     cell4 = newRow.insertCell(3),
+                    cell5=newRow.insertCell(4),
                     title = document.getElementById("title").value,
                     price = document.getElementById("price").value,
                     des = document.getElementById("des").value,
                     fee = document.getElementById("fee").value;
+                    acc=document.getElementById("accompanied").checked;
             
                 cell1.innerHTML = title;
                 cell2.innerHTML = price;
                 cell3.innerHTML = des;
                 cell4.innerHTML = fee;
+                cell5.innerHTML=acc;
                 selectedRowToInput();
 
                 hide("noField");
@@ -195,7 +234,7 @@
         var newD=document.getElementById("des").value;
         var newF=document.getElementById("fee").value;
 
-        var newJobRate = {title:newT,price:newP,des:newD,fee:newF};
+        var newJobRate = {title:newT,price:newP,des:newD,fee:newF,acc:document.getElementById("accompanied").checked};
         
         jobrate.push(newJobRate); 
         console.log(jobrate);
@@ -615,10 +654,33 @@
         document.getElementById("phoneNumbers").value = phoneNumbers.toString();
         document.getElementById("types").value = jobTypes.toString();
         document.getElementById("dates").value = dates.toString();
-        document.getElementById("jobrate").value = jobrate.toString();
+        //document.getElementById("jobrate").value = jobrate.toString();
 
-        console.log(JSON.stringify(document.getElementById("jobrate").value));
+        //create a string from the array jobrate
+        var stringJob="";
+        for(var i in jobrate)
+        {
+           
+            for (var key in jobrate[i])
+            {
+                stringJob=stringJob+String(key);
+                stringJob=stringJob+",";
+                stringJob=stringJob+String(jobrate[i][key]);
+                console.log("var "+stringJob);
+                stringJob=stringJob+",";
+
+            }
+            stringJob=stringJob+"-";
+
+        
+        }  
+        console.log(stringJob);
+        document.getElementById("jobrate").value = stringJob;
+        //console.log("mor"+jobrate);
+        //console.log("yarin"+document.getElementById("dates").value);
         //document.getElementById("areas").value = countryAreas.toString();
+
+        //return false;
     }
 
 </script>

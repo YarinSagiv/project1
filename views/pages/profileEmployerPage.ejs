@@ -2,6 +2,37 @@
 
 <head>
   <link href="css/sty.css" rel="stylesheet">
+
+  <style>
+    td {
+        border: 1px solid #ddd;
+        padding: 8px;
+    }
+
+    tr {
+        border: 1px solid #ddd;
+        padding: 8px;
+
+    }
+
+    tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    tr:hover {
+        background-color: #ddd;
+    }
+
+    th {
+        padding-top: 12px;
+        padding-bottom: 12px;
+        padding-left: 6px;
+        padding-right: 6px;
+        background-color: #a70d48;
+        opacity: 0.9;
+        color: white;
+    }
+    </style>
 </head>
 
 <body>
@@ -24,6 +55,32 @@
     </label></label><a class="button" href="/cancelRecruits">cancel Recruits</a><br>
     </label></label><a class="button" href="/chooseEventUpdate">update Recruits</a><br>
 
+
+  
+  <table id="events" style="width:70%; cursor:context-menu;" >
+    <tr>
+      <th>Event Name</th>
+      <th>Event Location</th>
+      <th>Num Of Guests</th>
+      <th>Date</th>
+      <th>Time</th>
+    </tr>
+
+    <tr>
+      <% eve.forEach(function(dat) {%>
+          <td><%= dat.eventname %></td>
+          <td><%= dat.eventLoc %></td>
+          <td><%= dat.numGuest %></td>
+          <td><%= dat.date %></td>
+          <td><%= dat.Time %></td>
+
+  </tr>
+  <% }); %>
+
+  </label></label><a class="button" href="/selectEventUp2">Remove Event</a><br>
+
+   
+  </table>
 
     </form>
 </body>
