@@ -102,7 +102,7 @@
         deactivate("reportCon");
         deactivate("reportEmp");
     }
-    else if (currentPage == "/contractorReports") {
+    else if (currentPage == "/contractorReports" || currentPage == "/pendingRecruits") {
         deactivate("log");
         deactivate("home");
         deactivate("reg");
@@ -128,7 +128,7 @@
         deactivate("reportCon");
         activate("reportEmp");
     }
-    else if (currentPage == "/humanResourcesReports") {
+    else if (currentPage == "/humanResourcesReports" || currentPage == "/humanResourcesReports-getContractors" || currentPage == "/humanResourcesReports-getEmployers" || currentPage == "/humanResourcesReports-getContractors"  || currentPage == "/humanResourcesReports-getRecruits") {
         deactivate("log");
         deactivate("home");
         deactivate("reg");

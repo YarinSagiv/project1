@@ -8,7 +8,7 @@ const appPort = process.env.PORT || 4000;
 
 const MongoClient = require('mongodb').MongoClient;
 const { request, query } = require("express");
-const { ReplSet, ObjectID } = require("mongodb");
+const { ReplSet, ObjectID, ObjectId } = require("mongodb");
 const url = "mongodb+srv://ymon:ymonashdod@cluster.0qqlp.mongodb.net/eventSaver?retryWrites=true&w=majority";
 var Uid = "";
 var typeUser = "";
@@ -1300,21 +1300,18 @@ app.post("/searchContractorWorker", async (req, res) => {
         console.log("jobRate:  " + JSON.stringify(price2));
 
         if (comments.length != 0 && price2.length != 0) {
-            var united=[];
-            for(var i =0; i<comments.length;i++)
-            {
-                for(var j=0;j<price2.lenght;j++)
-                {
-                    if(comments[i].idC==price2[j].idC)
-                    {
-                        var e = {...comments[i],...price2[j]};
-                        console.log("e"+ JSON.stringify(e));
+            var united = [];
+            for (var i = 0; i < comments.length; i++) {
+                for (var j = 0; j < price2.lenght; j++) {
+                    if (comments[i].idC == price2[j].idC) {
+                        var e = { ...comments[i], ...price2[j] };
+                        console.log("e" + JSON.stringify(e));
                         united.push(e);
                     }
                 }
             }
 
-            for ( i = 0; i < united.length; i++) {
+            for (i = 0; i < united.length; i++) {
                 let contractorFound = await dbo.collection("ContractorWorkers").find({ _id: united[i].idC }).toArray();
                 console.log("result of searching: " + JSON.stringify(contractorFound));
                 united[i] = { ...united[i], ...contractorFound[0] };
@@ -1514,6 +1511,73 @@ app.post('/contractorReports', async (req, res) => {
 
     });
 });
+
+
+
+app.get('/pendingRecruits', async (req, res) => {
+    if (Uid == "" || typeUser != "ContractorWorkers") {
+        res.redirect("/");
+    }
+    MongoClient.connect(url, { useUnifiedTopology: true }, async function (err, db) {
+        if (err) throw err;
+        var query = { idC: Uid, status: "pending" };
+        var dbo = db.db("eventSaver");
+        var recruits = await dbo.collection("Recuitment").find(query).toArray();
+
+        if (recruits.length != 0) {
+            for (var i = 0; i < recruits.length; i++) {
+                var employer = await dbo.collection("Employers").find({ _id: recruits[i].idEmployer }).project({ _id: 0 }).toArray();
+                if (employer.length == 0)
+                    throw "no employers found";
+                recruits[i] = { ...recruits[i], ...employer[0] };
+            }
+            console.log("recruits:: " + JSON.stringify(recruits));
+
+            res.view("pages/pendingRecruits", { Data: recruits });
+        }
+        else
+            res.view("pages/pendingRecruits", { Data: null }); 
+    });
+});
+
+app.post('/pendingRecruits', async (req, res) => {
+
+    MongoClient.connect(url, { useUnifiedTopology: true }, async function (err, db) {
+        if (err) throw err;
+        var dbo = db.db("eventSaver");
+        if (req.body.rejected != "") {
+            console.log("req.body.rejected " + req.body.rejected);
+            var reject = req.body.rejected.split(",");
+            console.log("reject: " + reject.lenght);
+            var values = { $set: { status: "canceled" } };
+            if (typeof reject.lenght == "undefined")
+                await dbo.collection("Recuitment").updateOne({ _id: ObjectId(reject.toString()) },values);
+            else {
+                for (var i; i < reject.lenght; i++) {
+                    await dbo.collection("Recuitment").updateOne({ _id: ObjectId(reject[i].toString()) },values);
+                }
+            }
+            res.redirect("/pendingRecruits");
+        } else if (req.body.accepted != "") {
+            var acc = req.body.accepted.split(",");
+            console.log("acc: " + acc.lenght);
+            var values = { $set: { status: "accepted" } };
+            if (typeof acc.lenght == "undefined") {
+                await dbo.collection("Recuitment").updateOne({ _id: ObjectId(acc.toString()) }, values);
+            }
+            else {
+                for (var i; i < acc.lenght; i++) {
+                    await dbo.collection("Recuitment").updateOne({ _id: ObjectId(acc[i].toString()) }, values);
+                }
+            }
+            res.redirect("/pendingRecruits");
+        }
+        else
+            throw "no choise for pending recruits";
+    });
+});
+
+
 //--Employer's
 app.get('/employerReports', (req, res) => {
     if (Uid == "" || typeUser != "Employers") {
@@ -1856,13 +1920,6 @@ app.post('/humanResourcesReports-getRecruits', async (req, res) => {
 
 });
 
-
-app.get('/pendingRecruits', (req, res) => {
-    if (Uid == "" || typeUser != "ContractorWorkers") {
-        res.redirect("/");
-    }
-    res.view("pages/pendingRecruits", { Recruits: null });
-});
 
 
 

@@ -2,12 +2,167 @@
 
 <head>
   <link href="css/sty.css" rel="stylesheet">
+  <style>
+    td {
+      border: 1px solid #ddd;
+      padding: 8px;
+    }
+
+    tr {
+      border: 1px solid #ddd;
+      padding: 8px;
+
+    }
+
+    tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+
+    tr:hover {
+      background-color: #ddd;
+    }
+
+    th {
+      padding-top: 12px;
+      padding-bottom: 12px;
+      padding-left: 6px;
+      padding-right: 6px;
+      text-align: center;
+      background-color: #a70d48;
+      /*background-color: #9e8e94;*/
+      opacity: 0.9;
+      color: white;
+    }
+  </style>
 </head>
 
 <body>
 
+  <header>
+    <%- include('../partials/_header') %>
+  </header>
 
+  <br />
+  <label class="report" style="display: block; text-align: center; text-decoration: underline;"><b>my pending
+      recruits</b></label><br>
+
+
+    <table id="table" style="width:90%; margin: 0 auto; text-align: center; border-collapse: collapse;">
+      <% if(Data!=null && typeof Data !="undefined" ){ %>
+      <tr id="head">
+        <th>Date & Time</th>
+        <th>Location</th>
+        <th>price</th>
+        <th>Requesterer</th>
+        <th>phone numbers</th>
+        <th>email</th>
+      </tr>
+
+      <% Data.forEach(function(dat) {%>
+        <tr id=<%=dat._id%>>
+          <td>
+            <% if(typeof dat.date !=undefined && dat.date && typeof dat.startTime !=undefined && dat.startTime) { %>
+              <%= dat.date %>
+                <%= dat.startTime %>
+                  <% } %>
+          </td>
+          <td>
+            <% if(typeof dat.location !=undefined && dat.location) { %>
+              <%= dat.location %>
+                <% } %>
+          </td>
+          <td>
+            <% if(typeof dat.price !=undefined && dat.price) { %>
+              <%= dat.price %>
+                <% } %>
+          </td>
+          <td>
+            <% if(typeof dat.firstName !=undefined && dat.firstName && typeof dat.lastName !=undefined && dat.lastName)
+              { %>
+              <%= dat.firstName %>
+                <%= dat.lastName %>
+                  <% } %>
+          </td>
+          <td>
+            <% if(typeof dat.phoneNumbers !=undefined && dat.phoneNumbers) { %>
+              <%= dat.phoneNumbers %>
+                <% } %>
+          </td>
+          <td>
+            <% if(typeof dat.email !=undefined && dat.email) { %>
+              <a style="color:#44081f;" href="mailto:<%= dat.email %>">
+                <%= dat.email %>
+                  <% } %>
+          </td>
+        </tr>
+        <% }); %>
+
+    </table><br />
+
+    <p style="text-align: center;">
+      <button type="button" class="report-reset" onclick="acceptRecruit()">accept</button>
+      <button type="button" class="report-reset" onclick="rejectRecruit()">reject</button>
+    </p>
+
+    <form id="myForm" action="pendingRecruits" method="POST">
+      <input type="hidden" id="rejected" name="rejected">
+      <input type="hidden" id="accepted" name="accepted">
+    </form>
+
+    <% } else { %>
+      <label class="report" style="text-align: center; display: block;">no pending recruits requests.</label>
+      <% } %>
 
 
 </body>
+
+<script>
+  var selected = [];
+  var rejected = [];
+  var acepted = [];
+  var rows = document.getElementById('table').getElementsByTagName('tr');
+  for (i = 1; i < rows.length; i++) {
+    rows[i].value = "notSelected";
+    rows[i].onclick = function () {
+      if (this.value == "notSelected") {
+        this.value = "selected";
+        this.style = "background-color: #9e8e94;";
+        selected.push(this.id);
+      }
+      else {
+        this.style = "";
+        this.value = "notSelected";
+        //remove the id from the selected list:
+        selected = selected.filter(s => s != this.id);
+       
+      }
+      console.log("selected "+selected);
+    }
+  }
+
+  function rejectRecruit() {
+    console.log(selected);
+    if (selected.length != 0) {
+      document.getElementById("rejected").value = selected.toString();
+      document.getElementById("myForm").submit();
+
+    }
+    else
+      alert("select a row to delete first");
+  }
+
+  function acceptRecruit() {
+    console.log(selected);
+    if (selected.length != 0) {
+      document.getElementById("accepted").value = selected.toString();
+      document.getElementById("myForm").submit();
+
+    }
+    else
+      alert("select a row to accepted first");
+  }
+</script>
+
+
+
 </html>
