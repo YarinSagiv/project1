@@ -63,7 +63,7 @@
             
         <label class="searching" for="jobRateL"><b>Job Rate</b></label>
         <!--<label for="minjobRateL"><b>minimum Job Rate: </b></label>-->
-        <select class="searchingRate" name="jobRate" id="jobRate" >
+        <select class="searchingRate" name="jobRate" id="FROMjobRate" >
             <option value="" default selected>from</option>
             <option style="font-size:18px;" value="0">0</option>
             <option style="font-size:18px;" value="1">1</option>
@@ -73,7 +73,7 @@
             <option style="font-size:18px;" value="5">5</option>
         </select>
         <!--<label for="maxjobRateL"><b>maximum Job Rate: </b></label>-->
-        <select class="searchingRate" name="jobRate" id="jobRate" >
+        <select class="searchingRate" name="jobRate" id="TOjobRate" >
             <option value="" default selected> <b>to</b></option>
             <option style="font-size:18px;" value="0">0</option>
             <option style="font-size:18px;" value="1">1</option>
@@ -140,8 +140,8 @@
       <th>first Name</th>
       <th>last Name</th>
       <th>Gender</th>
-      <th>Job Types</th>
       <th>Job Rate</th>
+      <th>Job Types</th>
       <th>accompanied services</th>
       <th>link profile</th>
 
@@ -157,6 +157,9 @@
             <% } %>
             <% if(typeof dataT.gender != "undefined" && dataT.gender) { %>
               <td><%= dataT.gender %></td>
+            <% } %>
+            <% if(typeof dataT.rate != "undefined" && dataT.rate) { %>
+              <td><%= dataT.rate %></td>
             <% } %>
             
         </tr>

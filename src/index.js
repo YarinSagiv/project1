@@ -190,11 +190,6 @@ app.post('/inputDBcontractor', (req, res) => {
             address: null,
             jobTypes: null,
             dates: null,
-            jobRate: null,
-            accompaniedServices: null,
-            rangeOfPrice: null,
-            minPrice: null,
-            maxPrice: null,
             gender: "other"
 
 
@@ -887,9 +882,11 @@ app.post("/searchContractorWorker", async (req, res) => {
         if (err) throw err;
         var dbo = db.db("eventSaver");
         var dictQuery = {};
+        var dictQuery2 = {};
         var firstnameI = req.body.INfirstname;
         var lastnameI = req.body.INlastname;
         var genderI = req.body.INgender;
+        var accompaniedI = req.body.INaccompanied;
         if (firstnameI != "") {
             dictQuery.firstName = firstnameI;
             console.log("check first name1:" + req.body.INfirstname);
@@ -898,14 +895,56 @@ app.post("/searchContractorWorker", async (req, res) => {
             dictQuery.lastName = lastnameI;
             console.log("check last name1:" + req.body.INlastname);
         }
-        if (genderI != "") {
+        if (typeof genderI != "undefined") {
             dictQuery.gender = genderI;
             console.log("check gender:" + req.body.INgender);
         }
-        console.log("check dic:" + JSON.stringify(dictQuery));
+
+        if (typeof accompaniedI != "undefined") {
+            dictQuery2.accompanied = accompaniedI;
+            console.log("check accompanied:" + req.body.accompaniedI);
+        }
 
         let contractorFound = await dbo.collection("ContractorWorkers").find(dictQuery).toArray();
-        console.log("result of searching: " + JSON.stringify(contractorFound[0]));
+        console.log("result of searching: " + JSON.stringify(contractorFound));
+
+        var from = parseInt(req.body.FROMjobRate);
+        var to = parseInt(req.body.TOjobRate);
+        for (i = 0; i < contractorFound.length; ++i) {
+            console.log(contractorFound[i]._id);
+            var query = [
+                {
+                    '$match': {
+                        'idC':contractorFound[i]._id
+                    }
+                }, {
+                    '$group': {
+                        '_id': '$idC',
+                        'rate': {
+                            '$avg': '$rate'
+                        }
+                    }
+                }, {
+                    '$match': {
+                        'rate': {
+                            '$lt': to + 1, // lower then -- +1 to include the top value
+                            '$gt': from // greater than
+                        }
+                    }
+                }
+            ];
+            let comments = await dbo.collection("Comments").aggregate(query).toArray();
+            console.log("comments:  " + JSON.stringify(comments));
+
+            if (comments.length != 0) {
+                contractorFound[i].rate = comments[0].rate;
+            }
+            else if (from == 0) {
+                contractorFound[i].rate = null;
+
+            }
+        }
+        
 
         if (contractorFound.length != 0) {
             res.view("pages/searchContractorWorker", { contractorFound: contractorFound });
