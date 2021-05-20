@@ -1155,14 +1155,6 @@ app.post('/updateProfileEmployer', function (req, res) {
 });
 
 
-<<<<<<< HEAD
-app.get("/profileEmployerPage", function (req, res) {
-    if (Uid != "" && typeUser == "Employers") {
-        MongoClient.connect(url, { useUnifiedTopology: true }, function (err, db) {
-            if (err) throw err;
-            var dbo = db.db("eventSaver");
-            var query = { _id: Uid };
-=======
 app.get("/profileEmployerPage", async function (req, res) {
     if (Uid != "" && typeUser == "Employers") {
         MongoClient.connect(url, { useUnifiedTopology: true }, async function (err, db) {
@@ -1183,7 +1175,6 @@ app.get("/profileEmployerPage", async function (req, res) {
             
             /*
 
->>>>>>> 305bae3f2f9952ff192fb1078726c6851eda36ff
             dbo.collection("Employers").find(query).toArray(function (err, result) {
                 if (err) throw err;
                 if (result.length != 0) {
@@ -1191,11 +1182,8 @@ app.get("/profileEmployerPage", async function (req, res) {
                 }
                 db.close();
             });
-<<<<<<< HEAD
-=======
             */
 
->>>>>>> 305bae3f2f9952ff192fb1078726c6851eda36ff
         });
     }
     else {
@@ -1245,30 +1233,6 @@ app.post('/updatePasswordE', (req, res) => {
     });
 });
 
-<<<<<<< HEAD
-=======
-app.post("/searchContractorWorker", async (req, res) => {
-    MongoClient.connect(url, { useUnifiedTopology: true }, async function (err, db) {
-        if (err) throw err;
-        var dbo = db.db("eventSaver");
-        var dictQuery = {};
-        var firstnameI = req.body.INfirstname;
-        var lastnameI = req.body.INlastname;
-        var genderI = req.body.INgender;
-        if (firstnameI != "") {
-            dictQuery.firstName = firstnameI;
-            console.log("check first name1:" + req.body.INfirstname);
-        }
-        if (lastnameI != "") {
-            dictQuery.lastName = lastnameI;
-            console.log("check last name1:" + req.body.INlastname);
-        }
-        if (genderI != "") {
-            dictQuery.gender = genderI;
-            console.log("check gender:" + req.body.INgender);
-        }
-        console.log("check dic:" + JSON.stringify(dictQuery));
->>>>>>> 305bae3f2f9952ff192fb1078726c6851eda36ff
 
 app.get("/searchContractor", function (req, res) {
     if (Uid != "" && (typeUser == "Employers" || typeUser == "resourcesCompanyWorkers")) {
@@ -1277,19 +1241,9 @@ app.get("/searchContractor", function (req, res) {
             var dbo = db.db("eventSaver");
             var query = {};
 
-<<<<<<< HEAD
             var firstname = req.body.firstname1;
             if (firstname != "")
                 query["firstName"] = firstname;
-=======
-        if (contractorFound.length != 0) {
-            res.view("pages/searchContractorWorker", { contractorFound: contractorFound });
-        }
-        else {
-            res.view("pages/searchContractorWorker", { contractorFound: null, messageNR: "no results found" });
-        }
-    });
->>>>>>> 305bae3f2f9952ff192fb1078726c6851eda36ff
 
             dbo.collection("ContractorWorkers").find(query).toArray(function (err, result) {
                 if (err) throw err;
@@ -1310,8 +1264,6 @@ app.get("/searchContractorWorker", function (req, res) {
 });
 
 
-<<<<<<< HEAD
-=======
 app.post("/searchEmployer", async (req, res) => {
     MongoClient.connect(url, { useUnifiedTopology: true }, async function (err, db) {
         if (err) throw err;
@@ -1344,7 +1296,6 @@ app.get("/searchEmployer", function (req, res) {
 
 //Reports
 //--Contractor's
->>>>>>> 305bae3f2f9952ff192fb1078726c6851eda36ff
 app.get("/contractorReports", function (req, res) {
     res.view("pages/contractorReports", { Recruits: null });
 });
@@ -1446,12 +1397,9 @@ app.post('/contractorReports', async (req, res) => {
                 location: req.body.location,
                 price: req.body.price,
                 rate: req.body.rate,
-<<<<<<< HEAD
-=======
                 month: req.body.month,
                 salary: salary,
                 status: req.body.status,
->>>>>>> 305bae3f2f9952ff192fb1078726c6851eda36ff
                 Recruits: united
             };
 
@@ -1466,12 +1414,7 @@ app.post('/contractorReports', async (req, res) => {
     });
 });
 
-<<<<<<< HEAD
-
-
-=======
 //--Employer's
->>>>>>> 305bae3f2f9952ff192fb1078726c6851eda36ff
 app.get('/employerReports', (req, res) => {
     res.view("pages/employerReports", { Recruits: null });
 });
