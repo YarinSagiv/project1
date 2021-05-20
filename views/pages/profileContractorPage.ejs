@@ -47,6 +47,7 @@
         <label style="font-size:19px;">
           <%= dates %>
         </label></label>
+<<<<<<< HEAD
         <label class="profile" for="rate" id="rate" ><b>rate : </b><label style="font-size:19px;">
           <%= rate %>
         </label></label> 
@@ -54,6 +55,32 @@
           <%= jobRate %>
         </label></label> 
 
+=======
+
+        <p>Price Rate:</p>
+        <table id="events" style="width:70%; cursor:context-menu;" >          
+            <tr>
+              <th>Title</th>
+              <th>Price</th>
+              <th>Description</th>
+              <th>fee</th>
+
+            </tr>
+
+            <tr>
+                <% j1.forEach(function(dat) {%>
+                    <td><%= dat.title %></td>
+                    <td><%= dat.price %></td>
+                    <td><%= dat.description %></td>
+                    <td><%= dat.travelingFee %></td>
+          
+            </tr>
+            <% }); %>
+
+          </table>
+        
+      
+>>>>>>> 79d7944039581110871c9add518dceadc89a416b
       <!--<label for="salary"><b>salary:</b> <label style="font-size:19px;"></label></label><br>-->
     </label>
   </form>
@@ -67,9 +94,7 @@
 
   if ("<%= dates %>" != '')
     document.getElementById("dates").style.display = 'block';
-  if ("<%= jobRate %>" != '')
-    document.getElementById("jobRate").style.display = 'block';
-
+  
 
   function toDelete() {
     var r = confirm("are you sure you want to delete your account?");
