@@ -11,13 +11,13 @@
 
 <form id="form1" action="/RecruitContractorWorker" method="POST" >
     <div class="container">
-        <p>Please fill the form></p>
+        <p>Please fill the form</p>
         <hr>
             <br><label id="errorinput"></label><br>
             </br>
             <label>Recruit:</label>
             <% if(ev1!=null && typeof ev1 !="undefined"){ %>
-            <select id="recruit1"> 
+            <select id="recruit1" name="idE"> 
               <% ev1.forEach(function(dat) {%>
                 <% if(typeof dat.eventname != undefined && dat.eventname) { %>
                     <option value="<%=dat._id %>"><%= dat.eventname %></option>
@@ -29,26 +29,20 @@
             <label for="date"><b>Start time</b></label>
             <input type="time" name="startTime" id="startTime">
             </br>
-            <% if ( hasAddress == 'true'){%>
+            <% if ( hasAddress == true){%>
                 <br>
                 <label for="location" style="font-size:18px;">do you want to use the contractor worker address?</label>
-                <input type="checkbox" style="width: 18px; height: 18px;" name="locationC" id="locatiionC" value="true"
-                    onchange="addBusiness()" checked>
+                <input type="checkbox"  onclick ="choose()" style="width: 18px; height: 18px;" name="locationC" id="locationC" value="true" checked>
             </br>
-            <% }else{%>
-                <label for="location" id="locationE"><b>enter your location: </b></label>
-                <input type="text" name="location" id="location" required>  
-            </br>        
-                    <% } %>
-                </br>
-            <label for="priceRate"><b>work place</b></label>
-            <input type="text" placeholder="Enter the price rate of the contractor worker" name="priceRate" id="priceRate" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..?)\../g, '$1');"required> 
-            </br>
+            <% } %>
+                <label for="location" style="display: none;" id="location"><b>enter your location: </b></label>
+                <input type="text" style="display: none;" name="locationE" id="locationE" required>  
+            </br>   
             <label for="information"><b>information:</b></label>
             <input type="text" placeholder="Enter extre information about the recruit" name="information" id="information" maxlength="200" required>
             </br>
             <label for="workRate"><b>choose a work rate:</b></label>
-            <select id:"work_rate">
+            <select id="work_rate">
                 <option value="work_rate">1</option>
                 <option value="work_rate">2</option>
                 <option value="work_rate">3</option>
@@ -61,7 +55,7 @@
         <hr>
     </div>
 
-    <button type="button" class="registerbtn" onclick="getSelect()">Recruit</button>
+    <button type="button" class="registerbtn" onclick="getSelect()">finish Recruit</button>
     <button type="submit" class="registerbtn" href="/profileEmployerPage">cancel</button>
     
     
@@ -77,21 +71,19 @@ function getSelect() {
         document.getElementById("form1").method = "POST";
         document.getElementById("form1").submit();
 }
-function addBusiness() {/* this function shows and hides the business address label so that if the contractor worker
-    doesn't have one then he can't enter one, and changes rather it is required.*/
-        if (document.getElementById("location").style.display == 'none') {
-            //show elemnets
-            hide("location");
-            hide("locationE");
-            document.getElementById("location").required = true; //TODO: check if works
-        }
-        else {
-            show("location");
-            show("locationE");
-            document.getElementById("location").required = false; //TODO: check if works
-        }
 
+function choose(){
+    if((document.getElementById("locationC").checked)==false){
+        document.getElementById("locationE").style.display="block";
+        document.getElementById("location").style.display="block";
     }
+    else{
+        document.getElementById("locationE").style.display="none";
+        document.getElementById("location").style.display="none";
+    }
+
+
+}
 
 </script>
 </body>

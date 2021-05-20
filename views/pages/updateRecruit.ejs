@@ -18,21 +18,17 @@
       <label for="date"><b>Start time</b></label>
       <input type="time" name="startTime" id="startTime">
       <br/>
-      <% if ( hasAddress == 'true'){%>
-        <label for="Location" style="font-size:18px;">do you want to use the contractor address?</label>
-        <input type="checkbox" style="width: 18px; height: 18px;" name="Location" id="Location" value="true"
-         onchange="chooseLocation()" checked>
-        </br>
-      <% }else{%>
-        <label for="Location"><b>location</b></label>
-        <input type="text" placeholder="Enter the location that you want" name="location" id="location" oninput="this.value = this.value.replace(/[^a-zA-Z]/g, '').replace(/(\..?)\../g, '$1');"required> 
-        </br>            
-            <% } %>
+      <% if ( hasAddress == true){%>
+          <br>
+          <label for="location" style="font-size:18px;">do you want to use the contractor worker address?</label>
+          <input type="checkbox"  onclick ="choose()" style="width: 18px; height: 18px;" name="locationC" id="locationC" value="true" checked>
       </br>
+      <% } %>
+          <label for="location" style="display: none;" id="location"><b>enter your location: </b></label>
+          <input type="text" style="display: none;" name="locationE" id="locationE" required>  
+      </br>  
       
-        
-      
-
+  
 
      <button type="submit" class="registerbtn" >Update Event</button>
     </div>
@@ -51,42 +47,16 @@
 
   }
 
-
-  
-  function dates()
-  {
-    //DATES:
-    var today = new Date();
-    var dd = String(today.getDate()).padStart(2, '0');
-    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-    var yyyy = today.getFullYear();
-
-    today = yyyy + '-' + mm + '-' + dd;
-    //document.write(today);
-    document.getElementById("date").min = today;
+  function choose(){
+    if((document.getElementById("locationC").checked)==false){
+        document.getElementById("locationE").style.display="block";
+        document.getElementById("location").style.display="block";
+    }
+    else{
+        document.getElementById("locationE").style.display="none";
+        document.getElementById("location").style.display="none";
+    }
   }
-  dates();
-
-
-  function initdit()
-  {
-        /*
-            this function gets the information already in the database for this specific event
-        */
-       //---event name 
-       document.getElementById("eventname").value = "<%= eventname %>";
-       //---event location 
-       document.getElementById("eventloc").value = "<%= eventloc %>";
-       //---num of guest
-       document.getElementById("numGuest").value = "<%= numGuest %>";
-       //---date
-       document.getElementById("date").value = "<%= date %>";
-       
-
-      
-  }
-
-  initdit();
 
 </script>
 
