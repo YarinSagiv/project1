@@ -993,6 +993,7 @@ app.post("/searchContractorWorker", async (req, res) => {
         var lastnameI = req.body.INlastname;
         var genderI = req.body.INgender;
         var accompaniedI = req.body.INaccompanied;
+        var jobTypesI = req.body.selectE;
         if (firstnameI != "") {
             dictQuery.firstName = firstnameI;
             console.log("check first name1:" + req.body.INfirstname);
@@ -1011,6 +1012,10 @@ app.post("/searchContractorWorker", async (req, res) => {
             console.log("check accompanied:" + req.body.accompaniedI);
         }
 
+        //if(typeof jobTypesI != "undefined") {
+          //  dictQuery.jobTypes = jobTypesI;
+            //console.log("check JobType:" + req.body.selectE);
+       // }
         let contractorFound = await dbo.collection("ContractorWorkers").find(dictQuery).toArray();
         console.log("result of searching: " + JSON.stringify(contractorFound));
 
