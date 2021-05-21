@@ -72,6 +72,13 @@
             <input type="checkbox" id="price" name="price">
         <% } %>
         &emsp;
+        <label class="report">status</label>
+        <% if(typeof status != "undefined" && status) { %>
+            <input type="checkbox" id="status" name="status" checked>
+        <% } else { %>
+            <input type="checkbox" id="status" name="status">
+        <% } %>
+        &emsp;
         <br />
 
         <label class="report">at month</label>
@@ -117,6 +124,9 @@
                 <% if(typeof price != "undefined" && price) { %>
                     <th>total price</th>
                 <% } %>
+                <% if(typeof status != "undefined" && status) { %>
+                    <th>status</th>
+                <% } %>
             </tr>
 
             <% if(Recruits!=null && typeof Recruits !=undefined) Recruits.forEach(function(dat) { %>
@@ -139,10 +149,13 @@
                     <% if(typeof dat.price != undefined && dat.price) { %>
                         <td><%= dat.price %></td>
                     <% } %>
+                    <% if(typeof dat.status != undefined && dat.status) { %>
+                        <td><%= dat.status %></td>
+                    <% } %>
                 </tr>
                 <% }); %>
 
-        </table>
+        </table><br/>
         <% } %>
 
 

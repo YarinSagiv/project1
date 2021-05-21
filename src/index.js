@@ -1631,6 +1631,9 @@ app.post('/employerReports', async (req, res) => {
         if (typeof req.body.price != "undefined") {
             fieldsR.price = 1;
         }
+        if (typeof req.body.status != "undefined") {
+            fieldsR.status = 1;
+        }
 
         var todayYear = new Date().getFullYear();
         var query3 = { idEmployer: Uid, date: new RegExp(todayYear + "-") };
@@ -1669,6 +1672,7 @@ app.post('/employerReports', async (req, res) => {
                 date: req.body.date,
                 location: req.body.location,
                 price: req.body.price,
+                status: req.body.status,
                 Recruits: united
             };
 
