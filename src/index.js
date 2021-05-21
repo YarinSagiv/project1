@@ -736,12 +736,12 @@ function emailLoc(con1) {
 
 */
 app.post('/updateEvent', async (req, res) => {
-    MongoClient.connect(url, async function (err, db) {
+    MongoClient.connect(url, { useUnifiedTopology: true }, async function (err, db) {
         if (err) throw err;
         var dbo = db.db("eventSaver");
         console.log("update post");
         var canU = "true";
-
+        
         var query = { idEmployer: Uid }; //id employer
         let rec1 = await dbo.collection("Recuitment").find(query).toArray(); //all the recruit of this employer
 
@@ -754,15 +754,20 @@ app.post('/updateEvent', async (req, res) => {
             //console.log("idc"+rec1[i].idC);
             var query22 = { _id: rec1[i].idC };
             let con1 = await dbo.collection("ContractorWorkers").find(query22).toArray(); //the details of the contractor that recruit
-            //console.log("check con1:"+con1[0].dates);
+            console.log("check con1:"+con1[0].dates);
 
             if (con1[0].dates != '') {
                 var dates = con1[0].dates.split(',');
-                console.log(dates);
+                var newDates = [];
+                console.log("dates " +JSON.stringify(dates) + " lenght: "+dates.length);
+                for(var j =0; j< dates.length;j++){
+                    console.log("dates[j] "+dates[j]);
+                    newDates.push(dates[j].replace("\"",''));
+                    console.log("dates " +JSON.stringify(newDates));
+                }
+                console.log("replace: "+dates[1]);
                 console.log(String(req.body.date));
             }
-
-            console.log(dates.length);
             /*
             for(var i=0;i<dates.length;++i)
             {
