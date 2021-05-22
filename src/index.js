@@ -1264,40 +1264,47 @@ app.post("/searchContractorWorker", async (req, res) => {
 
         var from = parseInt(req.body.FROMjobRate);
         var to = parseInt(req.body.TOjobRate);
-        var query = [
-            {
-                '$group': {
-                    '_id': '$idC',
-                    'rate': {
-                        '$avg': '$rate'
+        if (from != "" && to !=""){
+            var query = [
+                {
+                    '$group': {
+                        '_id': '$idC',
+                        'rate': {
+                            '$avg': '$rate'
+                        }
+                    }
+                }, {
+                    '$match': {
+                        'rate': {
+                            '$lt': to + 1, // lower then -- +1 to include the top value
+                            '$gt': from // greater than
+                        }
                     }
                 }
-            }, {
-                '$match': {
-                    'rate': {
-                        '$lt': to + 1, // lower then -- +1 to include the top value
-                        '$gt': from // greater than
-                    }
-                }
-            }
-        ];
-        let comments = await dbo.collection("Comments").aggregate(query).toArray();
-        console.log("comments:  " + JSON.stringify(comments));
+            ];
+            let comments = await dbo.collection("Comments").aggregate(query).toArray();
+            console.log("comments:  " + JSON.stringify(comments));
 
-        //if(priceFROMI!="")
+        }
+        
+
         var priceFROMI = parseInt(req.body.fromPriceRates);
         var priceTOI = parseInt(req.body.toPriceRates);
-        var query2 = [{
-            '$match': {
-                'rate': {
-                    '$lt': priceTOI + 1, // lower then -- +1 to include the top value
-                    '$gt': priceFROMI // greater than
+        if(priceFROMI!="" &&priceTOI !=""){
+            var query2 = [{
+                '$match': {
+                    'rate': {
+                        '$lt': priceTOI + 1, // lower then -- +1 to include the top value
+                        '$gt': priceFROMI // greater than
+                    }
                 }
             }
+            ];
+            let price2 = await dbo.collection("jobRate").aggregate(query2).toArray();
+            console.log("jobRate:  " + JSON.stringify(price2));
+
+
         }
-        ];
-        let price2 = await dbo.collection("jobRate").aggregate(query2).toArray();
-        console.log("jobRate:  " + JSON.stringify(price2));
 
         if (comments.length != 0 && price2.length != 0) {
             var united=[];
