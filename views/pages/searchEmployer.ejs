@@ -22,7 +22,9 @@
 
   <% if(typeof messageNRE != "undefined" && messageNRE) { %>
     <label class="searching" style="display: block; text-align: center;"><%=messageNRE%></label>
-    <!-- <% } else if(employerFound && typeof employerFound !="undefined"){ %>--> 
+    <% } else if(employerFound && typeof employerFound !="undefined"){ %>
+      <label class="searching" for="INlink"><b>link:</label><a href="http://localhost:5000/userprofile?id=<% employerFound._id %>">link to profile</a><br />
+
   <% } %>
 </body>
 
