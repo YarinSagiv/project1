@@ -94,6 +94,7 @@
         <% } else { %>
             <input type="checkbox" id="status" name="status">
         <% } %>
+        &emsp;<button type="button" class="report-reset" onclick="goPending()">see pending recruits</button>
         <br />
 
         <label class="report">at month</label>
@@ -215,6 +216,11 @@
                     inputs[i].checked = true; 
                 }  
             }
+        }
+
+        function goPending()
+        {
+            location.href = "/pendingRecruits";
         }
 
     </script>
