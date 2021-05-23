@@ -40,17 +40,25 @@
         <label class="searching" for="firstname"><b>First Name</label>
         <input class="searching" type="text" placeholder="Enter first name" name="INfirstname" id="INfirstname" 
             oninput="this.value = this.value.replace(/[^a-zA-Z]/g, '').replace(/(\..?)\../g, '$1');" >
+        <input type="hidden" id="textfirst" name="textfirst">   
         <br>
+
         <label class="searching" for="lastname"><b>Last Name</label>
         <input class="searching" type="text" placeholder="Enter last name" name="INlastname" id="INlastname" 
             oninput="this.value = this.value.replace(/[^a-zA-Z]/g, '').replace(/(\..?)\../g, '$1');" >
+        <input type="hidden" id="textlast" name="textlast"> 
         <br>
-        <label class="searching" for="lastname"><b>range of price rates</label>
+
+        <label class="searching" for="range"><b>range of price rates</label>
         <input class="searching" type="text" placeholder="From" name="fromPriceRates" id="fromPriceRates" 
             oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..?)\../g, '$1');">
+        <input type="hidden" id="selectfromP" name="selectfromP"> 
+
         <input class="searching" type="text" placeholder="To" name="toPriceRates" id="toPriceRates" 
             oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..?)\../g, '$1');">
+        <input type="hidden" id="selecttoP" name="selecttoP"> 
         <br>  
+
         <label class="searching" for="jobRateL"><b>Job Rate</b></label>
         <select class="searchingRate" name="jobRate" id="FROMjobRate" >
             <option value="" default selected>from</option>
@@ -61,6 +69,8 @@
             <option style="font-size:18px;" value="4">4</option>
             <option style="font-size:18px;" value="5">5</option>
         </select>
+        <input type="hidden" id="selectfromR" name="selectfromR"> 
+
         <select class="searchingRate" name="jobRate" id="TOjobRate" >
             <option value="" default selected> <b>to</b></option>
             <option style="font-size:18px;" value="0">0</option>
@@ -70,10 +80,14 @@
             <option style="font-size:18px;" value="4">4</option>
             <option style="font-size:18px;" value="5">5</option>
         </select>
+        <input type="hidden" id="selecttoR" name="selecttoR"> 
         <br>
+
         <label class="searching" for="DateA"><b>Date available</b></label>
         <input type="date" name="INdate" id="INdate">
+        <input type="hidden" id="selectDate" name="selectDate"> 
         <br>
+
         <label class="searching" for="gender"><b>Gender</b></label>
         <input type="radio" id="male" name="INgender" value="male" >
         <label class="searching" for="male" >Male&emsp;</label>
@@ -81,13 +95,17 @@
         <label class="searching" for="female">Female&emsp;</label>
         <input type="radio" id="other" name="INgender" value="other">
         <label class="searching" for="other">Other</label>
+        <input type="hidden" id="selectGender" name="selectGender"> 
         <br >
+
         <label class="searching" for="accompaniedS"><b>accompanied</b></label>
         <input type="radio" id="true" name="INaccompanied" value="true" >
         <label class="searching" for="yes">yes&emsp;</label>
         <input type="radio" id="false" name="INaccompanied" value="false">
         <label class="searching" for="no" >no&emsp;</label>
+        <input type="hidden" id="selectaccompanied" name="selectaccompanied"> 
         <br >
+        
         <label class="searching" for="jobTypesL"><b>Job Types</b></label>
         <br >
         <select class="searchingJType" name="jobTypesID" id="jobTypesID" multiple>
@@ -153,6 +171,10 @@
 
 <script >
   function getSelect() {
+        if(INfirstname!="")
+        {
+          document.getElementById("selectfirst").value = document.getElementById("INfirstname").value;
+        }
         document.getElementById("selectE").value = document.getElementById("jobTypesID").value;
         document.getElementById("searchingInput").action = "/searchContractorWorker";
         document.getElementById("searchingInput").method = "POST";
