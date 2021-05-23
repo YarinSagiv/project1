@@ -1852,11 +1852,68 @@ app.post('/humanResourcesReports-getRecruits', async (req, res) => {
 });
 
 
-app.get('/pendingRecruits', (req, res) => {
+app.get('/pendingRecruits', async (req, res) => {
     if (Uid == "" || typeUser != "ContractorWorkers") {
         res.redirect("/");
     }
-    res.view("pages/pendingRecruits", { Recruits: null });
+    MongoClient.connect(url, { useUnifiedTopology: true }, async function (err, db) {
+        if (err) throw err;
+        var query = { idC: Uid, status: "pending" };
+        var dbo = db.db("eventSaver");
+        var recruits = await dbo.collection("Recuitment").find(query).toArray();
+
+        if (recruits.length != 0) {
+            for (var i = 0; i < recruits.length; i++) {
+                var employer = await dbo.collection("Employers").find({ _id: recruits[i].idEmployer }).project({ _id: 0 }).toArray();
+                if (employer.length == 0)
+                    throw "no employers found";
+                recruits[i] = { ...recruits[i], ...employer[0] };
+            }
+            console.log("recruits:: " + JSON.stringify(recruits));
+
+            res.view("pages/pendingRecruits", { Data: recruits });
+        }
+        else
+            res.view("pages/pendingRecruits", { Data: null }); 
+    });
+});
+
+app.post('/pendingRecruits', async (req, res) => {
+
+    MongoClient.connect(url, { useUnifiedTopology: true }, async function (err, db) {
+        if (err) throw err;
+        var dbo = db.db("eventSaver");
+        if (req.body.rejected != "") {
+            console.log("req.body.rejected " + req.body.rejected);
+            var reject = req.body.rejected.split(",");
+            console.log("reject: " + reject.lenght);
+            var values = { $set: { status: "canceled" } };
+            if (typeof reject.lenght == "undefined")
+                await dbo.collection("Recuitment").updateOne({ _id: ObjectId(reject.toString()) },values);
+            else {
+                for (var i; i < reject.lenght; i++) {
+                    await dbo.collection("Recuitment").updateOne({ _id: ObjectId(reject[i].toString()) },values);
+                }
+            }
+            res.redirect("/pendingRecruits");
+        } 
+        else if (req.body.accepted != "") {
+            var acc = req.body.accepted.split(",");
+            console.log("acc: " + acc.lenght);
+            values = { $set: { status: "accepted" } };
+            if (typeof acc.lenght == "undefined") {
+                await dbo.collection("Recuitment").updateOne({ _id: ObjectId(acc.toString()) }, values);
+            }
+            else {
+                for (i; i < acc.lenght; i++) {
+                    await dbo.collection("Recuitment").updateOne({ _id: ObjectId(acc[i].toString()) }, values);
+                }
+            }
+            res.redirect("/pendingRecruits");
+        }
+        else
+            throw "no choise for pending recruits";
+    });
 });
 
 

@@ -105,7 +105,7 @@
         <label class="searching" for="no" >no&emsp;</label>
         <input type="hidden" id="selectaccompanied" name="selectaccompanied"> 
         <br >
-        
+
         <label class="searching" for="jobTypesL"><b>Job Types</b></label>
         <br >
         <select class="searchingJType" name="jobTypesID" id="jobTypesID" multiple>
@@ -121,18 +121,6 @@
         </select>
         <input type="hidden" id="selectE" name="selectE">   
         <br>
-       
-
-        <!-- <select name="searchingBy" id="searchingBy" onChange="myFunction()" >
-            <option class="searching" style="font-size:18px;" id='fName'  value="firstname">first name</option>
-            <option class="searching" style="font-size:18px;" id='lName' value="lastName">last name</option>
-            <option class="searching" style="font-size:18px;" id='jT' value="jobTypes">job Types</option>
-            <option class="searching" style="font-size:18px;" id='jR' value="jobRate">job Rate</option>
-            <option class="searching" style="font-size:18px;" id='daates' value="dates">dates</option>
-            <option class="searching" style="font-size:18px;" id='gender' value="gender" style="display: none;">gender</option>
-            <option class="searching" style="font-size:18px;" id='aServices' value="accompaniedServices">accompanied services</option>
-            <option class="searching" style="font-size:18px;" id='rP' value="rangePrice">range of price</option>
-        </select>-->
     <input type="submit" name="send" value="search" >
     <input type="reset" name="reset1" value="reset">
 
@@ -160,8 +148,7 @@
             <% if(typeof dataT.gender != "undefined" && dataT.gender) { %>
               <td><%= dataT.gender %></td>
             <% } %>
-
-            
+     
         </tr>
     <% }); %>
 
@@ -173,9 +160,46 @@
   function getSelect() {
         if(INfirstname!="")
         {
-          document.getElementById("selectfirst").value = document.getElementById("INfirstname").value;
+          document.getElementById("textfirst").value = true;
         }
-        document.getElementById("selectE").value = document.getElementById("jobTypesID").value;
+        if(INlastname!="")
+        {
+          document.getElementById("textlast").value = true;
+        }
+        if(fromPriceRates!="")
+        {
+          document.getElementById("selectfromP").value = true;
+        }
+        if(toPriceRates!="")
+        {
+          document.getElementById("selecttoP").value = true;
+        }
+        if(FROMjobRate!="")
+        {
+          document.getElementById("selectfromR").value = document.getElementById("FROMjobRate").value;
+        }
+        if(TOjobRate!="")
+        {
+          document.getElementById("selecttoR").value = document.getElementById("TOjobRate").value;
+        }
+        if(INdate!="")
+        {
+          document.getElementById("selectDate").value = document.getElementById("INdate").value;
+        }
+        if(INgender!="")
+        {
+          document.getElementById("selectGender").value = document.getElementById("INgender").value;
+        } 
+        if(INaccompanied!="")
+        {
+          document.getElementById("selectaccompanied").value = document.getElementById("INaccompanied").value;
+        } 
+        if(jobTypesID!="")
+        {
+          document.getElementById("selectE").value = document.getElementById("jobTypesID").value;
+        } 
+
+        //document.getElementById("selectE").value = document.getElementById("jobTypesID").value;
         document.getElementById("searchingInput").action = "/searchContractorWorker";
         document.getElementById("searchingInput").method = "POST";
         document.getElementById("searchingInput").submit();
