@@ -674,7 +674,7 @@ app.post('/updateEvent',async function (req, res) {
 
 */
 //send email with the new date to  the contructor worker
-/*
+
 function emaildate(con1) {
     var nodemailer = require('nodemailer');
    //var con1=con1;
@@ -687,20 +687,25 @@ function emaildate(con1) {
         }
     });
 
-    var mailOptions = {
-        from: 'eventsaver2@gmail.com',
-        to: con1[index][email],
-        subject: 'Sending Email using Node.js',
-        text: 'The location of the event change to' + String(req.body.eventloc)
-    };
+    for(var i=0;i<con1.length;++i)
+    {
+        var mailOptions = {
+            from: 'eventsaver2@gmail.com',
+            to: con1[i][email],
+            subject: 'Sending Email using Node.js',
+            text: 'The location of the event change to' + String(req.body.eventloc)
+        };
+    
+        transporter.sendMail(mailOptions, function (error, info) {
+            if (error) {
+                console.log(error);
+            } else {
+                console.log('Email sent: ' + info.response);
+            }
+        });
+    }
 
-    transporter.sendMail(mailOptions, function (error, info) {
-        if (error) {
-            console.log(error);
-        } else {
-            console.log('Email sent: ' + info.response);
-        }
-    });
+   
 }
 
 
@@ -718,23 +723,27 @@ function emailLoc(con1) {
         }
     });
 
-    var mailOptions = {
-        from: 'eventsaver2@gmail.com',
-        to: con1[index][email],
-        subject: 'Sending Email using Node.js',
-        text: 'The date of the event change to' + String(req.body.date)
-    };
+    for(var i=0;i<con1.length;++i)
+    {
+        var mailOptions = {
+            from: 'eventsaver2@gmail.com',
+            to: con1[index][email],
+            subject: 'Sending Email using Node.js',
+            text: 'The date of the event change to' + String(req.body.date)
+        };
+    
+        transporter.sendMail(mailOptions, function (error, info) {
+            if (error) {
+                console.log(error);
+            } else {
+                console.log('Email sent: ' + info.response);
+            }
+        });
+    }
 
-    transporter.sendMail(mailOptions, function (error, info) {
-        if (error) {
-            console.log(error);
-        } else {
-            console.log('Email sent: ' + info.response);
-        }
-    });
+    
 }
 
-*/
 app.post('/updateEvent', async (req, res) => {
     MongoClient.connect(url, async function (err, db) {
         if (err) throw err;
@@ -762,28 +771,14 @@ app.post('/updateEvent', async (req, res) => {
                 console.log(String(req.body.date));
             }
 
-            console.log(dates.length);
-            /*
-            for(var i=0;i<dates.length;++i)
-            {
-                console.log("dates[i]"+dates[i]);
-                console.log("req.body.date"+req.body.date);
-    
-                if(dates[i]==req.body.date)
-                {
-                    res.view('pages/updateEvent', { suc3: false });
-                    canU="false";
-                    console.log("iclude");
-                }
-            }
-            */
-            //console.log("dates"+detes);
-
             if (dates.includes(String(req.body.date))) //if the new date of the event is date that the contractor cant work
             {
-                res.view('pages/updateEvent', { suc3: false });
+                var q1={eventname:req.body.oldname};
+                let event1 = await dbo.collection("Event").find(q1).toArray(); //event
+                event1[0].suc3=false;
+                res.view('pages/updateEvent',event1[0]);
                 canU = "false";
-                console.log("iclude");
+                //console.log("iclude");
 
             }
 
@@ -791,24 +786,26 @@ app.post('/updateEvent', async (req, res) => {
                 console.log(" not iclude");
 
 
-                let event = await dbo.collection("Event").find(rec1[i].idEvent).toArray(); //the event 
+                //let event = await dbo.collection("Event").find(rec1[i].idEvent).toArray(); //the event 
                 // if the location of the event change - email will send to all the contructors
-                var lastLoc = event[0].eventLoc;
-                /*
+                var lastLoc = event1[0].eventLoc;
+                
                 if(lastLoc!=req.body.eventloc)
                 {
+                    //change loc
                     emailLoc(con1);
                 }
     
                  // if the date of the event change - email will send to the contructor
-                lastDate=event[0].date;            
+                lastDate=event1[0].date;            
                 if(lastDate!=req.body.date)
                 {
+                    //change date
                     emaildate(con1);
     
                 }
                 
-                */
+                
             }
 
 
@@ -831,8 +828,6 @@ app.post('/updateEvent', async (req, res) => {
 
 
         }
-
-
 
 
     });
