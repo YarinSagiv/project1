@@ -1898,6 +1898,10 @@ app.post('/pendingRecruits', async (req, res) => {
             res.redirect("/pendingRecruits");
         } 
         else if (req.body.accepted != "") {
+            var query={_id:Uid};
+            let PendingR = await dbo.collection("ContractorWorkers").find(query).toArray();
+            
+
             var acc = req.body.accepted.split(",");
             console.log("acc: " + acc.lenght);
             values = { $set: { status: "accepted" } };

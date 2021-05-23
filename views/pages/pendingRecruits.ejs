@@ -50,7 +50,8 @@
     <table id="table" style="width:90%; margin: 0 auto; text-align: center; border-collapse: collapse;">
       <% if(Data!=null && typeof Data !="undefined" ){ %>
       <tr id="head">
-        <th>Date & Time</th>
+        <th>Date</th>
+        <th>Time</th>
         <th>Location</th>
         <th>price</th>
         <th>Requesterer</th>
@@ -61,10 +62,15 @@
       <% Data.forEach(function(dat) {%>
         <tr id=<%=dat._id%>>
           <td>
-            <% if(typeof dat.date !=undefined && dat.date && typeof dat.startTime !=undefined && dat.startTime) { %>
+            <% if(typeof dat.date !=undefined && dat.date ) { %>
               <%= dat.date %>
-                <%= dat.startTime %>
+    
                   <% } %>
+          </td>
+          <td>
+            <% if(typeof dat.startTime !=undefined && dat.startTime) { %>
+              <%= dat.startTime %>
+              <% } %>
           </td>
           <td>
             <% if(typeof dat.location !=undefined && dat.location) { %>
@@ -113,6 +119,8 @@
       <label class="report" style="text-align: center; display: block;">no pending recruits requests.</label>
       <% } %>
 
+      <input type="hidden" id="date" name="date">
+
 
 </body>
 
@@ -120,10 +128,12 @@
   var selected = [];
   var rejected = [];
   var acepted = [];
+  var rIndex;
   var rows = document.getElementById('table').getElementsByTagName('tr');
   for (i = 1; i < rows.length; i++) {
     rows[i].value = "notSelected";
     rows[i].onclick = function () {
+      rIndex = this.rowIndex;
       if (this.value == "notSelected") {
         this.value = "selected";
         this.style = "background-color: #9e8e94;";
@@ -140,6 +150,7 @@
     }
   }
 
+
   function rejectRecruit() {
     console.log(selected);
     if (selected.length != 0) {
@@ -152,14 +163,22 @@
   }
 
   function acceptRecruit() {
-    console.log(selected);
+    console.log("yarin and noa");
     if (selected.length != 0) {
       document.getElementById("accepted").value = selected.toString();
+      document.getElementById("date").value=document.getElementById("table")[rIndex][0]; //the value of the date
+      console.log("date"+document.getElementById("table")[rIndex][0]);
       document.getElementById("myForm").submit();
 
     }
     else
       alert("select a row to accepted first");
+  }
+
+
+  function tableRow()
+  {
+
   }
 </script>
 
