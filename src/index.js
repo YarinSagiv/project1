@@ -1939,10 +1939,7 @@ app.post('/pendingRecruits', async (req, res) => {
             res.redirect("/pendingRecruits");
         } 
         else if (req.body.accepted != "") {
-            var query={_id:Uid};
-            let PendingR = await dbo.collection("ContractorWorkers").find(query).toArray();
-            
-
+            var query={_id:Uid}; 
             var acc = req.body.accepted.split(",");
             console.log("acc: " + acc.lenght);
             values = { $set: { status: "accepted" } };
@@ -1954,7 +1951,21 @@ app.post('/pendingRecruits', async (req, res) => {
                     await dbo.collection("Recuitment").updateOne({ _id: ObjectId(acc[i].toString()) }, values);
                 }
             }
-            res.redirect("/pendingRecruits");
+
+            console.log("yarin date:" + req.body.date);
+
+            values1 = { $set: { status: "canceled" } }; //to update all the requitment in this date 
+            query1={status:pending,date:req.body.date};
+            await dbo.collection("Recuitment").updateMany(query1, values1);
+
+            let c1 = await dbo.collection("ContractorWorkers").find(query).toArray(); //the details of the contractor
+            var oldD=c1[dates]; //the list of all the dates the contractor not avalible
+            var newD=oldD+","+req.body.date;
+
+            values2 = { $set: { dates: newD } }; 
+            await dbo.collection("ContractorWorkers").updateOne(query,values2 );
+
+            res.redirect("/");
         }
         else
             throw "no choise for pending recruits";

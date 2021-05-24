@@ -166,8 +166,9 @@
     console.log("yarin and noa");
     if (selected.length != 0) {
       document.getElementById("accepted").value = selected.toString();
-      document.getElementById("date").value=document.getElementById("table")[rIndex][0]; //the value of the date
-      console.log("date"+document.getElementById("table")[rIndex][0]);
+      document.getElementById("date").value=table.rows[rIndex].cells[0].innerHTML; //the value of the date
+      //document.getElementById("date").value=document.getElementById("table")[rIndex][0]; //the value of the date
+      console.log("date"+document.getElementById("date").value);
       document.getElementById("myForm").submit();
 
     }
