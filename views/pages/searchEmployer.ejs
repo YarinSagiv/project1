@@ -23,9 +23,11 @@
   <% if(typeof messageNRE != "undefined" && messageNRE) { %>
     <label class="searching" style="display: block; text-align: center;"><%=messageNRE%></label>
     <% } else if(employerFound && typeof employerFound !="undefined"){ %>
-      <a href="/watchProfile?id=<%=dataT._id %>">link to user profile</a>
-      <!--<label class="searching" for="INlink"><b>link:</label><a href="http://localhost:5000/userprofile?id=<% employerFound._id %>">link to profile</a><br />-->
-  <% } %>
+        <% employerFound.forEach(function(dataT) { %>
+          <a href="http://localhost:5000/profileEmployerPage?id=<%=dataT._id %>">link to user profile</a>
+          <!--<label class="searching" for="INlink"><b>link:</label><a href="http://localhost:5000/watchProfile?id=<% employerFound._id %>">link to profile</a><br />-->
+        <% }); %>
+    <% } %>
 </body>
 
 </html>

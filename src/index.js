@@ -1221,27 +1221,42 @@ app.post('/updatePasswordE', (req, res) => {
     });
 });
 
-app.get("/watchProfile", (req, res)=>{
+app.get("/watchProfile", async (req, res) => {
     res.send(req.query.id)
-    MongoClient.connect(url, { useUnifiedTopology: true }, function (err, db) {
+    MongoClient.connect(url, { useUnifiedTopology: true },async function (err, db) {
         if (err) throw err;
         var dbo = db.db("eventSaver");
-        var query = { _id: Uid };
-        dbo.collection("Employers").find(query).toArray(function (err, result) {
+        var query1 = { _id: req.query.id };
+        let Found = await dbo.collection("Employers").find(query1).toArray();
+        console.log("result of searchingE1: " + JSON.stringify(Found));
+        console.log("result of searchingE2: " + JSON.stringify(Found[0]));
+        console.log("result of searchingE3: " + JSON.stringify(Found[0]._id));
+        console.log("result of searchingE4: " + JSON.stringify(Found._id));
+
+        if (Found.length != 0) {
+            console.log("Found.length != 0");
+            res.render("pages/watchProfile?Found[0]._id");
+        }
+        //else
+            //res.view("pages/searchContractorWorker", { contractorFound: null, messageNR: "no results found" });
+    });
+});
+        /*dbo.collection("Employers").find(query).toArray(function (err, result) {
             if (err) throw err;
-            if (result.length != 0) {
-                res.view('pages/watchProfile', result[0]);
+            if (result.length != 0) 
+            {
+                
+                res.render('pages/profileEmployerPage', result);
             }
             else
                 res.redirect("/");
-
-            db.close();
         });
-    });
-    //acsses to mongodb and fetch this id column
-    //render ejs with this data
+        db.close();*/
+    
+         //acsses to mongodb and fetch this id column
+         //render ejs with this data
 
-});
+
 
 app.post("/searchContractorWorker", async (req, res) => {
     MongoClient.connect(url, { useUnifiedTopology: true }, async function (err, db) {
