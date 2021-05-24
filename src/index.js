@@ -1221,6 +1221,12 @@ app.post('/updatePasswordE', (req, res) => {
     });
 });
 
+app.get("/watchProfile", (req, res)=>{
+    res.send(req.query.id)
+    //acsses to mongodb and fetch this id column
+    //render ejs with this data
+
+})
 
 app.post("/searchContractorWorker", async (req, res) => {
     MongoClient.connect(url, { useUnifiedTopology: true }, async function (err, db) {
@@ -1247,15 +1253,34 @@ app.post("/searchContractorWorker", async (req, res) => {
             console.log("check gender:" + req.body.INgender);
         }
 
-        if (typeof accompaniedI != "undefined") {
+        let contractorFound = await dbo.collection("ContractorWorkers").find(dictQuery).toArray();
+        console.log("result of searching: " + JSON.stringify(contractorFound[0]));
+
+        if (contractorFound.length != 0) {
+           res.view("pages/searchContractorWorker", { contractorFound: contractorFound});
+        }
+        else
+            res.view("pages/searchContractorWorker", { contractorFound: null, messageNR: "no results found" });
+    });
+
+});
+let queryObject = {}
+
+if (x!=y){
+    queryObject["$group"] ={
+        
+    }
+}
+
+        /*if (typeof accompaniedI != "undefined") {
             dictQuery2.accompanied = accompaniedI;
             console.log("check accompanied:" + req.body.accompaniedI);
         }
 
-        //if(typeof jobTypesI != "undefined") {
-        //  dictQuery.jobTypes = jobTypesI;
-        //console.log("check JobType:" + req.body.selectE);
-        // }
+        if(typeof jobTypesI != "undefined") {
+              dictQuery.jobTypes = jobTypesI;
+              console.log("check JobType:" + req.body.selectE);
+        }
 
         var from = parseInt(req.body.FROMjobRate);
         var to = parseInt(req.body.TOjobRate);
@@ -1321,7 +1346,7 @@ app.post("/searchContractorWorker", async (req, res) => {
         }
     });
 
-});
+});*/
 
 
 
