@@ -1223,10 +1223,25 @@ app.post('/updatePasswordE', (req, res) => {
 
 app.get("/watchProfile", (req, res)=>{
     res.send(req.query.id)
+    MongoClient.connect(url, { useUnifiedTopology: true }, function (err, db) {
+        if (err) throw err;
+        var dbo = db.db("eventSaver");
+        var query = { _id: Uid };
+        dbo.collection("Employers").find(query).toArray(function (err, result) {
+            if (err) throw err;
+            if (result.length != 0) {
+                res.view('pages/watchProfile', result[0]);
+            }
+            else
+                res.redirect("/");
+
+            db.close();
+        });
+    });
     //acsses to mongodb and fetch this id column
     //render ejs with this data
 
-})
+});
 
 app.post("/searchContractorWorker", async (req, res) => {
     MongoClient.connect(url, { useUnifiedTopology: true }, async function (err, db) {
@@ -1264,15 +1279,16 @@ app.post("/searchContractorWorker", async (req, res) => {
     });
 
 });
-let queryObject = {}
 
-if (x!=y){
-    queryObject["$group"] ={
-        
-    }
-}
 
-        /*if (typeof accompaniedI != "undefined") {
+        /*let queryObject = {}
+
+        if (x!=y){
+        queryObject["$group"] ={
+
+         }
+            }
+        if (typeof accompaniedI != "undefined") {
             dictQuery2.accompanied = accompaniedI;
             console.log("check accompanied:" + req.body.accompaniedI);
         }
@@ -1946,5 +1962,4 @@ app.post('/pendingRecruits', async (req, res) => {
 });
 
 
-
-// https://project1sprint1.herokuapp.com
+//https://project1sprint1.herokuapp.com
