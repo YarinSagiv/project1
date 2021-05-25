@@ -58,9 +58,10 @@
             oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..?)\../g, '$1');">
         <input type="hidden" id="selecttoP" name="selecttoP"> 
         <br>  
-        <input type="radio" id="byRange" name="contractors" value="range" onchange="findByRange()" ><label class="report">by range of avg rates</label
-
         <label class="searching" for="jobRateL"><b>Job Rate</b></label>
+        <input type="radio" id="byRange" name="contractors" value="range" onchange="findByRange()" ><label class="report">by range of avg rates</label>
+
+        
         <select class="searchingRate" name="FROMjobRate" id="FROMjobRate" onchange="limitTo()" >
             <option style="font-size:18px;" value="0" selected>0</option>
             <option style="font-size:18px;" value="1">1</option>
