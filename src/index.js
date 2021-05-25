@@ -1931,8 +1931,8 @@ app.post('/pendingRecruits', async (req, res) => {
                     await dbo.collection("Recuitment").updateOne({ _id: ObjectID(acc[i].toString()) }, values);
                 }
             }
-            //date1= req.body.date;
-            date1="2021-07-26";
+            date1= req.body.date;
+            //date1="2021-07-26";
             console.log("yarin date:" + date1);
 
             values1 = { $set: { status: "canceled" } }; //to update all the requitment in this date 
