@@ -22,8 +22,7 @@
 
   <% if(typeof messageNRE != "undefined" && messageNRE) { %>
     <label class="searching" style="display: block; text-align: center;"><%=messageNRE%></label>
-    <% } else if(employerFound && typeof employerFound !="undefined"){ %>
-      <label class="profile" for="ide"><b>id : </b><label style="font-size:19px;"><%=_id%> </label></label><br>
+    <% } else if(result && typeof result !="undefined"){ %>
       <button type="button" id="gobutton" style="float: center;" onclick="goProfile()">Go to the profile</button>
       <input type="hidden" id="go" name="go">
 

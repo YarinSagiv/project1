@@ -691,7 +691,7 @@ function emaildate(con1,loc) {
 //send email with the new location to  the contructor worker
 function emailLoc(con1,date) {
     var nodemailer = require('nodemailer');
-    var con1 = con1;
+    //var con1 = con1;
 
     var transporter = nodemailer.createTransport({
         service: 'gmail',
@@ -773,7 +773,7 @@ app.post('/updateEvent', async (req, res) => {
                 }
 
                 // if the date of the event change - email will send to the contructor
-                lastDate = event1[0].date;
+                var lastDate = event1[0].date;
                 if (lastDate != req.body.date) {
                     //change date
                     emaildate(con1,req.body.date);
@@ -804,7 +804,7 @@ app.post('/updateEvent', async (req, res) => {
 
         }
         else{
-            var q1={eventname:req.body.oldname};
+            q1={eventname:req.body.oldname};
             let event1 = await dbo.collection("Event").find(q1).toArray(); //event
             event1[0].suc3=false;
             res.view('pages/updateEvent',event1[0]);
@@ -1361,8 +1361,8 @@ app.post("/searchContractorWorker", async (req, res) => {
 
             let price2 = await dbo.collection("jobRate").aggregate(query4).toArray();
             console.log("check price:  " + JSON.stringify(price2));
-            var arr = [];
-            for (var i = 0; i < price2.length; i++) {
+            arr = [];
+            for (i = 0; i < price2.length; i++) {
                 arr.push(price2[i].idC);
             }
             console.log("arrprice2:  " + JSON.stringify(arr));
@@ -1484,7 +1484,7 @@ app.get("/searchContractorWorker", function (req, res) {
     res.view('pages/searchContractorWorker', { contractorFound: null });
 });
 
-
+/*
 app.post("/searchEmployer", async (req, res) => {
     MongoClient.connect(url, { useUnifiedTopology: true }, async function (err, db) {
         if (err) throw err;
@@ -1508,13 +1508,41 @@ app.post("/searchEmployer", async (req, res) => {
                 res.render("pages/demoPofileE",employerFound);
 
             }
-        }
+        } //if(employerFound && typeof employerFound !="undefined")
         else
             res.view("pages/searchEmployer", { employerFound: null, messageNRE: "no results found" });
     });
 
-});
+});*/
 
+app.post("/searchEmployer", function (req, res) {
+    var info = "";
+
+    MongoClient.connect(url, function (err, db) {
+        if (err) throw err;
+        var dbo = db.db("eventSaver");
+        //var flag = false;
+        var dictQueryE = {};
+        //var myquery = { idE: Uid, eventname: req.body.selectE };
+        var select=req.body.go;
+        console.log("check sel :" +select);
+        var idEmployer = req.body.idE;
+        if (idEmployer != "") {
+            dictQueryE._id = idEmployer;
+            console.log("check id :" + req.body.idE);
+        }
+        dbo.collection("Employers").find(dictQueryE).toArray(function (err, result) {
+            if (err) throw err;
+            if (result.length != 0) {
+                res.view('pages/demoPofileC', result[0]);
+            }
+            else
+            {
+            res.view("pages/searchEmployer", { result: null, messageNRE: "no results found" });}
+            db.close();
+        });
+    });
+});
 
 
 app.get("/searchEmployer", function (req, res) {
@@ -2078,19 +2106,19 @@ app.post('/pendingRecruits', async (req, res) => {
                     await dbo.collection("Recuitment").updateOne({ _id: ObjectID(acc[i].toString()) }, values);
                 }
             }
-            date1= req.body.date.trim();
+            var date1= req.body.date.trim();
             //date1="2021-07-26";
             console.log("yarin date:" + date1);
 
-            values1 = { $set: { status: "canceled" } }; //to update all the requitment in this date 
-            query1 = { status: "pending", date: date1 };
+            var values1 = { $set: { status: "canceled" } }; //to update all the requitment in this date 
+            var query1 = { status: "pending", date: date1 };
             await dbo.collection("Recuitment").updateMany(query1, values1);
 
             let c1 = await dbo.collection("ContractorWorkers").find(query).toArray(); //the details of the contractor
             var oldD = c1.dates; //the list of all the dates the contractor not avalible
             var newD = oldD + "," + date1;
 
-            values2 = { $set: { dates: newD } };
+            var values2 = { $set: { dates: newD } };
             await dbo.collection("ContractorWorkers").updateOne(query, values2);
 
             res.redirect("/pendingRecruits");
