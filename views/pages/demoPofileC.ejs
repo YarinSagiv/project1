@@ -1,0 +1,92 @@
+<html>
+
+<head>
+  <link href="css/sty.css" rel="stylesheet">
+</head>
+
+<body>
+
+  <header>
+    <%- include('../partials/_header') %>
+  </header>
+
+  <form action="/demoPofileC" method="get">
+    <label style="font-size:22px;">
+      <label class="profile" for="firstname"><b>First Name :</b><label style="font-size:19px;">
+          <%= firstName %>
+      <!--  </label></label><a class="button" style="float: right;" href="/updateProfileContractor">Update Profile</a><br>-->
+      <label class="profile" for="lastname"><b>Last Name :</b> <label style="font-size:19px;">
+          <%= lastName %>
+        </label></label><br>
+      <label class="profile" for="userName"><b>user Name : </b><label style="font-size:19px;">
+          <%= userName %>
+        </label></label><a class="button" style="float: right;" onclick="toDelete()">Delete Profile</a><br>
+      <label class="profile" for="email"><b>email :</b> <label style="font-size:19px;">
+          <%= email %>
+        </label></label><br>
+      <label class="profile" for="phoneNumbers"><b>phone Number : </b><label style="font-size:19px;">
+          <%= phoneNumbers %>
+        </label></label><br>
+      <!--<label for="Job rate:"><b>Job rate : </b></label><br>-->
+      <label class="profile" for="jobTypes"><b>Job Types :</b><label style="font-size:19px;">
+          <%= jobTypes %>
+        </label></label><br>
+      <label class="profile" for="gender:"><b>gender :</b>
+        <label style="font-size:19px;">
+          <%= gender %>
+        </label></label>
+      <label class="profile" for="business place:" id="hasAddress" style="display: none;"><b>business place(T/F) :</b>
+        <label style="font-size:19px;">
+          <%= hasAddress %>
+        </label></label>
+      <label class="profile" for="business address:" id="address" style="display: none;"><b> business address :
+        </b><label style="font-size:19px;">
+          <%= address %>
+        </label></label>
+      <label class="profile" for="Dates not available:" id="dates" style="display: none;"><b>Dates not available : </b>
+        <label style="font-size:19px;">
+          <%= dates %>
+        </label></label>
+
+        <p>Price Rate:</p>
+        <table id="events" style="width:70%; cursor:context-menu;" >          
+            <tr>
+              <th>Title</th>
+              <th>Price</th>
+              <th>Description</th>
+              <th>fee</th>
+
+            </tr>
+
+            <tr>
+                <% j1.forEach(function(dat) {%>
+                    <td><%= dat.title %></td>
+                    <td><%= dat.price %></td>
+                    <td><%= dat.description %></td>
+                    <td><%= dat.travelingFee %></td>
+          
+            </tr>
+            <% }); %>
+
+          </table>
+        
+      
+      <!--<label for="salary"><b>salary:</b> <label style="font-size:19px;"></label></label><br>-->
+    </label>
+  </form>
+</body>
+
+<script>
+  if ("<%= hasAddress %>" != 'false')
+    document.getElementById("address").style.display = 'block';
+  else
+    document.getElementById("hasAddress").style.display = 'block';
+
+  if ("<%= dates %>" != '')
+    document.getElementById("dates").style.display = 'block';
+  
+
+
+</script>
+
+</html>

@@ -1167,6 +1167,44 @@ app.get("/profileContractorPage", async function (req, res) {
     });
 });
 
+app.get("/demoPofileE", function (req, res) {
+    if (Uid != "" && typeUser == "Employers") {
+        MongoClient.connect(url, function (err, db) {
+            if (err) throw err;
+            var dbo = db.db("eventSaver");
+            var query = { _id: Uid };
+            dbo.collection("Employers").find(query).toArray(function (err, result) {
+                if (err) throw err;
+                if (result.length != 0) {
+                    res.view('pages/demoPofileE', result[0]);
+                }
+                db.close();
+            });
+        });
+    }
+    else {
+        res.redirect('/');
+    }
+});
+
+app.get("/demoPofileC", function (req, res) {
+    var info = "";
+
+    MongoClient.connect(url, function (err, db) {
+        if (err) throw err;
+        var dbo = db.db("eventSaver");
+        //var query = { _id: Uid };
+        var query = { _id: Uid };
+        dbo.collection("ContractorWorkers").find(query).toArray(function (err, result) {
+            if (err) throw err;
+            if (result.length != 0) {
+                res.view('pages/demoPofileC', result[0]);
+            }
+            db.close();
+        });
+    });
+});
+
 
 
 app.post('/updatePasswordE', (req, res) => {
@@ -1187,7 +1225,7 @@ app.post('/updatePasswordE', (req, res) => {
     });
 });
 
-app.get("/watchProfile", async (req, res) => {
+/*app.get("/watchProfile", async (req, res) => {
     res.send(req.query.id)
     MongoClient.connect(url, { useUnifiedTopology: true },async function (err, db) {
         if (err) throw err;
@@ -1206,7 +1244,7 @@ app.get("/watchProfile", async (req, res) => {
         //else
             //res.view("pages/searchContractorWorker", { contractorFound: null, messageNR: "no results found" });
     });
-});
+});*/
         /*dbo.collection("Employers").find(query).toArray(function (err, result) {
             if (err) throw err;
             if (result.length != 0) 
@@ -1224,43 +1262,144 @@ app.get("/watchProfile", async (req, res) => {
 
 
 
-app.post("/searchContractorWorker", async (req, res) => {
-    MongoClient.connect(url, { useUnifiedTopology: true }, async function (err, db) {
-        if (err) throw err;
-        var dbo = db.db("eventSaver");
-        var dictQuery = {};
-        var dictQuery2 = {};
-        var firstnameI = req.body.INfirstname;
-        var lastnameI = req.body.INlastname;
-        var genderI = req.body.INgender;
-        var accompaniedI = req.body.INaccompanied;
-        var jobTypesI = req.body.selectE;
-
-        if (firstnameI != "") {
-            dictQuery.firstName = firstnameI;
-            console.log("check first name1:" + req.body.INfirstname);
-        }
-        if (lastnameI != "") {
-            dictQuery.lastName = lastnameI;
-            console.log("check last name1:" + req.body.INlastname);
-        }
-        if (typeof genderI != "undefined") {
-            dictQuery.gender = genderI;
-            console.log("check gender:" + req.body.INgender);
-        }
-
-        let contractorFound = await dbo.collection("ContractorWorkers").find(dictQuery).toArray();
-        console.log("result of searching: " + JSON.stringify(contractorFound[0]));
-
-        if (contractorFound.length != 0) {
-           res.view("pages/searchContractorWorker", { contractorFound: contractorFound});
-           //to check if the "click" var is true (there is a click on 'show profile'), if is true move to the deme profile
-        }
-        else
-            res.view("pages/searchContractorWorker", { contractorFound: null, messageNR: "no results found" });
-    });
-
-});
+         app.post("/searchContractorWorker", async (req, res) => {
+            MongoClient.connect(url, { useUnifiedTopology: true }, async function (err, db) {
+                if (err) throw err;
+                var dbo = db.db("eventSaver");
+                var dictQuery = {};
+                var dictQuery2 = {};
+                var firstnameI = req.body.INfirstname;
+                var lastnameI = req.body.INlastname;
+                var genderI = req.body.INgender;
+                var accompaniedI = req.body.INaccompanied;
+                var jobTypesI = req.body.INjobTypes;
+        
+                var from = parseInt(req.body.FROMjobRate);
+                var to = parseInt(req.body.TOjobRate);
+                var flag = false;
+                var query = [
+                    {
+                        '$group': {
+                            '_id': '$idC',
+                            'rate': {
+                                '$avg': '$rate'
+                            }
+                        }
+                    }, {
+                        '$match': {
+                            'rate': {
+                                '$lt': to + 1, // lower then -- +1 to include the top value
+                                '$gt': from // greater than
+                            }
+                        }
+                    }
+                ];
+                let comments = await dbo.collection("Comments").aggregate(query).toArray();
+                console.log("comments:  " + JSON.stringify(comments));
+                console.log("from:  " + from);
+                console.log("to:  " + to);
+                var arr = [];
+                for (var i = 0; i < comments.length; i++) {
+                    arr.push(comments[i]._id);
+                }
+                console.log("arrComments:  " + JSON.stringify(arr));
+        
+        
+                if (req.body.fromPriceRates != "" || req.body.toPriceRates != "" || typeof accompaniedI != "undefined") {
+                    var priceFROMI = parseInt(req.body.fromPriceRates);
+                    var priceTOI = parseInt(req.body.toPriceRates);
+                    var query3 = [{ '$match': {} }];
+                    if (req.body.fromPriceRates != "" && req.body.toPriceRates == "") {
+                        query3 = [{
+                            '$match': {
+                                'price': {
+                                    '$gt': priceFROMI // greater than
+                                }
+                            }
+                        }
+                        ];
+                    }
+                    else if (req.body.fromPriceRates == "" && req.body.toPriceRates != "") {
+                        query3 = [{
+                            '$match': {
+                                'price': {
+                                    '$lt': priceTOI + 1 // lower then -- +1 to include the top value   
+                                }
+                            }
+                        }
+                        ];
+                    }
+                    else if (req.body.fromPriceRates != "" && req.body.toPriceRates != "") {
+                        query3 = [{
+                            '$match': { 
+                                'price': {
+                                    '$lt': priceTOI + 1, // lower then -- +1 to include the top value
+                                    '$gt': priceFROMI
+                                }
+                            }
+                        }];
+                    }
+                    else {
+                        flag = true;
+                        query3 = [{
+                            '$match': {
+                                'accompanied': req.body.INaccompanied
+                            }
+                        }];
+                    }
+                    if (flag == false && typeof accompaniedI != "undefined") {
+                        query3[0]['$match'].accompanied = accompaniedI;
+        
+                    }
+                    query3[0]['$match'].idC = { '$in': arr };
+                    var query4= query3[0]['$match'].idC;
+                    console.log("result of query4: " + JSON.stringify(query4));
+        
+                    console.log("result of query3: " + JSON.stringify(query3[0]));
+        
+        
+                    let price2 = await dbo.collection("jobRate").aggregate(query4).toArray();
+                    console.log("check price:  " + JSON.stringify(price2));
+                    var arr = [];
+                    for (var i = 0; i < price2.length; i++) {
+                        arr.push(price2[i].idC);
+                    }
+                    console.log("arrprice2:  " + JSON.stringify(arr));
+                }
+        
+                if (firstnameI != "") {
+                    dictQuery.firstName = firstnameI;
+                    console.log("check first name1:" + req.body.INfirstname);
+                }
+                if (lastnameI != "") {
+                    dictQuery.lastName = lastnameI;
+                    console.log("check last name1:" + req.body.INlastname);
+                }
+                if (typeof genderI != "undefined") {
+                    dictQuery.gender = genderI;
+                    console.log("check gender:" + req.body.INgender);
+                }
+                if (typeof jobTypesI != "undefined") {
+                    dictQuery.jobTypes = jobTypesI;
+                    //console.log("check JobType:" + req.body.selectE);
+                    console.log("check JobType:" + req.body.INjobTypes);
+                }
+        
+        
+                dictQuery._id={'$in': arr};
+                //query3[0]['$match'].idC = { '$in': arrComments };
+                let contractorFound = await dbo.collection("ContractorWorkers").find(dictQuery).toArray();
+                console.log("result of searching: " + JSON.stringify(contractorFound[0]));
+        
+                if (contractorFound.length != 0) {
+                    res.view("pages/searchContractorWorker", { contractorFound: contractorFound });
+                     //to check if the "click" var is true (there is a click on 'show profile'), if is true move to the deme profile
+                }
+                else
+                    res.view("pages/searchContractorWorker", { contractorFound: null, messageNR: "no results found" });
+            });
+        
+        });
 
 
         /*let queryObject = {}
