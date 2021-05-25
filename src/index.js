@@ -1254,6 +1254,7 @@ app.post("/searchContractorWorker", async (req, res) => {
 
         if (contractorFound.length != 0) {
            res.view("pages/searchContractorWorker", { contractorFound: contractorFound});
+           //to check if the "click" var is true (there is a click on 'show profile'), if is true move to the deme profile
         }
         else
             res.view("pages/searchContractorWorker", { contractorFound: null, messageNR: "no results found" });
@@ -1930,16 +1931,17 @@ app.post('/pendingRecruits', async (req, res) => {
                     await dbo.collection("Recuitment").updateOne({ _id: ObjectID(acc[i].toString()) }, values);
                 }
             }
-
-            console.log("yarin date:" + req.body.date);
+            //date1= req.body.date;
+            date1="2021-07-26";
+            console.log("yarin date:" + date1);
 
             values1 = { $set: { status: "canceled" } }; //to update all the requitment in this date 
-            query1={status:"pending",date:req.body.date};
+            query1={status:"pending",date:date1};
             await dbo.collection("Recuitment").updateMany(query1, values1);
 
             let c1 = await dbo.collection("ContractorWorkers").find(query).toArray(); //the details of the contractor
             var oldD=c1.dates; //the list of all the dates the contractor not avalible
-            var newD=oldD+","+req.body.date;
+            var newD=oldD+","+date1;
 
             values2 = { $set: { dates: newD } }; 
             await dbo.collection("ContractorWorkers").updateOne(query,values2 );
