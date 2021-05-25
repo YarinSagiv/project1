@@ -654,7 +654,7 @@ app.post('/updateEvent',async function (req, res) {
 */
 //send email with the new date to  the contructor worker
 
-function emaildate(con1) {
+function emaildate(con1,loc) {
     var nodemailer = require('nodemailer');
     //var con1=con1;
 
@@ -669,9 +669,9 @@ function emaildate(con1) {
     for (var i = 0; i < con1.length; ++i) {
         var mailOptions = {
             from: 'eventsaver2@gmail.com',
-            to: con1[i][email],
+            to: con1[i].email,
             subject: 'Sending Email using Node.js',
-            text: 'The location of the event change to' + String(req.body.eventloc)
+            text: 'The location of the event change to' + String(loc)
         };
 
         transporter.sendMail(mailOptions, function (error, info) {
@@ -689,7 +689,7 @@ function emaildate(con1) {
 
 
 //send email with the new location to  the contructor worker
-function emailLoc(con1) {
+function emailLoc(con1,date) {
     var nodemailer = require('nodemailer');
     var con1 = con1;
 
@@ -704,9 +704,9 @@ function emailLoc(con1) {
     for (var i = 0; i < con1.length; ++i) {
         var mailOptions = {
             from: 'eventsaver2@gmail.com',
-            to: con1[index][email],
+            to: con1[i].email,
             subject: 'Sending Email using Node.js',
-            text: 'The date of the event change to' + String(req.body.date)
+            text: 'The date of the event change to' + String(date)
         };
 
         transporter.sendMail(mailOptions, function (error, info) {
@@ -726,7 +726,7 @@ app.post('/updateEvent', async (req, res) => {
         if (err) throw err;
         var dbo = db.db("eventSaver");
         console.log("update post");
-        var canU = "true";
+        var canU = true;
 
         var query = { idEmployer: Uid }; //id employer
         let rec1 = await dbo.collection("Recuitment").find(query).toArray(); //all the recruit of this employer
@@ -750,11 +750,9 @@ app.post('/updateEvent', async (req, res) => {
 
             if (dates.includes(String(req.body.date))) //if the new date of the event is date that the contractor cant work
             {
-                var q1 = { eventname: req.body.oldname };
-                let event1 = await dbo.collection("Event").find(q1).toArray(); //event
-                event1[0].suc3 = false;
-                res.view('pages/updateEvent', event1[0]);
-                canU = "false";
+                
+                canU = false;
+                i=rec1.lenght;
                 //console.log("iclude");
 
             }
@@ -762,22 +760,24 @@ app.post('/updateEvent', async (req, res) => {
             else {
                 console.log(" not iclude");
 
-
+                var q1={eventname:req.body.oldname};
+                let event1 = await dbo.collection("Event").find(q1).toArray(); //event
+                event1[0].suc3=true;
                 //let event = await dbo.collection("Event").find(rec1[i].idEvent).toArray(); //the event 
                 // if the location of the event change - email will send to all the contructors
                 var lastLoc = event1[0].eventLoc;
 
                 if (lastLoc != req.body.eventloc) {
                     //change loc
-                    emailLoc(con1);
+                    emailLoc(con1,req.body.eventloc);
                 }
 
                 // if the date of the event change - email will send to the contructor
                 lastDate = event1[0].date;
                 if (lastDate != req.body.date) {
                     //change date
-                    emaildate(con1);
-
+                    emaildate(con1,req.body.date);
+    
                 }
 
 
@@ -802,6 +802,12 @@ app.post('/updateEvent', async (req, res) => {
             res.view("pages/firstpage");
 
 
+        }
+        else{
+            var q1={eventname:req.body.oldname};
+            let event1 = await dbo.collection("Event").find(q1).toArray(); //event
+            event1[0].suc3=false;
+            res.view('pages/updateEvent',event1[0]);
         }
 
 
@@ -2072,8 +2078,8 @@ app.post('/pendingRecruits', async (req, res) => {
                     await dbo.collection("Recuitment").updateOne({ _id: ObjectID(acc[i].toString()) }, values);
                 }
             }
-            //date1= req.body.date;
-            date1 = "2021-07-26";
+            date1= req.body.date.trim();
+            //date1="2021-07-26";
             console.log("yarin date:" + date1);
 
             values1 = { $set: { status: "canceled" } }; //to update all the requitment in this date 
