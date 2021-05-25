@@ -23,11 +23,33 @@
   <% if(typeof messageNRE != "undefined" && messageNRE) { %>
     <label class="searching" style="display: block; text-align: center;"><%=messageNRE%></label>
     <% } else if(employerFound && typeof employerFound !="undefined"){ %>
-        <% employerFound.forEach(function(dataT) { %>
+      <label class="profile" for="ide"><b>id : </b><label style="font-size:19px;"><%=_id%> </label></label><br>
+      <button type="button" id="gobutton" style="float: center;" onclick="goProfile()">Go to the profile</button>
+      <input type="hidden" id="go" name="go">
+
+        <!--<% employerFound.forEach(function(dataT) { %>
           <a href="http://localhost:5000/profileEmployerPage?id=<%=dataT._id %>">link to user profile</a>
-          <!--<label class="searching" for="INlink"><b>link:</label><a href="http://localhost:5000/watchProfile?id=<% employerFound._id %>">link to profile</a><br />-->
-        <% }); %>
+          <label class="searching" for="INlink"><b>link:</label><a href="http://localhost:5000/watchProfile?id=<% employerFound._id %>">link to profile</a><br />
+        <% }); %-->
     <% } %>
 </body>
+<script>
+
+  function goProfile() {
+    console.log("go to the profile is ok");
+    document.getElementById("go").value = document.getElementById("gobutton").value;
+    
+    //document.getElementById("accepted").value = selected.toString();
+    console.log("gogogo:::"+document.getElementById("go").value);
+
+
+
+    var ok=true;
+    //var r = confirm("are you sure you want to delete your account?");
+    //if (r == true)
+     // window.location.href = "/deleteC";
+
+  }
+</script>
 
 </html>
