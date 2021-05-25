@@ -1945,42 +1945,42 @@ app.post('/pendingRecruits', async (req, res) => {
             console.log("reject: " + reject.lenght);
             var values = { $set: { status: "canceled" } };
             if (typeof reject.lenght == "undefined")
-                await dbo.collection("Recuitment").updateOne({ _id: ObjectId(reject.toString()) },values);
+                await dbo.collection("Recuitment").updateOne({ _id: ObjectID(reject.toString()) },values);
             else {
                 for (var i; i < reject.lenght; i++) {
-                    await dbo.collection("Recuitment").updateOne({ _id: ObjectId(reject[i].toString()) },values);
+                    await dbo.collection("Recuitment").updateOne({ _id: ObjectID(reject[i].toString()) },values);
                 }
             }
             res.redirect("/pendingRecruits");
         } 
         else if (req.body.accepted != "") {
             var query={_id:Uid}; 
-            var acc = req.body.accepted.split(",");
+            var acc = req.body.accepted;
             console.log("acc: " + acc.lenght);
             values = { $set: { status: "accepted" } };
             if (typeof acc.lenght == "undefined") {
-                await dbo.collection("Recuitment").updateOne({ _id: ObjectId(acc.toString()) }, values);
+                await dbo.collection("Recuitment").updateOne({ _id: ObjectID(acc.toString()) }, values);
             }
             else {
                 for (i; i < acc.lenght; i++) {
-                    await dbo.collection("Recuitment").updateOne({ _id: ObjectId(acc[i].toString()) }, values);
+                    await dbo.collection("Recuitment").updateOne({ _id: ObjectID(acc[i].toString()) }, values);
                 }
             }
 
             console.log("yarin date:" + req.body.date);
 
             values1 = { $set: { status: "canceled" } }; //to update all the requitment in this date 
-            query1={status:pending,date:req.body.date};
+            query1={status:"pending",date:req.body.date};
             await dbo.collection("Recuitment").updateMany(query1, values1);
 
             let c1 = await dbo.collection("ContractorWorkers").find(query).toArray(); //the details of the contractor
-            var oldD=c1[dates]; //the list of all the dates the contractor not avalible
+            var oldD=c1.dates; //the list of all the dates the contractor not avalible
             var newD=oldD+","+req.body.date;
 
             values2 = { $set: { dates: newD } }; 
             await dbo.collection("ContractorWorkers").updateOne(query,values2 );
 
-            res.redirect("/");
+            res.redirect("/pendingRecruits");
         }
         else
             throw "no choise for pending recruits";
