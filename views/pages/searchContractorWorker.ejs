@@ -58,11 +58,11 @@
             oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..?)\../g, '$1');">
         <input type="hidden" id="selecttoP" name="selecttoP"> 
         <br>  
+        <input type="radio" id="byRange" name="contractors" value="range" onchange="findByRange()" ><label class="report">by range of avg rates</label
 
         <label class="searching" for="jobRateL"><b>Job Rate</b></label>
-        <select class="searchingRate" name="jobRate" id="FROMjobRate" >
-            <option value="" default selected>from</option>
-            <option style="font-size:18px;" value="0">0</option>
+        <select class="searchingRate" name="FROMjobRate" id="FROMjobRate" onchange="limitTo()" >
+            <option style="font-size:18px;" value="0" selected>0</option>
             <option style="font-size:18px;" value="1">1</option>
             <option style="font-size:18px;" value="2">2</option>
             <option style="font-size:18px;" value="3">3</option>
@@ -71,22 +71,21 @@
         </select>
         <input type="hidden" id="selectfromR" name="selectfromR"> 
 
-        <select class="searchingRate" name="jobRate" id="TOjobRate" >
-            <option value="" default selected> <b>to</b></option>
+        <select class="searchingRate" name="TOjobRate" id="TOjobRate" >
             <option style="font-size:18px;" value="0">0</option>
             <option style="font-size:18px;" value="1">1</option>
             <option style="font-size:18px;" value="2">2</option>
             <option style="font-size:18px;" value="3">3</option>
             <option style="font-size:18px;" value="4">4</option>
-            <option style="font-size:18px;" value="5">5</option>
+            <option style="font-size:18px;" value="5" selected >5</option>
         </select>
         <input type="hidden" id="selecttoR" name="selecttoR"> 
         <br>
-
+        <!--<option value="" default selected> <b>to</b></option>
         <label class="searching" for="DateA"><b>Date available</b></label>
         <input type="date" name="INdate" id="INdate">
         <input type="hidden" id="selectDate" name="selectDate"> 
-        <br>
+        <br>-->
 
         <label class="searching" for="gender"><b>Gender</b></label>
         <input type="radio" id="male" name="INgender" value="male" >
@@ -108,9 +107,9 @@
 
         <label class="searching" for="jobTypesL"><b>Job Types</b></label>
         <br >
-        <select class="searchingJType" name="jobTypesID" id="jobTypesID" multiple>
-            <option class="searching" style="font-size:18px;" value="Hair Styling">Hair Styling</option>
-            <option style="font-size:18px;" name= "" value="Makeup">Makeup</option>
+        <select class="searchingJType" name="INjobTypes" id="INjobTypes" multiple>
+            <option class="searching" value="Hair Styling">Hair Styling</option>
+            <option style="font-size:18px;" value="Makeup">Makeup</option>
             <option style="font-size:18px;" value="Event Stylist">Event Stylist</option>
             <option style="font-size:18px;" value="Sitting Organizer">Sitting Organizer</option>
             <option style="font-size:18px;" value="Photography">Photography</option>
@@ -133,7 +132,6 @@
     <tr id="head">
       <th>first Name</th>
       <th>last Name</th>
-      <th>Gender</th>
       <th>link profile</th>
     </tr>
 
@@ -144,9 +142,6 @@
             <% } %>
             <% if(typeof dataT.lastName != "undefined" && dataT.lastName) { %>
               <td><%= dataT.lastName %></td>
-            <% } %>
-            <% if(typeof dataT.gender != "undefined" && dataT.gender) { %>
-              <td><%= dataT.gender %></td>
             <% } %>
             <td> <a href="/watchProfile?id=<%=dataT._id %>">link to user profile</a></td>
 
@@ -159,6 +154,17 @@
 
 
 <script >
+  function findByRange()
+  {
+    if(document.getElementById("byRange").checked){
+                enable("from");
+                document.getElementById("from").focus();
+                enable("to");}
+            else{
+                disable("from");
+                disable("to");
+            }
+  }
   function getSelect() {
         if(INfirstname!="")
         {
@@ -196,18 +202,32 @@
         {
           document.getElementById("selectaccompanied").value = document.getElementById("INaccompanied").value;
         } 
-        if(jobTypesID!="")
+        if(INjobTypes!="")
         {
-          document.getElementById("selectE").value = document.getElementById("jobTypesID").value;
+          document.getElementById("selectE").value = document.getElementById("INjobTypes").value;
         } 
 
         //document.getElementById("selectE").value = document.getElementById("jobTypesID").value;
         document.getElementById("searchingInput").action = "/searchContractorWorker";
         document.getElementById("searchingInput").method = "POST";
         document.getElementById("searchingInput").submit();
-        console.log(document.getElementById("jobTypesID").value);
+        //console.log(document.getElementById("jobTypesID").value);
   }
-  
+  function limitTo()
+  {
+    var from=parseInt(document.getElementById("FROMjobRate").value);
+            //get all <option>s in "to"
+            var op = document.getElementById("TOjobRate").getElementsByTagName("option");
+            for (var i = 0; i < op.length; i++) {
+                (parseInt(op[i].value) < from) 
+                    ? op[i].disabled = true 
+                    : op[i].disabled = false ;
+            }
+
+            //change value of needed:
+            if(parseInt(document.getElementById("TOjobRate").value)<parseInt(document.getElementById("FROMjobRate").value))
+                op[from].selected = true;
+  }
   function Fdates()
   {
     //DATES:
