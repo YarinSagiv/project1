@@ -149,7 +149,7 @@ app.post("/RecruitContractorWorker", async function (req, res) {
         if (cont.length != 0) {
             values = {
                 idC: iduser,
-                idE: Uid,
+                idEmployer: Uid,
                 idEvent: cont2[0]._id,
                 date: cont2[0].date,
                 location: theA,
@@ -1918,9 +1918,15 @@ app.get('/pendingRecruits', async (req, res) => {
         var dbo = db.db("eventSaver");
         var recruits = await dbo.collection("Recuitment").find(query).toArray();
 
+        console.log(recruits);
+        console.log("end r");
+
         if (recruits.length != 0) {
             for (var i = 0; i < recruits.length; i++) {
                 var employer = await dbo.collection("Employers").find({ _id: recruits[i].idEmployer }).project({ _id: 0 }).toArray();
+                console.log(employer);
+                console.log(employer.length);
+
                 if (employer.length == 0)
                     throw "no employers found";
                 recruits[i] = { ...recruits[i], ...employer[0] };
