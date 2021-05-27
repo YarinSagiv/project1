@@ -94,6 +94,10 @@ app.get("/updateRecruit", function (req, res) {
     res.redirect("/");
 
 });
+app.get("/chooseCRecruit", function (req, res) {
+    res.redirect("/");
+
+});
 
 app.post("/updateRecruit", async function(req, res) {
     MongoClient.connect(url, { useUnifiedTopology: true }, async function (err, db) {
@@ -101,16 +105,23 @@ app.post("/updateRecruit", async function(req, res) {
         var dbo = db.db("eventSaver");
         var myquery = { idC: iduser };
         var theA;
-        if(req.body.locationC == true){
-            theA=await dbo.collection("ContractorWorkers").find(myquery).toArray();    
+        if(typeof req.body.locationC != "undefined"){
+            var cont=await dbo.collection("ContractorWorkers").find(myquery).toArray(); 
+            if (cont.length !=0)
+            {
+                console.log(cont[0].address);
+                theA=cont[0].address;  
+            }
+            else
+                theA=''; 
         }
         else{
             theA=req.body.locationE;     
         }
+
         var myobj = {
-            startTime: req.body.startTime,
             location:theA,
-            status:pending
+            startTime:req.body.startTime
         }
 
         dbo.collection("Recuitment").updateOne(myquery, myobj, function (err, res1) {
@@ -123,17 +134,54 @@ app.post("/updateRecruit", async function(req, res) {
 
 });
 
+app.post("/chooseCRecruit", async function(req, res) {
+    MongoClient.connect(url, { useUnifiedTopology: true }, async function (err, db) {
+        if (err) throw err;
+        var dbo = db.db("eventSaver");
+        var myquery = { idC: req.body.iduser };
+        suc4=await dbo.collection("ContractorWorkers").find(myquery).toArray();    
+        res.view("pages/ReviewRecruit" ,{suc4:suc4});
+        });
+});
+
+app.post("/ReviewRecruit", async function(req, res) {
+    MongoClient.connect(url, { useUnifiedTopology: true }, async function (err, db) {
+        if (err) throw err;
+        var dbo = db.db("eventSaver");
+        var myquery = { idC: req.body.iduser };
+        var reviewC = await dbo.collection("ContractorWorkers").find(myquery).toArray();
+        var values;
+        if (reviewC.length!=0){
+            values = {
+                review:req.body.review
+            }
+        }
+        else
+            throw "no event found";
+
+        var inputR = dbo.collection("contractorWorkers").insertOne(values, function (err, resault1) {
+
+        console.log("1 document inserted");
+        db.close();
+        });
+        
+        });
+});
+
 app.post("/RecruitContractorWorker", async function (req, res) {
     MongoClient.connect(url, { useUnifiedTopology: true },async function(err, db) {
         if (err) throw err;
         var dbo = db.db("eventSaver");
-        var myquery = { _id:iduser };
-        var quar={_id:Uid}
+        var myquery = { _id:req.body.iduser };
+        var quar={idE:Uid}
         var theA;
-        if(req.body.locationC == true){
+        if(typeof req.body.locationC != "undefined"){
             var cont=await dbo.collection("ContractorWorkers").find(myquery).toArray(); 
             if (cont.length !=0)
+            {
+                console.log(cont[0].address);
                 theA=cont[0].address;  
+            }
             else
                 theA=''; 
         }
@@ -143,16 +191,16 @@ app.post("/RecruitContractorWorker", async function (req, res) {
 
         var cont2 = await dbo.collection("Event").find(quar).toArray();
         var values;
-        if (cont.length !=0){
+        if (cont2.length !=0){
              values={
-                idC:iduser,
+                idC:req.body.iduser,
                 idE:Uid,
                 idEvent:cont2[0]._id,
                 date:cont2[0].date,
                 location:theA,
                 startTime:req.body.startTime,
                 information:req.body.information,
-                status:pending,
+                status:"pending",
             }
         }
         else{
@@ -183,7 +231,7 @@ app.post('/chooseEventUpdate', (req, res) => {
         var myquery = {idE:Uid , eventname:req.body.selectE };
         console.log(idE);
         var dbo = db.db("eventSaver");
-        dbo.collection("Event").find(myquery).toArray(function (err, result) {
+        dbo.collection("Recuitment").find(myquery).toArray(function (err, result) {
             if (err) throw err;
             //console.log(Uid);
             if (result.length != 0) {
@@ -367,9 +415,8 @@ app.post('/inputDBcontractor', (req, res) => {
             rangeOfPrice: null,
             minPrice: null,
             maxPrice: null,
-            gender: "other"
-
-
+            gender: "other",
+            review:null
         };
 
 

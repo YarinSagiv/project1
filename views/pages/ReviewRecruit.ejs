@@ -1,0 +1,30 @@
+<html>
+<head>
+  <link href="css/sty.css" rel="stylesheet">
+
+</head>
+<body>
+
+  <header>
+    <%- include('../partials/_header') %>
+  </header>
+
+<form id="form1" action="/ReviewRecruit" method="POST" >
+    <div class="container">
+        <p>fill the review</p>
+        <label for="review"><b>review about the contractor:</b></label>
+        <input type="text" placeholder="enter the review" name="Review" id="Review" maxlength="200" required>
+        </br>
+        <hr>        
+    </div>
+
+
+<button type="button" class="registerbtn" onclick="getSelect()" href="/updateRecruit">continue</button>
+
+</form>
+</body>
+
+<script>
+     
+</script>
+</html>
