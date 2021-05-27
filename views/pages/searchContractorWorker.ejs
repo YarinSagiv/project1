@@ -38,54 +38,56 @@
 <form name="searchingInput" id="searchingInput" action="/searchContractorWorker" method="POST" >
         <h3 class="searching" for="LsearchingBy:" style="font-size:22px;"><b>searching Contractor Worker </b></h3>
         <label class="searching" for="firstname"><b>First Name</label>
-        <!--<% if(typeof INfirstname != "undefined" && INfirstname) { %>
-          <input type="text" name="INfirstname" id="INfirstname" 
-            oninput="this.value = this.value.replace(/[^a-zA-Z]/g, '').replace(/(\..?)\../g, '$1');" checked>
-        <% } else { %>
-          <input type="text" name="INfirstname" id="INfirstname" 
-            oninput="this.value = this.value.replace(/[^a-zA-Z]/g, '').replace(/(\..?)\../g, '$1');" >
-        <% } %>
-        &emsp;-->
-
         <input class="searching" type="text" placeholder="Enter first name" name="INfirstname" id="INfirstname" 
             oninput="this.value = this.value.replace(/[^a-zA-Z]/g, '').replace(/(\..?)\../g, '$1');" >
+        <input type="hidden" id="textfirst" name="textfirst">   
         <br>
+
         <label class="searching" for="lastname"><b>Last Name</label>
         <input class="searching" type="text" placeholder="Enter last name" name="INlastname" id="INlastname" 
             oninput="this.value = this.value.replace(/[^a-zA-Z]/g, '').replace(/(\..?)\../g, '$1');" >
+        <input type="hidden" id="textlast" name="textlast"> 
         <br>
-        <label class="searching" for="lastname"><b>range of price rates</label>
+
+        <label class="searching" for="range"><b>range of price rates</label>
         <input class="searching" type="text" placeholder="From" name="fromPriceRates" id="fromPriceRates" 
             oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..?)\../g, '$1');">
+        <input type="hidden" id="selectfromP" name="selectfromP"> 
+
         <input class="searching" type="text" placeholder="To" name="toPriceRates" id="toPriceRates" 
             oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..?)\../g, '$1');">
+        <input type="hidden" id="selecttoP" name="selecttoP"> 
         <br>  
-            
         <label class="searching" for="jobRateL"><b>Job Rate</b></label>
-        <!--<label for="minjobRateL"><b>minimum Job Rate: </b></label>-->
-        <select class="searchingRate" name="jobRate" id="jobRate" >
-            <option value="" default selected>from</option>
-            <option style="font-size:18px;" value="0">0</option>
+        <input type="radio" id="byRange" name="contractors" value="range" onchange="findByRange()" ><label class="report">by range of avg rates</label>
+
+        
+        <select class="searchingRate" name="FROMjobRate" id="FROMjobRate" onchange="limitTo()" >
+            <option style="font-size:18px;" value="0" selected>0</option>
             <option style="font-size:18px;" value="1">1</option>
             <option style="font-size:18px;" value="2">2</option>
             <option style="font-size:18px;" value="3">3</option>
             <option style="font-size:18px;" value="4">4</option>
             <option style="font-size:18px;" value="5">5</option>
         </select>
-        <!--<label for="maxjobRateL"><b>maximum Job Rate: </b></label>-->
-        <select class="searchingRate" name="jobRate" id="jobRate" >
-            <option value="" default selected> <b>to</b></option>
+        <input type="hidden" id="selectfromR" name="selectfromR"> 
+
+        <select class="searchingRate" name="TOjobRate" id="TOjobRate" >
             <option style="font-size:18px;" value="0">0</option>
             <option style="font-size:18px;" value="1">1</option>
             <option style="font-size:18px;" value="2">2</option>
             <option style="font-size:18px;" value="3">3</option>
             <option style="font-size:18px;" value="4">4</option>
-            <option style="font-size:18px;" value="5">5</option>
+            <option style="font-size:18px;" value="5" selected >5</option>
         </select>
+        <input type="hidden" id="selecttoR" name="selecttoR"> 
         <br>
+        <!--<option value="" default selected> <b>to</b></option>
         <label class="searching" for="DateA"><b>Date available</b></label>
         <input type="date" name="INdate" id="INdate">
-        <br>
+        <input type="hidden" id="selectDate" name="selectDate"> 
+        <br>-->
+
         <label class="searching" for="gender"><b>Gender</b></label>
         <input type="radio" id="male" name="INgender" value="male" >
         <label class="searching" for="male" >Male&emsp;</label>
@@ -93,6 +95,7 @@
         <label class="searching" for="female">Female&emsp;</label>
         <input type="radio" id="other" name="INgender" value="other">
         <label class="searching" for="other">Other</label>
+        <input type="hidden" id="selectGender" name="selectGender"> 
         <br >
 
         <label class="searching" for="accompaniedS"><b>accompanied</b></label>
@@ -100,11 +103,13 @@
         <label class="searching" for="yes">yes&emsp;</label>
         <input type="radio" id="false" name="INaccompanied" value="false">
         <label class="searching" for="no" >no&emsp;</label>
+        <input type="hidden" id="selectaccompanied" name="selectaccompanied"> 
         <br >
+
         <label class="searching" for="jobTypesL"><b>Job Types</b></label>
         <br >
-        <select class="searchingJType" name="jobTypes" id="jobTypes" multiple>
-            <option class="searching" style="font-size:18px;" value="Hair Styling">Hair Styling</option>
+        <select class="searchingJType" name="INjobTypes" id="INjobTypes" multiple>
+            <option class="searching" value="Hair Styling">Hair Styling</option>
             <option style="font-size:18px;" value="Makeup">Makeup</option>
             <option style="font-size:18px;" value="Event Stylist">Event Stylist</option>
             <option style="font-size:18px;" value="Sitting Organizer">Sitting Organizer</option>
@@ -114,19 +119,8 @@
             <option style="font-size:18px;" value="Atraction Provider">Attraction Provider</option>
             <option style="font-size:18px;" value="Invitation Printer">Invitation Printer</option>
         </select>
+        <input type="hidden" id="selectE" name="selectE">   
         <br>
-       
-
-        <!-- <select name="searchingBy" id="searchingBy" onChange="myFunction()" >
-            <option class="searching" style="font-size:18px;" id='fName'  value="firstname">first name</option>
-            <option class="searching" style="font-size:18px;" id='lName' value="lastName">last name</option>
-            <option class="searching" style="font-size:18px;" id='jT' value="jobTypes">job Types</option>
-            <option class="searching" style="font-size:18px;" id='jR' value="jobRate">job Rate</option>
-            <option class="searching" style="font-size:18px;" id='daates' value="dates">dates</option>
-            <option class="searching" style="font-size:18px;" id='gender' value="gender" style="display: none;">gender</option>
-            <option class="searching" style="font-size:18px;" id='aServices' value="accompaniedServices">accompanied services</option>
-            <option class="searching" style="font-size:18px;" id='rP' value="rangePrice">range of price</option>
-        </select>-->
     <input type="submit" name="send" value="search" >
     <input type="reset" name="reset1" value="reset">
 
@@ -139,12 +133,7 @@
     <tr id="head">
       <th>first Name</th>
       <th>last Name</th>
-      <th>Gender</th>
-      <th>Job Types</th>
-      <th>Job Rate</th>
-      <th>accompanied services</th>
       <th>link profile</th>
-
     </tr>
 
     <% contractorFound.forEach(function(dataT) { %>
@@ -155,10 +144,9 @@
             <% if(typeof dataT.lastName != "undefined" && dataT.lastName) { %>
               <td><%= dataT.lastName %></td>
             <% } %>
-            <% if(typeof dataT.gender != "undefined" && dataT.gender) { %>
-              <td><%= dataT.gender %></td>
-            <% } %>
-            
+            <td> <a href="/watchProfile?id=<%=dataT._id %>">link to user profile</a></td>
+
+
         </tr>
     <% }); %>
 
@@ -167,7 +155,81 @@
 
 
 <script >
-function initdit()
+  function findByRange()
+  {
+    if(document.getElementById("byRange").checked){
+                enable("from");
+                document.getElementById("from").focus();
+                enable("to");}
+            else{
+                disable("from");
+                disable("to");
+            }
+  }
+  function getSelect() {
+        if(INfirstname!="")
+        {
+          document.getElementById("textfirst").value = true;
+        }
+        if(INlastname!="")
+        {
+          document.getElementById("textlast").value = true;
+        }
+        if(fromPriceRates!="")
+        {
+          document.getElementById("selectfromP").value = true;
+        }
+        if(toPriceRates!="")
+        {
+          document.getElementById("selecttoP").value = true;
+        }
+        if(FROMjobRate!="")
+        {
+          document.getElementById("selectfromR").value = document.getElementById("FROMjobRate").value;
+        }
+        if(TOjobRate!="")
+        {
+          document.getElementById("selecttoR").value = document.getElementById("TOjobRate").value;
+        }
+        if(INdate!="")
+        {
+          document.getElementById("selectDate").value = document.getElementById("INdate").value;
+        }
+        if(INgender!="")
+        {
+          document.getElementById("selectGender").value = document.getElementById("INgender").value;
+        } 
+        if(INaccompanied!="")
+        {
+          document.getElementById("selectaccompanied").value = document.getElementById("INaccompanied").value;
+        } 
+        if(INjobTypes!="")
+        {
+          document.getElementById("selectE").value = document.getElementById("INjobTypes").value;
+        } 
+
+        //document.getElementById("selectE").value = document.getElementById("jobTypesID").value;
+        document.getElementById("searchingInput").action = "/searchContractorWorker";
+        document.getElementById("searchingInput").method = "POST";
+        document.getElementById("searchingInput").submit();
+        //console.log(document.getElementById("jobTypesID").value);
+  }
+  function limitTo()
+  {
+    var from=parseInt(document.getElementById("FROMjobRate").value);
+            //get all <option>s in "to"
+            var op = document.getElementById("TOjobRate").getElementsByTagName("option");
+            for (var i = 0; i < op.length; i++) {
+                (parseInt(op[i].value) < from) 
+                    ? op[i].disabled = true 
+                    : op[i].disabled = false ;
+            }
+
+            //change value of needed:
+            if(parseInt(document.getElementById("TOjobRate").value)<parseInt(document.getElementById("FROMjobRate").value))
+                op[from].selected = true;
+  }
+  function Fdates()
   {
     //DATES:
     var today = new Date();
@@ -177,9 +239,9 @@ function initdit()
 
     today = yyyy + '-' + mm + '-' + dd;
     //document.write(today);
-    document.getElementById("date").min = today;
+    document.getElementById("INdate").min = today;
   }
-  initdit();
+  Fdates();
 
 
     

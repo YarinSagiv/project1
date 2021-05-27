@@ -2,7 +2,7 @@
 
 <head>
     <link href="css/sty.css" rel="stylesheet">
-    
+
 </head>
 
 <body>
@@ -81,35 +81,16 @@
         <label for="other" style="font-size:22px;">Other</label>
         <br />
 
-        <!--Areas:
-        <br /><br /><label for="countryAreas"><b>areas where i can't work in: </b></label>
-        <ul id="addedCountryAreas">
-        </ul>
-        <label id="noCountryAreas" style="font-size:22px;">no areas to show<br><br></label>
-        <label style="font-size:18px;">choose another area:</label>
-        <br>
-        <select name="countryAreas" id="countryAreas">
-            <option style="font-size:18px;" value="Golan Heights">Golan Heights</option>
-            <option style="font-size:18px;" value="Galilee">Galilee</option>
-            <option style="font-size:18px;" value="Coastal Plain">Coastal Plain</option>-->
-        <!--TODO: add more areas-->
-        <!--</select>
-        <button id="addAountryAreaB" type="button" class=button onclick="addAnotherArea()"
-            style="padding: 8px 15px;">add area</button>
-        <button id="addAreaB" type="button" class=button onclick="addArea()"
-            style="padding: 8px 15px; display: none;">Add</button>
-        <br />
-        <input type="hidden" id="areas" name="areas">-->
-        <!--to POST-->
-
         <!--DATES OF UNAVAILABILITY-->
         <br /><label for="addedDates"><b>Dates when I am not available: </b></label>
         <br /><label id="dateError" style="color: red; font-size: 18px; display: none;"></label>
         <ul id="addedDates">
         </ul>
         <input type="date" style="display: none;" name="date" id="date">
-        <button id="addAnotherDateB" type="button" class=button onclick="addAnotherDate()" style="padding: 8px 15px;">add another date</button>
-        <button id="addDateB" type="button" class=button onclick="addDate()" style="padding: 8px 15px; display: none;">Add</button>
+        <button id="addAnotherDateB" type="button" class=button onclick="addAnotherDate()"
+            style="padding: 8px 15px;">add another date</button>
+        <button id="addDateB" type="button" class=button onclick="addDate()"
+            style="padding: 8px 15px; display: none;">Add</button>
         <input type="hidden" id="dates" name="dates">
         <!--to POST-->
         <br />
@@ -117,56 +98,68 @@
 
         <p>Price Rate:</p>
         <div class="container">
-        <div class="tab tab-1">
-        <table id="table">
-            <tr>
-              <th>Title</th>
-              <th>Price</th>
-              <th>Description</th>
-              <th>fee</th>
-              <th>accompanied</th>
+            <div class="tab tab-1">
+                <table id="table">
+                    <tr>
+                        <th>Title</th>
+                        <th>Price</th>
+                        <th>Description</th>
+                        <th>fee</th>
+                        <th>accompanied</th>
 
-            </tr>
+                    </tr>
 
-            <tr>
-                <% j1.forEach(function(dat) {%>
-                    <td><%= dat.title %></td>
-                    <td><%= dat.price %></td>
-                    <td><%= dat.description %></td>
-                    <td><%= dat.travelingFee %></td>
-                    <td><%= dat.accompanied %></td>
+                    <tr>
+                        <% j1.forEach(function(dat) {%>
+                            <td>
+                                <%= dat.title %>
+                            </td>
+                            <td>
+                                <%= dat.price %>
+                            </td>
+                            <td>
+                                <%= dat.description %>
+                            </td>
+                            <td>
+                                <%= dat.travelingFee %>
+                            </td>
+                            <td>
+                                <%= dat.accompanied %>
+                            </td>
 
-          
-            </tr>
-            <% }); %>
 
-          </table>
-        </div>
+                    </tr>
+                    <% }); %>
+
+                </table>
+            </div>
 
             <div class="tab tab-2">
-            Title :<input type="text" placeholder="Enter Title" name="title" id="title" maxlength="20" >
-            Price :<input type="text" placeholder="Enter Price" name="price" id="price" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..?)\../g, '$1');" required>
-            Description :<input type="text" placeholder="Enter Description" name="des" id="des" maxlength="200">
-            fee :<input type="text" placeholder="Enter Traveling fee" name="fee" id="fee" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..?)\../g, '$1');" required>
-  
-            <button type="button" class="button" onclick="addJobRate()">add</button>
-            <button type="button" class="button" onclick="deleteJobRate()">delete</button>
-            <button type="button" class="button" onclick="editJobRate()">edit</button>
+                Title :<input type="text" placeholder="Enter Title" name="title" id="title" maxlength="20">
+                Price :<input type="text" placeholder="Enter Price" name="price" id="price"
+                    oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..?)\../g, '$1');" required>
+                Description :<input type="text" placeholder="Enter Description" name="des" id="des" maxlength="200">
+                fee :<input type="text" placeholder="Enter Traveling fee" name="fee" id="fee"
+                    oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..?)\../g, '$1');" required>
+
+                <button type="button" class="button" onclick="addJobRate()">add</button>
+                <button type="button" class="button" onclick="deleteJobRate()">delete</button>
+                <button type="button" class="button" onclick="editJobRate()">edit</button>
+
+            </div>
+
+
+            <input type="hidden" id="jobrate" name="jobrate">
 
         </div>
-    
+        <br />
+        <input type="checkbox" id="accompanied" name="accompanied">
+        <label for="acc"> With accompanied</label><br>
 
-        <input type="hidden" id="jobrate" name="jobrate">
 
-    </div>
-    <br />
-    <input type="checkbox" id="accompanied" name="accompanied">
-    <label for="acc"> With accompanied</label><br>
 
-          
-
-          <br>
-          <a href="/changeC" class="button" style="padding: 8px 15px;" >change password</a><br/><br>
+        <br>
+        <a href="/changeC" class="button" style="padding: 8px 15px;">change password</a><br /><br>
 
         <button type="submit" class="button">update ditails</button>
     </form>
@@ -177,121 +170,115 @@
     var loggedId;
     var jobTypes = [];
     var phoneNumbers = [];
-    var dates = [] //TODO: get initial from db
+    var dates = []
     //var countryAreas = []; 
-    var jobrate= []; //array that each cell is dict of one job rate
+    var jobrate = []; //array that each cell is dict of one job rate
     //TODO: take all information from the data base and put in the right places in the form
     //console.log("<%= firstName %>");
 
-    
-    function oldJ()
-    {   
-        var arr=[];
+
+    function oldJ() {
+        var arr = [];
         var t = document.getElementById("table");
         for (var r = 1; r < table.rows.length; r++) {
-             for (var c = 0; c < table.rows[r].cells.length; c++) {
+            for (var c = 0; c < table.rows[r].cells.length; c++) {
 
                 arr.push(table.rows[r].cells[c].innerHTML); //push all the value of the key
-                }
-                var newJobRate = {title:arr[0],price:arr[1],des:arr[2],fee:arr[3],acc:arr[4]};
-                console.log("new:"+newJobRate);
-                jobrate.push(newJobRate); 
-                arr=[];
+            }
+            var newJobRate = { title: arr[0], price: arr[1], des: arr[2], fee: arr[3], acc: arr[4] };
+            console.log("new:" + newJobRate);
+            jobrate.push(newJobRate);
+            arr = [];
         }
 
-        console.log("old in the arr:"+jobrate);
+        console.log("old in the arr:" + jobrate);
     }
     oldJ();
-    
+
 
 
 
     function addJobRate() {
         var newRow = table.insertRow(table.length),
-                    cell1 = newRow.insertCell(0),
-                    cell2 = newRow.insertCell(1),
-                    cell3 = newRow.insertCell(2),
-                    cell4 = newRow.insertCell(3),
-                    cell5=newRow.insertCell(4),
-                    title = document.getElementById("title").value,
-                    price = document.getElementById("price").value,
-                    des = document.getElementById("des").value,
-                    fee = document.getElementById("fee").value;
-                    acc=document.getElementById("accompanied").checked;
-            
-                cell1.innerHTML = title;
-                cell2.innerHTML = price;
-                cell3.innerHTML = des;
-                cell4.innerHTML = fee;
-                cell5.innerHTML=acc;
-                selectedRowToInput();
+            cell1 = newRow.insertCell(0),
+            cell2 = newRow.insertCell(1),
+            cell3 = newRow.insertCell(2),
+            cell4 = newRow.insertCell(3),
+            cell5 = newRow.insertCell(4),
+            title = document.getElementById("title").value,
+            price = document.getElementById("price").value,
+            des = document.getElementById("des").value,
+            fee = document.getElementById("fee").value;
+        acc = document.getElementById("accompanied").checked;
 
-                hide("noField");
-
-
-        var newT=document.getElementById("title").value;
-        var newP=document.getElementById("price").value;
-        var newD=document.getElementById("des").value;
-        var newF=document.getElementById("fee").value;
-
-        var newJobRate = {title:newT,price:newP,des:newD,fee:newF,acc:document.getElementById("accompanied").checked};
-        
-        jobrate.push(newJobRate); 
-        console.log(jobrate);
-     
-    }
-
-      // display selected row data into input text
-    function selectedRowToInput()
-            {
-                
-                for(var i = 1; i < table.rows.length; i++)
-                {
-                    table.rows[i].onclick = function()
-                    {
-                      // get the seected row index
-                      rIndex = this.rowIndex;
-                      console.log(rIndex);
-                      document.getElementById("title").value = this.cells[0].innerHTML;
-                      document.getElementById("price").value = this.cells[1].innerHTML;
-                      document.getElementById("des").value = this.cells[2].innerHTML;
-                      document.getElementById("fee").value = this.cells[3].innerHTML;
-
-                    };
-                }
-            }
+        cell1.innerHTML = title;
+        cell2.innerHTML = price;
+        cell3.innerHTML = des;
+        cell4.innerHTML = fee;
+        cell5.innerHTML = acc;
         selectedRowToInput();
 
+        hide("noField");
 
-    function editJobRate()
-            {
-                var newT = document.getElementById("title").value,
-                newP = document.getElementById("price").value,
-                newD = document.getElementById("des").value,
-                newF = document.getElementById("fee").value;
-                    table.rows[rIndex].cells[0].innerHTML = newT;
-                    table.rows[rIndex].cells[1].innerHTML = newP;
-                    table.rows[rIndex].cells[2].innerHTML = newD;
-                    table.rows[rIndex].cells[3].innerHTML = newF;
 
-                    jobrate[rIndex-1]={title:newT,price:newP,des:newD,fee:newF}
-                    console.log(jobrate);
+        var newT = document.getElementById("title").value;
+        var newP = document.getElementById("price").value;
+        var newD = document.getElementById("des").value;
+        var newF = document.getElementById("fee").value;
 
-            }
+        var newJobRate = { title: newT, price: newP, des: newD, fee: newF, acc: document.getElementById("accompanied").checked };
 
-        function deleteJobRate()
-            {
-                table.deleteRow(rIndex);
-                // clear input text
-                document.getElementById("title").value = "";
-                document.getElementById("price").value = "";
-                document.getElementById("des").value = "";
-                document.getElementById("fee").value = "";
+        jobrate.push(newJobRate);
+        console.log(jobrate);
 
-                jobrate.splice(rIndex-1,1); //remove from the array
-                console.log(jobrate);
+    }
 
-            }
+    // display selected row data into input text
+    function selectedRowToInput() {
+
+        for (var i = 1; i < table.rows.length; i++) {
+            table.rows[i].onclick = function () {
+                // get the seected row index
+                rIndex = this.rowIndex;
+                console.log(rIndex);
+                document.getElementById("title").value = this.cells[0].innerHTML;
+                document.getElementById("price").value = this.cells[1].innerHTML;
+                document.getElementById("des").value = this.cells[2].innerHTML;
+                document.getElementById("fee").value = this.cells[3].innerHTML;
+
+            };
+        }
+    }
+    selectedRowToInput();
+
+
+    function editJobRate() {
+        var newT = document.getElementById("title").value,
+            newP = document.getElementById("price").value,
+            newD = document.getElementById("des").value,
+            newF = document.getElementById("fee").value;
+        table.rows[rIndex].cells[0].innerHTML = newT;
+        table.rows[rIndex].cells[1].innerHTML = newP;
+        table.rows[rIndex].cells[2].innerHTML = newD;
+        table.rows[rIndex].cells[3].innerHTML = newF;
+
+        jobrate[rIndex - 1] = { title: newT, price: newP, des: newD, fee: newF }
+        console.log(jobrate);
+
+    }
+
+    function deleteJobRate() {
+        table.deleteRow(rIndex);
+        // clear input text
+        document.getElementById("title").value = "";
+        document.getElementById("price").value = "";
+        document.getElementById("des").value = "";
+        document.getElementById("fee").value = "";
+
+        jobrate.splice(rIndex - 1, 1); //remove from the array
+        console.log(jobrate);
+
+    }
     function show(id) {
         document.getElementById(id).style.display = 'block';
     }
@@ -553,7 +540,7 @@
     function delDate(li, id1) {
 
         li.style.display = 'none';
-        //remove the phone from the phones list:
+        //remove the date from the phones list:
         dates = dates.filter(date => date != id1);
         //for checking
         console.log(dates);
@@ -624,18 +611,18 @@
         document.getElementById("date").min = today;
 
 
-        
+
         var date;
         console.log("1 <%= dates %>");
         if (date = "<%= dates %>") {
             date = date.split(",");
             for (var a of date) {
-                console.log("a: "+a);
+                console.log("a: " + a);
                 document.getElementById("date").value = a;
                 addDate();
             }
         }
-        
+
 
     }
 
@@ -657,23 +644,21 @@
         //document.getElementById("jobrate").value = jobrate.toString();
 
         //create a string from the array jobrate
-        var stringJob="";
-        for(var i in jobrate)
-        {
-           
-            for (var key in jobrate[i])
-            {
-                stringJob=stringJob+String(key);
-                stringJob=stringJob+",";
-                stringJob=stringJob+String(jobrate[i][key]);
-                console.log("var "+stringJob);
-                stringJob=stringJob+",";
+        var stringJob = "";
+        for (var i in jobrate) {
+
+            for (var key in jobrate[i]) {
+                stringJob = stringJob + String(key);
+                stringJob = stringJob + ",";
+                stringJob = stringJob + String(jobrate[i][key]);
+                console.log("var " + stringJob);
+                stringJob = stringJob + ",";
 
             }
-            stringJob=stringJob+"-";
+            stringJob = stringJob + "-";
 
-        
-        }  
+
+        }
         console.log(stringJob);
         document.getElementById("jobrate").value = stringJob;
         //console.log("mor"+jobrate);
