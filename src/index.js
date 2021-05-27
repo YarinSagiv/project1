@@ -654,7 +654,8 @@ app.post('/updateEvent',async function (req, res) {
 */
 //send email with the new date to  the contructor worker
 
-function emaildate(con1,loc) {
+/*
+function emaildate(emailc,loc) {
     var nodemailer = require('nodemailer');
     //var con1=con1;
 
@@ -666,10 +667,11 @@ function emaildate(con1,loc) {
         }
     });
 
-    for (var i = 0; i < con1.length; ++i) {
+    for (var i = 0; i < emailc.length; ++i) {
         var mailOptions = {
             from: 'eventsaver2@gmail.com',
-            to: con1[i].email,
+             //to: emailc[i],
+             to: 'yarin893@gmail.com',
             subject: 'Sending Email using Node.js',
             text: 'The location of the event change to' + String(loc)
         };
@@ -686,10 +688,10 @@ function emaildate(con1,loc) {
 
 }
 
-
-
+*/
+/*
 //send email with the new location to  the contructor worker
-function emailLoc(con1,date) {
+function emailLoc(emailc,date) {
     var nodemailer = require('nodemailer');
     //var con1 = con1;
 
@@ -701,10 +703,11 @@ function emailLoc(con1,date) {
         }
     });
 
-    for (var i = 0; i < con1.length; ++i) {
+    for (var i = 0; i < emailc.length; ++i) {
         var mailOptions = {
             from: 'eventsaver2@gmail.com',
-            to: con1[i].email,
+            //to: emailc[i],
+            to: 'yarin893@gmail.com',
             subject: 'Sending Email using Node.js',
             text: 'The date of the event change to' + String(date)
         };
@@ -721,12 +724,15 @@ function emailLoc(con1,date) {
 
 }
 
+*/
+
 app.post('/updateEvent', async (req, res) => {
     MongoClient.connect(url, async function (err, db) {
         if (err) throw err;
         var dbo = db.db("eventSaver");
         console.log("update post");
         var canU = true;
+        var emailc=[];
 
         var query = { idEmployer: Uid }; //id employer
         let rec1 = await dbo.collection("Recuitment").find(query).toArray(); //all the recruit of this employer
@@ -740,6 +746,7 @@ app.post('/updateEvent', async (req, res) => {
             //console.log("idc"+rec1[i].idC);
             var query22 = { _id: rec1[i].idC };
             let con1 = await dbo.collection("ContractorWorkers").find(query22).toArray(); //the details of the contractor that recruit
+            emailc.push(con1[0].email);
             //console.log("check con1:"+con1[0].dates);
 
             if (con1[0].dates != '') {
@@ -757,36 +764,55 @@ app.post('/updateEvent', async (req, res) => {
 
             }
 
-            else {
-                console.log(" not iclude");
 
-                var q1={eventname:req.body.oldname};
-                let event1 = await dbo.collection("Event").find(q1).toArray(); //event
-                event1[0].suc3=true;
-                //let event = await dbo.collection("Event").find(rec1[i].idEvent).toArray(); //the event 
-                // if the location of the event change - email will send to all the contructors
-                var lastLoc = event1[0].eventLoc;
-
-                if (lastLoc != req.body.eventloc) {
-                    //change loc
-                    emailLoc(con1,req.body.eventloc);
-                }
-
-                // if the date of the event change - email will send to the contructor
-                var lastDate = event1[0].date;
-                if (lastDate != req.body.date) {
-                    //change date
-                    emaildate(con1,req.body.date);
-    
-                }
-
-
-            }
+            
 
 
         }
         if (canU) {
+
+
+            /*
+            var q1={eventname:req.body.oldname};
+            let event1 = await dbo.collection("Event").find(q1).toArray(); //event
+            event1[0].suc3=true;
+            //let event = await dbo.collection("Event").find(rec1[i].idEvent).toArray(); //the event 
+            // if the location of the event change - email will send to all the contructors
+            var lastLoc = event1[0].eventLoc;
+
+            if (lastLoc != req.body.eventloc) {
+                //change loc
+                emailLoc(emailc,req.body.eventloc);
+            }
+
+            // if the date of the event change - email will send to the contructor
+            var lastDate = event1[0].date;
+            if (lastDate != req.body.date) {
+                //change date
+                emaildate(emailc,req.body.date);
+
+            }
+            */
             var myquery = { idE: Uid, eventname: req.body.oldname };
+            let event=await dbo.collection("Event").find(myquery).toArray();
+            var idE=event[0]._id; 
+            console.log(idE);
+            var q={idEvent:idE.toString()};
+            //let rec=await dbo.collection("Recuitment").find(q).toArray();
+
+                var newvalues1 = {
+                    $set: {
+                       status:"pending",
+                       date:req.body.date
+                    }
+
+                };
+
+                let rec1 = await dbo.collection("Recuitment").updateMany(q, newvalues1);
+              
+
+
+
 
             var newvalues = {
                 $set: {
@@ -798,7 +824,7 @@ app.post('/updateEvent', async (req, res) => {
                     idE: Uid
                 }
             };
-            let event = await dbo.collection("Event").updateOne(myquery, newvalues);
+            let event12 = await dbo.collection("Event").updateOne(myquery, newvalues);
             res.view("pages/firstpage");
 
 
