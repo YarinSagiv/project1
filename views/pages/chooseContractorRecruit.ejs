@@ -13,7 +13,9 @@
     <div class="container">
         <p>Please enter the id of the contractor worker that you want to recruit</p>
         <hr>
-            <br><label id="errorinput"></label><br>
+            <br><label id="errorinput"></label>
+            <label id="errorinput2"></label><br>
+            <label id="errorinput3"></label>
             <label for="iduser"><b>ID</b></label>
             <br><label id="ID"></label><br>
             <input type="text" placeholder="Enter ID" name="iduser" id="iduser" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..?)\../g, '$1');" required>
@@ -37,6 +39,20 @@
     else
     {
         document.getElementById('errorinput').style.display = 'none';
+    }
+    if ("<%= suc2 %>" == 'false')
+    {
+        var l = document.getElementById("errorinput2");
+        l.innerHTML = "<br>you can only recruit if you have events"
+        l.style = "font-size:18px; color: red;"
+        newusucc=false;
+    }
+    if ("<%= suc3 %>" == 'false')
+    {
+        var l = document.getElementById("errorinput3");
+        l.innerHTML = "<br>this contractor worker can't be recruited."
+        l.style = "font-size:18px; color: red;"
+        newusucc=false;
     }
 
 </script>

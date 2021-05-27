@@ -1,69 +1,63 @@
 <html>
+
 <head>
   <link href="css/sty.css" rel="stylesheet">
 
 </head>
+
 <body>
 
   <header>
     <%- include('../partials/_header') %>
   </header>
 
-<form id="form1" action="/updateRecruit" method="POST" >
-    <div class="container">
-      <p>Please fill in this form the details to update the recruit</p>
-      <hr>
-      <br><label id="errorinput"></label><br>
-      <br/>
-      <label for="date"><b>Start time</b></label>
-      <input type="time" name="startTime" id="startTime">
-      <br>
-      <% if ( hasAddress == true){%>
+  <form id="form1" action="/updateRecruit" method="POST">
+    <p>Please fill in this form the details to update the recruit</p>
+    <br><label id="errorinput"></label>
+    <% if ( hasAddress==true ){%>
+      <label for="location" style="font-size:18px;">do you want to use the contractor worker address?</label>
+      <input type="checkbox" onclick="choose()" style="width: 18px; height: 18px;" name="locationC" id="locationC"
+        value="true">
       </br>
-        <label for="location" style="font-size:18px;">do you want to use the contractor worker address?</label>
-        <input type="checkbox"  onclick ="choose()" style="width: 18px; height: 18px;" name="locationC" id="locationC" value="true" checked>
-    </br>
-    <% } %>
-        <label for="location" style="display: none;" id="location"><b>enter your location: </b></label>
-        <input type="text" style="display: none;" name="locationE" id="locationE" required>  
-    </br>
-    <label for="date"><b>Start time</b></label>
-    <input type="time" name="startTime" id="startTime">
-    </br>
-    <input type="hidden" id="selectE" name="selectE">  
-    <hr>   
+      <% } %>
+        <label for="location" id="location"><b>enter your location: </b></label>
+        <input type="text" name="locationE" id="locationE" value="<%=location%>" required>
+        </br>
+        <label for="date"><b>Start time</b></label>
+        <input type="time" name="time" id="time">
+        </br></br>
+        <input type="hidden" name="recruitId" value="<%=_id%>">
+        <input type="hidden" name="contractorId" value="<%=idC%>">
 
-    </div>
+        <button type="submit" class="registerbtn">Update</button>
+        <button type="button" class="registerbtn" href="/profileEmployerPage">cancel</button>
 
-    <button type="button" class="registerbtn" href="/profileEmployerPage" onclick="getSelect()">Update</button>
-    <button type="submit" class="registerbtn" href="/profileEmployerPage">cancel</button>
-  
-   
-</form>
+
+  </form>
 </body>
 
-<span id = "message" style="color:red"> </span> <br><br>
+<span id="message" style="color:red"> </span> <br><br>
 
 <script>
-  function getSelect() {
-        document.getElementById("selectE").value = document.getElementById("recruit1").value;
-        document.getElementById("form1").action = "/RecruitContractorWorker";
-        document.getElementById("form1").method = "POST";
-        document.getElementById("form1").submit();
-}
+  //--location
+  if ("<%= location %>" != "null") {
+    document.getElementById("location").value = "<%= location %>";
+  }
+  //--time
+  document.getElementById("time").value = "<%= startTime %>";
 
-function choose(){
-    if((document.getElementById("locationC").checked)==false){
-        document.getElementById("locationE").style.display="block";
-        document.getElementById("location").style.display="block";
+  function choose() {
+    if ((document.getElementById("locationC").checked) == false) {
+      document.getElementById("locationE").style.display = "block";
+      document.getElementById("location").style.display = "block";
+      //document.getElementById("location").style.required = false;
     }
-    else{
-        document.getElementById("locationE").style.display="none";
-        document.getElementById("location").style.display="none";
+    else {
+      document.getElementById("locationE").style.display = "none";
+      document.getElementById("location").style.display = "none";
     }
   }
 
 </script>
 
 </html>
-

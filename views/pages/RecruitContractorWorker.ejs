@@ -12,10 +12,7 @@
 <form id="form1" action="/RecruitContractorWorker" method="POST" >
     <div class="container">
         <p>Please fill the form</p>
-        <hr>
-            <br><label id="errorinput"></label><br>
-            </br>
-            <input type = "hidden" value="<%=_id%>" name="iduser"> 
+            <label id="errorinput"></label><br>
             <label>Recruit:</label>
             <% if(ev1!=null && typeof ev1 !="undefined"){ %>
             <select id="recruit1" name="idE"> 
@@ -53,8 +50,17 @@
             </br>
             <input type="hidden" id="selectE" name="selectE">  
 
-        <hr>
+            <% if(prices!=null && typeof prices !="undefined"){ %>
+                <label for="prices"><b>price rate:</b></label>
+                <select id="prices" name="priceRate"> 
+                  <% prices.forEach(function(dat) {%>
+                        <option value="<%=dat._id %>"><%= dat.title %>, price: <%= dat.price %>, description: <%= dat.description %>, traveling fee: <%= dat.travelingFee %>, accompanied: <%if(dat.accompanied=="true"){ %>yes <%}else{%>no<%}%> </option>
+                    <% }); %>                 
+                </select> 
+                <% } %>
+
     </div>
+    <input type = "hidden" value="<%=_id%>" name="iduser"> 
 
     <button type="button" class="registerbtn" href="/profileEmployerPage" onclick="getSelect()">finish Recruit</button>
     <button type="submit" class="registerbtn" href="/profileEmployerPage">cancel</button>
