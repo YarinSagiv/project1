@@ -43,9 +43,9 @@
 
   <form action="/demoPofileE" method="get" >
     <label style="font-size:22px;">
-    <label class="profile" for="firstname"><b>First name :</b> <label style="font-size:19px;"><%=firstName%></label></label><a class="button" style="float: right;" href="/updateProfileEmployer">Update Profile</a><br>
+    <label class="profile" for="firstname"><b>First name :</b> <label style="font-size:19px;"><%=firstName%></label></label><br>
     <label class="profile" for="lastname"><b>Last name :</b> <label style="font-size:19px;"><%=lastName%></label></label><br>
-    <label class="profile" for="userName"><b>User name :</b><label style="font-size:19px;"> <%=userName%></label></label><a class="button" style="float: right;" onclick="toDelete()">Delete Profile</a><br>
+    <label class="profile" for="userName"><b>User name :</b><label style="font-size:19px;"> <%=userName%></label></label><br>
     <label class="profile" for="email"><b>Email : </b><label style="font-size:19px;"><%=email%> </label></label><br>
     <label class="profile" for="phoneNumber"><b>phone Number/s :</b><label style="font-size:19px;"> <%=phoneNumbers%></label></label><br>
     </label>
@@ -56,7 +56,7 @@
     </label></label><a class="button" href="/chooseEventUpdate">update Recruits</a><br>-->
 
 
-  
+  <% if(typeof eve != "undefined" && eve) { %>
   <table id="events" style="width:70%; cursor:context-menu;" >
     <tr>
       <th>Event Name</th>
@@ -65,14 +65,13 @@
       <th>Date</th>
       <th>Time</th>
     </tr>
-
+    <% eve.forEach(function(dat) {%>
     <tr>
-      <% eve.forEach(function(dat) {%>
           <td><%= dat.eventname %></td>
           <td><%= dat.eventLoc %></td>
           <td><%= dat.numGuest %></td>
           <td><%= dat.date %></td>
-          <td><%= dat.Time %></td>
+          <td><%= dat.time %></td>
 
   </tr>
   <% }); %>
@@ -81,6 +80,7 @@
 
    
   </table>
+  <% } %>
 
     </form>
 </body>
