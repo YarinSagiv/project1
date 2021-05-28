@@ -1286,7 +1286,6 @@ db.close();*/
 //acsses to mongodb and fetch this id column
 //render ejs with this data
 
-
 app.post("/searchContractorWorker", async (req, res) => {
     MongoClient.connect(url, { useUnifiedTopology: true }, async function (err, db) {
         if (err) throw err;
@@ -1327,7 +1326,22 @@ app.post("/searchContractorWorker", async (req, res) => {
         for (var i = 0; i < comments.length; i++) {
             arr.push(comments[i]._id);
         }
-        console.log("arrComments:  " + JSON.stringify(arr));
+        console.log("arrComments111:  " + JSON.stringify(arr));
+
+        if (from == 0) {
+            let comments2 = await dbo.collection("Comments").find().project({ idC: 1, _id: 0 }).toArray();
+            var arr2 = [];
+            for (i = 0; i < comments2.length; i++) {
+                arr2.push(comments2[i].idC);
+            }
+            let comments3 = await dbo.collection("ContractorWorkers").find({ _id: { "$nin": arr2 } }).toArray();
+            for (i = 0; i < comments3.length; i++) {
+                arr.push(comments3[i]._id);
+            }
+            console.log("arrComments333:  " + JSON.stringify(arr));
+        }
+
+
 
 
         if (req.body.fromPriceRates != "" || req.body.toPriceRates != "" || typeof accompaniedI != "undefined") {
@@ -1338,7 +1352,7 @@ app.post("/searchContractorWorker", async (req, res) => {
                 query3 = [{
                     '$match': {
                         'price': {
-                            '$gt': priceFROMI // greater than
+                            '$gt': (priceFROMI).toString() // greater than
                         }
                     }
                 }
@@ -1348,7 +1362,7 @@ app.post("/searchContractorWorker", async (req, res) => {
                 query3 = [{
                     '$match': {
                         'price': {
-                            '$lt': priceTOI + 1 // lower then -- +1 to include the top value   
+                            '$lt': (priceTOI + 1).toString() // lower then -- +1 to include the top value   
                         }
                     }
                 }
@@ -1358,8 +1372,8 @@ app.post("/searchContractorWorker", async (req, res) => {
                 query3 = [{
                     '$match': {
                         'price': {
-                            '$lt': priceTOI + 1, // lower then -- +1 to include the top value
-                            '$gt': priceFROMI
+                            '$lt': (priceTOI + 1).toString(), // lower then -- +1 to include the top value
+                            '$gt': (priceFROMI).toString()
                         }
                     }
                 }];
@@ -1377,13 +1391,13 @@ app.post("/searchContractorWorker", async (req, res) => {
 
             }
             query3[0]['$match'].idC = { '$in': arr };
-            var query4 = query3[0]['$match'].idC;
-            console.log("result of query4: " + JSON.stringify(query4));
+            //var query4 = query3[0]['$match'].idC;
+            //console.log("result of query4: " + JSON.stringify(query4));
 
             console.log("result of query3: " + JSON.stringify(query3[0]));
 
 
-            let price2 = await dbo.collection("jobRate").aggregate(query4).toArray();
+            let price2 = await dbo.collection("jobRate").aggregate(query3).toArray();
             console.log("check price:  " + JSON.stringify(price2));
             arr = [];
             for (i = 0; i < price2.length; i++) {
@@ -1423,7 +1437,11 @@ app.post("/searchContractorWorker", async (req, res) => {
         else
             res.view("pages/searchContractorWorker", { contractorFound: null, messageNR: "no results found" });
     });
+});
 
+
+app.get("/searchContractorWorker", function (req, res) {
+    res.view('pages/searchContractorWorker', { contractorFound: null });
 });
 
 
@@ -1534,33 +1552,36 @@ app.post("/searchEmployer", async (req, res) => {
             res.view("pages/searchEmployer", { employerFound: null, messageNRE: "no results found" });
     });
 });*/
-
-app.post("/searchEmployer", function (req, res) {
+app.post("/searchEmployer", async function (req, res) {
     var info = "";
 
-    MongoClient.connect(url, function (err, db) {
+    MongoClient.connect(url, { useUnifiedTopology: true }, async function (err, db) {
         if (err) throw err;
         var dbo = db.db("eventSaver");
-        //var flag = false;
         var dictQueryE = {};
-        //var myquery = { idE: Uid, eventname: req.body.selectE };
-        var select = req.body.go;
-        console.log("check sel :" + select);
         var idEmployer = req.body.idE;
         if (idEmployer != "") {
             dictQueryE._id = idEmployer;
             console.log("check id :" + req.body.idE);
         }
-        dbo.collection("Employers").find(dictQueryE).toArray(function (err, result) {
-            if (err) throw err;
-            if (result.length != 0) {
-                res.view('pages/demoPofileC', result[0]);
+        console.log("result dictQueryE:" + JSON.stringify(dictQueryE));
+        let m = await dbo.collection("Employers").find(dictQueryE).toArray();
+        console.log("result m: " + JSON.stringify(m));
+        if (m.lenght != 0)
+        {
+            var query2 = { idE: idEmployer };
+            let eve = await dbo.collection("Event").find(query2).toArray(); //the events
+            if ( eve.length != 0) {
+                m[0].eve = eve;
             }
-            else {
-                res.view("pages/searchEmployer", { result: null, messageNRE: "no results found" });
-            }
-            db.close();
-        });
+            console.log("result m2: " + JSON.stringify(m));
+            res.view('pages/demoPofileE', m[0]);
+        }
+        else 
+        {
+            res.view("pages/searchEmployer", { m: null, messageNRE: "no results found" });
+        }
+        db.close();
     });
 });
 
@@ -1568,7 +1589,6 @@ app.post("/searchEmployer", function (req, res) {
 app.get("/searchEmployer", function (req, res) {
     res.view('pages/searchEmployer', { employerFound: null });
 });
-
 
 //Reports
 //--Contractor's
