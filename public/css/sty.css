@@ -159,10 +159,12 @@ hr {
     cursor: pointer;
     width: 100%;
     opacity: 0.9;
+    font-family: Felix Titling, Helvetica, sans-serif;
 }
 
 .registerbtn:hover {
     opacity: 1;
+    font-family: Felix Titling, Helvetica, sans-serif;
 }
 
 /* Add a blue text color to links */
