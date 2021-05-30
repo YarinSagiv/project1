@@ -106,7 +106,7 @@
         <input type="hidden" id="selectaccompanied" name="selectaccompanied"> 
         <br >
 
-        <label class="searching" for="jobTypesL"><b>Job Types</b></label>
+        <!--<label class="searching" for="jobTypesL"><b>Job Types</b></label>
         <br >
         <select class="searchingJType" name="INjobTypes" id="INjobTypes" multiple>
             <option class="searching" value="Hair Styling">Hair Styling</option>
@@ -120,7 +120,7 @@
             <option style="font-size:18px;" value="Invitation Printer">Invitation Printer</option>
         </select>
         <input type="hidden" id="selectE" name="selectE">   
-        <br>
+        <br>-->
     <input type="submit" name="send" value="search" >
     <input type="reset" name="reset1" value="reset">
 
@@ -129,29 +129,32 @@
   <label class="searching" style="display: block; text-align: center;"><%=messageNR%></label>
 <% } else if(contractorFound && typeof contractorFound !="undefined"){ %>
   
-  <table id="resultSearching" style="width:90%; margin: 0 auto; text-align: center; border-collapse: collapse;">
+  <table id="table" style="width:90%; margin: 0 auto; text-align: center; border-collapse: collapse;">
     <tr id="head">
       <th>first Name</th>
       <th>last Name</th>
-      <th>link profile</th>
     </tr>
 
     <% contractorFound.forEach(function(dataT) { %>
-        <tr>
+        <tr id=<%=dataT._id%>>
             <% if(typeof dataT.firstName != "undefined" && dataT.firstName) { %>
                 <td><%= dataT.firstName %></td>
             <% } %>
             <% if(typeof dataT.lastName != "undefined" && dataT.lastName) { %>
               <td><%= dataT.lastName %></td>
             <% } %>
-            <td>Go to the profile</td>
-            
-
-
         </tr>
     <% }); %>
 
   </table>
+  <p style="text-align: center;">
+    <button type="button" class="report-reset" onclick="goToProfile()">go to the profile</button>
+  </p>
+
+  <form id="myForm" action="searchContractorWorker" method="POST">
+    <input type="hidden" value="" id="goProfile" name="goProfile">
+
+  </form>
 <% } %>
 
 <script >
@@ -169,12 +172,6 @@ function findByRange()
     disable("TOjobRate");
             
   }
-  
-        //document.getElementById("selectE").value = document.getElementById("jobTypesID").value;
-        //document.getElementById("searchingInput").action = "/searchContractorWorker";
-       // document.getElementById("searchingInput").method = "POST";
-        //document.getElementById("searchingInput").submit();
-        //console.log(document.getElementById("jobTypesID").value);
 }
 function limitTo()
 {
@@ -187,10 +184,11 @@ function limitTo()
     ? op[i].disabled = true 
     : op[i].disabled = false ;
   }
-            //change value of needed:
+  //change value of needed:
   if(parseInt(document.getElementById("TOjobRate").value)<parseInt(document.getElementById("FROMjobRate").value))
       op[from].selected = true;
 }
+/*
   function Fdates()
   {
     //DATES:
@@ -204,7 +202,7 @@ function limitTo()
     document.getElementById("INdate").min = today;
   }
   Fdates();
-
+*/
 function show(id) {
     document.getElementById(id).style.display = 'block';
 }
@@ -213,13 +211,48 @@ function hide(id) {
     document.getElementById(id).style.display = 'none';
 }
 
-function goProfile() 
-{
-  console.log("go to the profile is ok");
-  document.getElementById("go").value = true;
-  //document.getElementById("accepted").value = selected.toString();
-  console.log("gogogo:::"+document.getElementById("go").value);
-}
+var selected = "";
+  var rIndex;
+  var rows = document.getElementById('table').getElementsByTagName('tr');
+  for (i = 1; i < rows.length; i++) {
+    rows[i].value = "notSelected";
+    rows[i].onclick = function () {
+      rIndex = this.rowIndex;
+      if (this.value == "notSelected") {
+        this.value = "selected";
+        this.style = "background-color: #9e8e94;";
+        selected = this.id;
+        var rows = document.getElementById('table').getElementsByTagName('tr');
+        for (var i = 0; i < rows.length; ++i) {
+          if (rows[i] != this) {
+            rows[i].value = "notSelected";
+            rows[i].style = "";
+          }
+        }
+      }
+      else {
+        this.style = "";
+        this.value = "notSelected";
+        //remove the id from the selected list:
+        selected = "";
+
+      }
+      console.log("selected " + selected);
+    }
+  }
+
+  function goToProfile() {
+    console.log(selected);
+    if (selected != "") {
+      document.getElementById("goProfile").value = selected;
+      document.getElementById("myForm").submit();
+
+    }
+    else
+      alert("select a row for go To Profile");
+  }
+
+
 </script>
 </body>
 

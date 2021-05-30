@@ -172,15 +172,19 @@ app.post("/RecruitContractorWorker", async function (req, res) {
         var prices = await dbo.collection("jobRate").find(priceQuery).toArray();
         console.log("prices: " + JSON.stringify(prices));
 
+        var dates = [];
+        var cont = await dbo.collection("ContractorWorkers").find(myquery).toArray();
+        if (cont.length != 0) {
+            console.log(cont[0].address);
+            if (typeof req.body.locationC != "undefined") {
 
-        if (typeof req.body.locationC != "undefined") {
-            var cont = await dbo.collection("ContractorWorkers").find(myquery).toArray();
-            if (cont.length != 0) {
-                console.log(cont[0].address);
                 theA = cont[0].address;
             }
             else
                 theA = '';
+            console.log("cont[0].dates: " + cont[0].dates);
+            dates = cont[0].dates.split(",");
+
         }
         else {
             theA = req.body.locationE;
@@ -189,25 +193,39 @@ app.post("/RecruitContractorWorker", async function (req, res) {
         var cont2 = await dbo.collection("Event").find(quar).toArray();
         var values;
         if (cont2.length != 0) {
-            values = {
-                idC: req.body.iduser,
-                idEmployer: Uid,
-                idEvent: cont2[0]._id.toString(),
-                date: cont2[0].date,
-                location: theA,
-                startTime: req.body.startTime,
-                information: req.body.information,
-                status: "pending",
-                price: prices[0].price
-            };
+            var cant = false;
+            console.log("dates:: " + JSON.stringify(dates));
+            if (dates.length != 0)
+                for (var i = 0; i < dates.length; ++i) {
+                    console.log("cont2[0].date: " + cont2[0].date);
+                    console.log("dates[i]: " + dates[i]);
+                    if (cont2[0].date == dates[i]) {
+                        console.log("cant recruit- contractor is anavailable at that date");
+                        cant = true;
+                    }
+                }
+
+            if (!cant) {
+                values = {
+                    idC: req.body.iduser,
+                    idEmployer: Uid,
+                    idEvent: cont2[0]._id.toString(),
+                    date: cont2[0].date,
+                    location: theA,
+                    startTime: req.body.startTime,
+                    information: req.body.information,
+                    status: "pending",
+                    price: prices[0].price
+                };
+                await dbo.collection("Recuitment").insertOne(values);
+            }
         }
         else {
             throw "no event found";
         }
-
-        await dbo.collection("Recuitment").insertOne(values);
         res.redirect("/");
         db.close();
+
     });
 });
 
@@ -566,20 +584,23 @@ app.get('/updateProfileContractor', async function (req, res) {
             var query2 = { idC: Uid };
             let c1 = await dbo.collection("ContractorWorkers").find(query).toArray();
             let j1 = await dbo.collection("jobRate").find(query2).toArray(); //all the job rate
+            var recruits = await dbo.collection("Recuitment").find({ idC: Uid, status: "accepted" }).toArray();
+            var dates = null;
+            if (recruits.length != 0) {
+                dates = [];
+                for (var i = 0; i < recruits.length; i++) {
+                    dates.push(recruits[i].date);
+                }
+                dates = dates.toString();
+            }
+
 
             console.log(j1);
             c1[0].j1 = j1;
+            c1[0].recDates = dates;
             res.view('pages/updateProfileContractor', c1[0]);
 
-            /*
-            dbo.collection("ContractorWorkers").find(query).toArray(function (err, result) {
-                if (err) throw err;
-                if (result.length != 0) {
-                    res.view('pages/updateProfileContractor', result[0]);
-                }
-                db.close();
-            });
-            */
+
         });
     }
 });
@@ -746,8 +767,6 @@ app.post('/updateContractor', (req, res) => {
             theA = req.body.address;
         else
             theA = null;
-        /*if (req.body.areas == "")
-            area = null;*/
         if (req.body.dates == "")
             date = null;
         else
@@ -759,8 +778,6 @@ app.post('/updateContractor', (req, res) => {
         //delete all the documents of the job rate of this contractur
         var myqueryC = { idC: Uid };
         let delete1 = await dbo.collection("jobRate").deleteMany(myqueryC);
-
-
 
         var arrJobRate = req.body.jobrate;
         var jobrates = arrJobRate.split("-");
@@ -1049,46 +1066,11 @@ app.post('/updatePasswordE', (req, res) => {
     });
 });
 
-/*app.get("/watchProfile", async (req, res) => {
-    res.send(req.query.id)
-    MongoClient.connect(url, { useUnifiedTopology: true },async function (err, db) {
-        if (err) throw err;
-        var dbo = db.db("eventSaver");
-        var query1 = { _id: req.query.id };
-        let Found = await dbo.collection("Employers").find(query1).toArray();
-        console.log("result of searchingE1: " + JSON.stringify(Found));
-        console.log("result of searchingE2: " + JSON.stringify(Found[0]));
-        console.log("result of searchingE3: " + JSON.stringify(Found[0]._id));
-        console.log("result of searchingE4: " + JSON.stringify(Found._id));
-        if (Found.length != 0) {
-            console.log("Found.length != 0");
-            res.render("pages/watchProfile?Found[0]._id");
-        }
-        //else
-            //res.view("pages/searchContractorWorker", { contractorFound: null, messageNR: "no results found" });
-    });
-});*/
-/*dbo.collection("Employers").find(query).toArray(function (err, result) {
-    if (err) throw err;
-    if (result.length != 0) 
-    {
-        
-        res.render('pages/profileEmployerPage', result);
-    }
-    else
-        res.redirect("/");
-});
-db.close();*/
-
-//acsses to mongodb and fetch this id column
-//render ejs with this data
-
 app.post("/searchContractorWorker", async (req, res) => {
     MongoClient.connect(url, { useUnifiedTopology: true }, async function (err, db) {
         if (err) throw err;
         var dbo = db.db("eventSaver");
         var dictQuery = {};
-        var dictQuery2 = {};
         var firstnameI = req.body.INfirstname;
         var lastnameI = req.body.INlastname;
         var genderI = req.body.INgender;
@@ -1137,10 +1119,6 @@ app.post("/searchContractorWorker", async (req, res) => {
             }
             console.log("arrComments333:  " + JSON.stringify(arr));
         }
-
-
-
-
         if (req.body.fromPriceRates != "" || req.body.toPriceRates != "" || typeof accompaniedI != "undefined") {
             var priceFROMI = parseInt(req.body.fromPriceRates);
             var priceTOI = parseInt(req.body.toPriceRates);
@@ -1220,19 +1198,24 @@ app.post("/searchContractorWorker", async (req, res) => {
             //console.log("check JobType:" + req.body.selectE);
             console.log("check JobType:" + req.body.INjobTypes);
         }
-
-
         dictQuery._id = { '$in': arr };
         //query3[0]['$match'].idC = { '$in': arrComments };
         let contractorFound = await dbo.collection("ContractorWorkers").find(dictQuery).toArray();
         console.log("result of searching: " + JSON.stringify(contractorFound[0]));
 
+     
         if (contractorFound.length != 0) {
             res.view("pages/searchContractorWorker", { contractorFound: contractorFound });
             //to check if the "click" var is true (there is a click on 'show profile'), if is true move to the deme profile
         }
-        else
-            res.view("pages/searchContractorWorker", { contractorFound: null, messageNR: "no results found" });
+        else if (req.body.goProfile != "") {
+            let mC = await dbo.collection("ContractorWorkers").find({_id:req.body.goProfile}).toArray();
+            console.log("result of mC: " + JSON.stringify(mC));
+            console.log("req.body.goProfile " + req.body.goProfile);
+            res.view('pages/demoPofileE', mC[0]);     
+        }
+        //else 
+            //res.view("pages/searchContractorWorker", { contractorFound: null, messageNR: "no results found" });
     });
 });
 
@@ -1241,114 +1224,6 @@ app.get("/searchContractorWorker", function (req, res) {
     res.view('pages/searchContractorWorker', { contractorFound: null });
 });
 
-
-/*let queryObject = {}
-if (x!=y){
-queryObject["$group"] ={
- }
-    }
-if (typeof accompaniedI != "undefined") {
-    dictQuery2.accompanied = accompaniedI;
-    console.log("check accompanied:" + req.body.accompaniedI);
-}
-if(typeof jobTypesI != "undefined") {
-      dictQuery.jobTypes = jobTypesI;
-      console.log("check JobType:" + req.body.selectE);
-}
-var from = parseInt(req.body.FROMjobRate);
-var to = parseInt(req.body.TOjobRate);
-var query = [
-    {
-        '$group': {
-            '_id': '$idC',
-            'rate': {
-                '$avg': '$rate'
-            }
-        }
-    }, {
-        '$match': {
-            'rate': {
-                '$lt': to + 1, // lower then -- +1 to include the top value
-                '$gt': from // greater than
-            }
-        }
-    }
-];
-let comments = await dbo.collection("Comments").aggregate(query).toArray();
-console.log("comments:  " + JSON.stringify(comments));
-//if(priceFROMI!="")
-var priceFROMI = parseInt(req.body.fromPriceRates);
-var priceTOI = parseInt(req.body.toPriceRates);
-var query2 = [{
-    '$match': {
-        'rate': {
-            '$lt': priceTOI + 1, // lower then -- +1 to include the top value
-            '$gt': priceFROMI // greater than
-        }
-    }
-}
-];
-let price2 = await dbo.collection("jobRate").aggregate(query2).toArray();
-console.log("jobRate:  " + JSON.stringify(price2));
-if (comments.length != 0 && price2.length != 0) {
-    var united=[];
-    for(var i =0; i<comments.length;i++)
-    {
-        for(var j=0;j<price2.lenght;j++)
-        {
-            if(comments[i].idC==price2[j].idC)
-            {
-                var e = {...comments[i],...price2[j]};
-                console.log("e"+ JSON.stringify(e));
-                united.push(e);
-            }
-        }
-    }
-    for ( i = 0; i < united.length; i++) {
-        let contractorFound = await dbo.collection("ContractorWorkers").find({ _id: united[i].idC }).toArray();
-        console.log("result of searching: " + JSON.stringify(contractorFound));
-        united[i] = { ...united[i], ...contractorFound[0] };
-    }
-    res.view("pages/searchContractorWorker", { contractorFound: united});
-}
-else {
-    res.view("pages/searchContractorWorker", { contractorFound: null, messageNR: "no results found" });
-}
-});
-});*/
-
-
-
-app.get("/searchContractorWorker", function (req, res) {
-    res.view('pages/searchContractorWorker', { contractorFound: null });
-});
-
-/*
-app.post("/searchEmployer", async (req, res) => {
-    MongoClient.connect(url, { useUnifiedTopology: true }, async function (err, db) {
-        if (err) throw err;
-        var dbo = db.db("eventSaver");
-        var flag = false;
-        var dictQueryE = {};
-        var myquery = { idE: Uid, eventname: req.body.selectE };
-        var select=req.body.go;
-        var idEmployer = req.body.idE;
-        if (idEmployer != "") {
-            dictQueryE._id = idEmployer;
-            console.log("check id :" + req.body.idE);
-        }
-        let employerFound = await dbo.collection("Employers").find(dictQueryE).toArray();
-        console.log("result of employer searching: " + JSON.stringify(employerFound));
-        if (employerFound.length != 0) {
-            res.view("pages/searchEmployer", { employerFound: employerFound });
-            if (select == true) {
-                res.render("pages/demoPofileE",employerFound);
-            }
-        } //if(employerFound && typeof employerFound !="undefined")
-        else
-            res.view("pages/searchEmployer", { employerFound: null, messageNRE: "no results found" });
-    });
-});*/
 app.post("/searchEmployer", async function (req, res) {
     var info = "";
 
@@ -1364,8 +1239,10 @@ app.post("/searchEmployer", async function (req, res) {
         console.log("result dictQueryE:" + JSON.stringify(dictQueryE));
         let m = await dbo.collection("Employers").find(dictQueryE).toArray();
         console.log("result m: " + JSON.stringify(m));
-        if (m.lenght != 0)
+        console.log("length m2: " + m.length);
+        if (m.length != 0)
         {
+            console.log("lenght m2 In if: " + JSON.stringify(m.lenght));
             var query2 = { idE: idEmployer };
             let eve = await dbo.collection("Event").find(query2).toArray(); //the events
             if ( eve.length != 0) {
@@ -1382,10 +1259,10 @@ app.post("/searchEmployer", async function (req, res) {
     });
 });
 
-
 app.get("/searchEmployer", function (req, res) {
-    res.view('pages/searchEmployer', { employerFound: null });
+    res.view('pages/searchEmployer', { m: null });
 });
+
 
 //Reports
 //--Contractor's
@@ -1952,8 +1829,13 @@ app.post('/pendingRecruits', async (req, res) => {
             await dbo.collection("Recuitment").updateMany(query1, values1);
 
             let c1 = await dbo.collection("ContractorWorkers").find(query).toArray(); //the details of the contractor
-            var oldD = c1.dates; //the list of all the dates the contractor not avalible
-            var newD = oldD + "," + date1;
+            var oldD = c1[0].dates; //the list of all the dates the contractor not avalible
+            console.log("oldD: " + oldD);
+            var newD;
+            if (oldD != null)
+                newD = oldD + "," + date1;
+            else
+                newD = date1;
 
             var values2 = { $set: { dates: newD } };
             await dbo.collection("ContractorWorkers").updateOne(query, values2);
@@ -1994,11 +1876,16 @@ app.post("/cancelRecruits", async function (req, res) {
                     var dates = contractors[0].dates;
                     dates = dates.split(",");
                     var newDates = [];
+                    var newD;
                     for (var i = 0; i < dates.lenght; i++) {
                         if (dates[i] != recruits[0].date)
                             newDates.push(dates[i]);
                     }
-                    await dbo.collection("ContractorWorkers").updateOne(query, { $set: { dates: newDates.toString() } });
+                    if (newDates.length != 0)
+                        newD = newDates.toString();
+                    else
+                        newD = null;
+                    await dbo.collection("ContractorWorkers").updateOne(query, { $set: { dates: newD } });
                 }
             }
             await dbo.collection("Recuitment").updateOne({ _id: ObjectID(recruits[0]._id) }, { $set: { status: "canceled" } });
@@ -2010,6 +1897,35 @@ app.post("/cancelRecruits", async function (req, res) {
     });
 });
 
+
+app.get("/reviewContractorWorker", function (req, res) {
+    if (Uid == "" || typeUser != "Employers")
+        res.redirect("/");
+    else {
+        res.view("pages/reviewContractorWorker");
+    }
+});
+
+
+app.post("/reviewContractorWorker", async function (req, res) {
+    MongoClient.connect(url, { useUnifiedTopology: true }, async function (err, db) {
+        if (err) throw err;
+        var dbo = db.db("eventSaver");
+
+        var query = { _id: req.body.contractorId };
+        var contractor = await dbo.collection("ContractorWorkers").find(query).toArray();
+        if (contractor.length != 0) {
+            await dbo.collection("Comments").insertOne({ idC: req.body.contractorId, idEmp: Uid, review: req.body.information, rate: req.body.rate });
+            res.redirect("/");
+        }
+        else {
+            console.log("111111");
+            res.view("pages/reviewContractorWorker", { no1: true });
+        }
+        db.close();
+
+    });
+});
 
 
 

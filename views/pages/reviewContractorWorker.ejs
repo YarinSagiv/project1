@@ -1,0 +1,42 @@
+<html>
+
+<head>
+    <link href="css/sty.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+    <header>
+        <%- include('../partials/_header') %>
+    </header>
+
+
+
+    <form action="/reviewContractorWorker" method="POST">
+
+        <% if(typeof no1 !="undefined" && no1==true ) { %>
+            <label id="noField" style=" font-size: 18px; color: red;">can't find the contractor worker</label><br>
+                <% } %>
+        <label class="report">enter the contractor's id:</label><br>
+        <input type="text" id="contractorId" name="contractorId" required><br>
+
+        <label class="report">rate the worker:</label><br>
+        <select class="report" id="rate" name="rate">
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+            <option>5</option>
+        </select><br>
+
+        <label class="report">tell us more</label><br>
+        <input  type="text" placeholder="optional extra information" name="information" id="information" maxlength="200">
+        <br>
+        <button class="report" type="submit" >send</button>
+
+    </form>
+
+</body>
+
+</html>

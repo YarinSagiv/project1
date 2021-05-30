@@ -14,10 +14,14 @@
         <a id="reg" href="/newu">registration</a>
         <a id="log" href="/logIn">log in</a>
         <a id="profile" style="display: none;">my profile</a>
+        <a id="searchContractorWorker" href="/searchContractorWorker" style="display: none;">search Contractor</a>
+        <a id="searchEmployer" href="/searchEmployer" style="display: none;">search Employer</a>
         <a id="password" href="/changeHR" style="display: none;">change password</a>
         <a id="reportHR" href="/humanResourcesReports" style="display: none;">stats & reports</a>
         <a id="reportCon" href="/contractorReports" style="display: none;">stats & reports</a>
         <a id="reportEmp" href="/employerReports" style="display: none;">reports</a>
+        <a id="review" href="/reviewContractorWorker" style="display: none;">review contractor</a>
+
         <a id="contact" href="/contactUs">contact us</a>
         <a id="logOut" href="/logOut" style="display: none; float: right;">log out</a>
         <label id="HR" style="display: none;"><br><br><a id="addC" href="/newC">add new Contractor worker</a>
@@ -62,6 +66,8 @@
         deactivate("reportHR");
         deactivate("reportCon");
         deactivate("reportEmp");
+        deactivate("review");
+
     }
     else if (currentPage == "/newu") {
         deactivate("log");
@@ -75,6 +81,8 @@
         deactivate("reportHR");
         deactivate("reportCon");
         deactivate("reportEmp");
+        deactivate("review");
+
     }
     else if (currentPage == "/changeHR") {
         deactivate("log");
@@ -88,6 +96,8 @@
         deactivate("reportHR");
         deactivate("reportCon");
         deactivate("reportEmp");
+        deactivate("review");
+
     }
     else if (currentPage == "/updateProfileContractor" || currentPage == "/updateProfileEmployer" || currentPage == "/profileEmployerPage" || currentPage == "/profileContractorPage" || currentPage == "/changeC" || currentPage == "/changeHR") {
         deactivate("log");
@@ -101,6 +111,8 @@
         deactivate("reportHR");
         deactivate("reportCon");
         deactivate("reportEmp");
+        deactivate("review");
+
     }
     else if (currentPage == "/contractorReports" || currentPage == "/pendingRecruits") {
         deactivate("log");
@@ -114,6 +126,8 @@
         deactivate("reportHR");
         activate("reportCon");
         deactivate("reportEmp");
+        deactivate("review");
+
     }
     else if (currentPage == "/employerReports") {
         deactivate("log");
@@ -127,6 +141,8 @@
         deactivate("reportHR");
         deactivate("reportCon");
         activate("reportEmp");
+        deactivate("review");
+
     }
     else if (currentPage == "/humanResourcesReports" || currentPage == "/humanResourcesReports-getContractors" || currentPage == "/humanResourcesReports-getEmployers" || currentPage == "/humanResourcesReports-getContractors"  || currentPage == "/humanResourcesReports-getRecruits") {
         deactivate("log");
@@ -140,6 +156,8 @@
         activate("reportHR");
         deactivate("reportCon");
         deactivate("reportEmp");
+        deactivate("review");
+
     }
 
     if ("<%= Uname %>" != "")
@@ -155,6 +173,10 @@
         hide("reportHR");
         show("reportCon");
         hide("reportEmp");
+        hide("review");
+        hide("searchContractorWorker");
+        show("searchEmployer");
+
     }
     else if ("<%= typeUser %>" == "Employers") {
         show("profile");
@@ -167,6 +189,9 @@
         hide("reportHR");
         hide("reportCon");
         show("reportEmp");
+        show("review");
+        show("searchContractorWorker");
+        hide("searchEmployer");
     }
     else if ("<%= typeUser %>" == "resourcesCompanyWorkers") {
         hide("log");
@@ -177,6 +202,10 @@
         show("reportHR");
         hide("reportCon");
         hide("reportEmp");
+        hide("review");
+        show("searchContractorWorker");
+        show("searchEmployer");
+
     }
 
     function toDelete() {

@@ -166,7 +166,7 @@
 </body>
 
 <script type="text/javascript">
-
+    var recruited = [];
     var loggedId;
     var jobTypes = [];
     var phoneNumbers = [];
@@ -194,9 +194,6 @@
         console.log("old in the arr:" + jobrate);
     }
     oldJ();
-
-
-
 
     function addJobRate() {
         var newRow = table.insertRow(table.length),
@@ -250,7 +247,6 @@
         }
     }
     selectedRowToInput();
-
 
     function editJobRate() {
         var newT = document.getElementById("title").value,
@@ -441,52 +437,6 @@
         ul.appendChild(li);
     }
 
-    /*function addAnotherArea() {
-        var selElement = document.getElementById("countryAreas");
-        //document.getElementById("jobTypesErrorL").style.display='none';
-
-        for (var option of selElement.options) {
-            if (option.selected && !countryAreas.includes(option.value)) { //making sure that each value is in the array once
-                countryAreas.push(option.value);
-
-                document.getElementById("noCountryAreas").style.display = "none";
-
-                //------add to selected:------
-                var ul = document.getElementById("addedCountryAreas");
-                var li = document.createElement("li");
-                li.appendChild(document.createTextNode(option.value));
-                li.setAttribute("id", option.value);
-                li.setAttribute("style", "font-size:18px;");
-
-                //------span -> X symbol : REMOVE job type
-                var span = document.createElement("span");
-                span.appendChild(document.createTextNode('\u00D7'));
-                span.setAttribute("style", "cursor: pointer;");
-                //onclick
-                span.addEventListener("click", function () {
-                    
-                        //function to delete an area
-                    
-
-                    this.parentElement.style.display = 'none';
-
-                    //remove the type from the types list:
-                    countryAreas = countryAreas.filter(type => type != this.parentElement.id);
-                    console.log(countryAreas);
-
-                    if (countryAreas.length == 0)
-                        document.getElementById("noCountryAreas").style.display = "block";
-
-                });
-
-                //----adding the childs
-                li.appendChild(span);
-                ul.appendChild(li);
-            }
-        }
-
-    }*/
-
     function addAnotherDate() {
         show("date");
         hide("addAnotherDateB");
@@ -539,11 +489,17 @@
 
     function delDate(li, id1) {
 
-        li.style.display = 'none';
-        //remove the date from the phones list:
-        dates = dates.filter(date => date != id1);
-        //for checking
-        console.log(dates);
+        if (recruited.includes(id1.toString())) {
+            document.getElementById("dateError").innerHTML = "you have a recruit in that date, cancel the recruit before deleting the date"
+            show("dateError");
+        }
+        else {  
+            li.style.display = 'none';
+            //remove the date from the phones list:
+            dates = dates.filter(date => date != id1);
+            //for checking
+            console.log(dates);
+        }
 
     }
 
@@ -610,7 +566,9 @@
         //document.write(today);
         document.getElementById("date").min = today;
 
-
+        //recruited dates
+        recruited = "<%= recDates %>";
+        recruited = recruited.split(",");
 
         var date;
         console.log("1 <%= dates %>");
