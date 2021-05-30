@@ -8,20 +8,31 @@
   <header>
     <%- include('../partials/_header') %>
   </header>
+  <% if(typeof notFound !="undefined" && notFound!="false"){ %>
+  <label id="error" style="color: red;">no recruit found for the event and contractor id</label>
+  <% } %>  
 
-<form id="form1" action="/cancelRecruit" method="POST" >
+<form id="form1" action="/cancelRecruits" method="POST" >
     <div class="container">
-        <p>Please enter the id of the contractor worker that you want to review</p>
+        <p>Please choose the event of the rectuit to cancel</p>
         <hr>
-         
+            <label>your event:</label>
+            <% if(ev1!=null && typeof ev1 !="undefined"){ %>
+            <select id="your_event" name="event"> 
+              <% ev1.forEach(function(dat) {%>
+                <% if(typeof dat.eventname != undefined && dat.eventname) { %>
+                    <option value="<%= dat._id %>"><%= dat.eventname %></option>
+                <% } %>  
+                <% }); %> 
+            </select>
+            <% } %>
+            <label>enter the contractor's id:</label>
+            <input type="text" id="idC" name="idC" required>
     </div>
 
-   
+
+<button type="submit" class="registerbtn">continue</button>
 
 </form>
 </body>
-
-<script>
-   
-</script>
 </html>
