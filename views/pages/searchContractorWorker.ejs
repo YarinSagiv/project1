@@ -59,7 +59,7 @@
         <input type="hidden" id="selecttoP" name="selecttoP"> 
         <br>  
         <label class="searching" for="jobRateL"><b>Job Rate</b></label>
-        <input type="radio" id="byRange" name="contractors" value="range" onchange="findByRange()" ><label class="report">by range of avg rates</label>
+        <!--<input type="radio" id="byRange" name="contractors" value="range" onchange="findByRange()" ><label class="report">by range of avg rates</label>-->
 
         
         <select class="searchingRate" name="FROMjobRate" id="FROMjobRate" onchange="limitTo()" >
@@ -144,7 +144,8 @@
             <% if(typeof dataT.lastName != "undefined" && dataT.lastName) { %>
               <td><%= dataT.lastName %></td>
             <% } %>
-            <td> <a href="/watchProfile?id=<%=dataT._id %>">link to user profile</a></td>
+            <td>Go to the profile</td>
+            
 
 
         </tr>
@@ -153,82 +154,43 @@
   </table>
 <% } %>
 
-
 <script >
-  function findByRange()
+function findByRange()
+{
+  if(document.getElementById("byRange").checked)
   {
-    if(document.getElementById("byRange").checked){
-                enable("from");
-                document.getElementById("from").focus();
-                enable("to");}
-            else{
-                disable("from");
-                disable("to");
-            }
+    enable("FROMjobRate");
+    document.getElementById("FROMjobRate").focus();
+    enable("TOjobRate");
   }
-  function getSelect() {
-        if(INfirstname!="")
-        {
-          document.getElementById("textfirst").value = true;
-        }
-        if(INlastname!="")
-        {
-          document.getElementById("textlast").value = true;
-        }
-        if(fromPriceRates!="")
-        {
-          document.getElementById("selectfromP").value = true;
-        }
-        if(toPriceRates!="")
-        {
-          document.getElementById("selecttoP").value = true;
-        }
-        if(FROMjobRate!="")
-        {
-          document.getElementById("selectfromR").value = document.getElementById("FROMjobRate").value;
-        }
-        if(TOjobRate!="")
-        {
-          document.getElementById("selecttoR").value = document.getElementById("TOjobRate").value;
-        }
-        if(INdate!="")
-        {
-          document.getElementById("selectDate").value = document.getElementById("INdate").value;
-        }
-        if(INgender!="")
-        {
-          document.getElementById("selectGender").value = document.getElementById("INgender").value;
-        } 
-        if(INaccompanied!="")
-        {
-          document.getElementById("selectaccompanied").value = document.getElementById("INaccompanied").value;
-        } 
-        if(INjobTypes!="")
-        {
-          document.getElementById("selectE").value = document.getElementById("INjobTypes").value;
-        } 
-
+  else
+  {
+    disable("FROMjobRate");
+    disable("TOjobRate");
+            
+  }
+  
         //document.getElementById("selectE").value = document.getElementById("jobTypesID").value;
-        document.getElementById("searchingInput").action = "/searchContractorWorker";
-        document.getElementById("searchingInput").method = "POST";
-        document.getElementById("searchingInput").submit();
+        //document.getElementById("searchingInput").action = "/searchContractorWorker";
+       // document.getElementById("searchingInput").method = "POST";
+        //document.getElementById("searchingInput").submit();
         //console.log(document.getElementById("jobTypesID").value);
-  }
-  function limitTo()
+}
+function limitTo()
+{
+  var from=parseInt(document.getElementById("FROMjobRate").value);
+  //get all <option>s in "to"
+  var op = document.getElementById("TOjobRate").getElementsByTagName("option");
+  for (var i = 0; i < op.length; i++) 
   {
-    var from=parseInt(document.getElementById("FROMjobRate").value);
-            //get all <option>s in "to"
-            var op = document.getElementById("TOjobRate").getElementsByTagName("option");
-            for (var i = 0; i < op.length; i++) {
-                (parseInt(op[i].value) < from) 
-                    ? op[i].disabled = true 
-                    : op[i].disabled = false ;
-            }
-
-            //change value of needed:
-            if(parseInt(document.getElementById("TOjobRate").value)<parseInt(document.getElementById("FROMjobRate").value))
-                op[from].selected = true;
+    (parseInt(op[i].value) < from) 
+    ? op[i].disabled = true 
+    : op[i].disabled = false ;
   }
+            //change value of needed:
+  if(parseInt(document.getElementById("TOjobRate").value)<parseInt(document.getElementById("FROMjobRate").value))
+      op[from].selected = true;
+}
   function Fdates()
   {
     //DATES:
@@ -243,17 +205,6 @@
   }
   Fdates();
 
-
-    
-/*function myFunction() {
-  var x = document.getElementById("searchingBy").value;
-  document.getElementById("demo").innerHTML = "You selected: " + x;  
-  if (x == 'gender')
-    document.getElementById("selectGender").style.display = 'block';
-} */
-
-
-
 function show(id) {
     document.getElementById(id).style.display = 'block';
 }
@@ -262,7 +213,13 @@ function hide(id) {
     document.getElementById(id).style.display = 'none';
 }
 
-
+function goProfile() 
+{
+  console.log("go to the profile is ok");
+  document.getElementById("go").value = true;
+  //document.getElementById("accepted").value = selected.toString();
+  console.log("gogogo:::"+document.getElementById("go").value);
+}
 </script>
 </body>
 

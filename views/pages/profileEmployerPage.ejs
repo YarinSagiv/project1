@@ -57,7 +57,7 @@
   </label></label><a class="button" href="/chooseCRecruit"> Review Recruits</a><br>
 
 
-  
+  <% if(typeof eve != "undefined" && eve) { %>
   <table id="events" style="width:70%; cursor:context-menu;" >
     <tr>
       <th>Event Name</th>
@@ -66,14 +66,13 @@
       <th>Date</th>
       <th>Time</th>
     </tr>
-
+    <% eve.forEach(function(dat) {%>
     <tr>
-      <% eve.forEach(function(dat) {%>
           <td><%= dat.eventname %></td>
           <td><%= dat.eventLoc %></td>
           <td><%= dat.numGuest %></td>
           <td><%= dat.date %></td>
-          <td><%= dat.Time %></td>
+          <td><%= dat.time %></td>
 
   </tr>
   <% }); %>
@@ -82,6 +81,7 @@
 
    
   </table>
+  <% } %>
 
     </form>
 </body>
